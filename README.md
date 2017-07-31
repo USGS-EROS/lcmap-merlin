@@ -49,8 +49,8 @@ From pypi: ```pip install lcmap-merlin```
 ## Developing
 It is highly recommended to work within a virtual environment.
 ```bash
-$ python -m venv --without-pip .venv
-$ source .venv/bin/activate
+$ conda create --name merlin
+$ source activate merlin
 ```
 
 From there, clone this repo and install merlin's dependencies.
