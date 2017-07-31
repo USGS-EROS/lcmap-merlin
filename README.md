@@ -6,6 +6,7 @@ Turns lcmap spatial data into time series like magic.
 * Convert chips & chip specs into time series rods
 * Many composable functions
 * Built with efficiency in mind... leverages Numpy for heavy lifting.
+* Tested with cPython 3.5 & 3.6
 
 ## Example
 This will retrieve pyccd flavored time-series data from an Aardvark instance
@@ -42,25 +43,26 @@ running locally on port 5678.
 ```
 
 ## Installing
-LCMAP Merlin is on pypi.  To install simply: ```pip install lcmap-merlin```
+
+From pypi: ```pip install lcmap-merlin```
 
 ## Developing
 It is highly recommended to work within a virtual environment.
 ```bash
-   $ python -m venv --without-pip .venv
-   $ source .venv/bin/activate
+$ python -m venv --without-pip .venv
+$ source .venv/bin/activate
 ```
 
 From there, clone this repo and install merlin's dependencies.
 ```bash
-   $ git clone git@github.com:usgs-eros/lcmap-merlin
-   $ cd lcmap-merlin
-   $ pip install -e .[test]
+$ git clone git@github.com:usgs-eros/lcmap-merlin
+$ cd lcmap-merlin
+$ pip install -e .[test]
 ```
 
 ## Testing
 ```bash
- $ pytest
+$ pytest
 ```
 
 Occasionally chip and chip spec test data may need to be updated if the source
