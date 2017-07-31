@@ -82,7 +82,7 @@ def pyccd(point, specs_url, specs_fn, chips_url, chips_fn, acquired, queries):
     dstrs = f.intersection(map(fchips.dates, [c for c in chips.values()]))
 
     blue_chip_spec = specs['blues'][0]
-    chip_x, chip_y = fchips.snap(*point, blue_chip_spec)
+    chip_x, chip_y = fchips.snap(*point, chip_spec=blue_chip_spec)
     chip_locations = fchips.locations(chip_x, chip_y, blue_chip_spec)
 
     # LETS MAKE SOME RODS :-)  (life (is (way better) (with s-expressions)))
