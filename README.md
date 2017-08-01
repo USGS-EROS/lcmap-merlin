@@ -14,8 +14,8 @@ running locally on port 5678.
 ```
 >>> from merlin import timeseries
 >>> aardvark = 'http://localhost:5678'
->>> chips = '{}/{}'.format(aardvark, '/landsat/v1/chips')
->>> specs = '{}/{}'.format(aardvark, '/landsat/v1/chip-specs')
+>>> chips = '{}/{}'.format(aardvark, 'landsat/v1/chips')
+>>> specs = '{}/{}'.format(aardvark, 'landsat/v1/chip-specs')
 >>>
 >>> def queries(url):
     return {'reds':     ''.join([url, '?q=tags:red AND sr']),
