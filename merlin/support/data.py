@@ -1,29 +1,30 @@
 """
-Functions for working with test data.
-This module allows merlin to test using local data rather than
+Functions for working with local data.
+This module allows merlin functions to test using local data rather than
 requiring external systems such as aardvark to be available.
 
-Mock servers (such as aardvark) live in the test.mocks directory, not here.
+Mock servers (such as aardvark) live in other modules, not here.
 
-There are functions contained for updating the test data that lives under
-test/resources/data.  The locations of this data is controlled by values
-in test/__init__.py
+There are functions contained for updating the data that lives under
+merlin/support/data.  The locations of this data is controlled by values
+in merlin/support/__init__.py
 """
 
 from merlin import chips as mc
 from merlin import chip_specs as mcs
 from merlin import functions as f
 from merlin import files
+from merlin import support
 from urllib.parse import urlparse
 
 import glob
 import json
 import os
 import re
-import test
 
-CHIPS_DIR = test.data_config()['chips_dir']
-SPECS_DIR = test.data_config()['specs_dir']
+
+CHIPS_DIR = support.data_config()['chips_dir']
+SPECS_DIR = support.data_config()['specs_dir']
 
 
 def chips(spectra, root_dir=CHIPS_DIR):
@@ -113,7 +114,7 @@ def live_specs(specs_url):
     return {k: mcs.get(v) for k, v in test.chip_spec_urls(specs_url).items()}
 
 
-def update_specs(specs_url, conf=test.data_config()):
+def update_specs(specs_url, conf=support.data_config()):
     """Updates the spec test data"""
     specs = live_specs(specs_url)
     qids = spec_query_ids(specs_url)
@@ -124,7 +125,7 @@ def update_specs(specs_url, conf=test.data_config()):
         files.write(files.mkdirs(output_file), json.dumps(specs[spectra]))
 
 
-def update_chips(chips_url, specs_url, conf=test.data_config()):
+def update_chips(chips_url, specs_url, conf=support.data_config()):
     """Updates the chip test data"""
     x = conf['x']
     y = conf['y']

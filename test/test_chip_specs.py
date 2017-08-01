@@ -1,5 +1,5 @@
 from merlin import chip_specs as mcs
-from test import data as d
+from merlin.support import data as d
 
 
 def test_byubid():

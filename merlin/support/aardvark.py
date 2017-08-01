@@ -1,5 +1,5 @@
 from merlin import functions as f
-from test import data
+from merlin.support import data
 
 index = data.spectra_index(data.test_specs())
 

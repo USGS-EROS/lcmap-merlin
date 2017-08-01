@@ -1,5 +1,5 @@
 from merlin import timeseries
-from test.mocks import aardvark as ma
+from merlin.support import aardvark as ma
 import test
 
 def test_csort():
