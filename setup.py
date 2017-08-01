@@ -8,7 +8,7 @@ def readme():
 
 
 setup(name='lcmap-merlin',
-      version='0.5.4',
+      version='0.5.5',
       description='Python client library for LCMAP-Aardvark',
       long_description=readme(),
       classifiers=[
