@@ -10,8 +10,8 @@ test/resources/data.  The locations of this data is controlled by values
 in test/__init__.py
 """
 
-from merlin import chips as fc
-from merlin import chip_specs as fcs
+from merlin import chips as mc
+from merlin import chip_specs as mcs
 from merlin import functions as f
 from merlin import files
 from urllib.parse import urlparse
@@ -68,7 +68,7 @@ def spectra_index(specs):
     :returns: A dict of ubid: spectra
     """
     def rekey_by_ubid(chip_spec, spectra):
-        return dict((ubid, spectra) for ubid in fcs.ubids(chip_spec))
+        return dict((ubid, spectra) for ubid in mcs.ubids(chip_spec))
 
     return f.merge([rekey_by_ubid(cs, s) for s, cs in specs.items()])
 
@@ -110,7 +110,7 @@ def test_specs(root_dir=SPECS_DIR):
 def live_specs(specs_url):
     """Returns a dict of all chip specs defined by the driver.chip_spec_urls
     keyed by spectra"""
-    return {k: fcs.get(v) for k, v in test.chip_spec_urls(specs_url).items()}
+    return {k: mcs.get(v) for k, v in test.chip_spec_urls(specs_url).items()}
 
 
 def update_specs(specs_url, conf=test.data_config()):
@@ -138,5 +138,5 @@ def update_chips(chips_url, specs_url, conf=test.data_config()):
                                                 acquired.replace('/', '_'))
         output_file = os.path.join(chips_dir, filename)
         files.write(files.mkdirs(output_file),
-                    json.dumps(fc.get(chips_url, x, y, acquired,
-                                      fcs.ubids(specs[spectra]))))
+                    json.dumps(mc.get(chips_url, x, y, acquired,
+                                      mcs.ubids(specs[spectra]))))

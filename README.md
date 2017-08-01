@@ -12,7 +12,7 @@ Turns lcmap spatial data into time series like magic.
 This will retrieve pyccd flavored time-series data from an Aardvark instance
 running locally on port 5678.
 ```
->>> import merlin
+>>> from merlin import timeseries
 >>> aardvark = 'http://localhost:5678'
 >>> chips = '{}/{}'.format(aardvark, '/landsat/v1/chips')
 >>> specs = '{}/{}'.format(aardvark, '/landsat/v1/chip-specs')
@@ -27,11 +27,11 @@ running locally on port 5678.
             'thermals': ''.join([url, '?q=tags:bt AND thermal AND NOT tirs2']),
             'quality':  ''.join([url, '?q=tags:pixelqa'])}
 
->>> data = merlin.pyccd(point=(-182000, 300400),
-                        specs_url=specs,
-                        chips_url=chips,
-                        acquired='1980-01-01/2015-12-31',
-                        queries=queries(specs)
+>>> data = timeseries.pyccd(point=(-182000, 300400),
+                            specs_url=specs,
+                            chips_url=chips,
+                            acquired='1980-01-01/2015-12-31',
+                            queries=queries(specs)
 >>> data
 >>> (((chip_x, chip_y, x1, y1), {'dates': [],  'reds': [],     'greens': [],
                                  'blues': [],  'nirs1': [],    'swir1s': [],
@@ -41,6 +41,15 @@ running locally on port 5678.
                                  'swir2s': [], 'thermals': [], 'quality': []}))
 ...
 ```
+<aside class="notice">
+Version 0.5 of timeseries.pyccd trims each chips arrays to match the
+common intersection of dates received for all chip arrays.  This means variable
+results may be returned from repeated calls to timeseries.pyccd depending on the
+behaviour of the backend storage system.
+
+Verion 1.0 will implement a check function instead, which will raise an
+exception if all chip arrays are not symmetrical.
+</aside>
 
 ## Installing
 
@@ -49,7 +58,7 @@ From pypi: ```pip install lcmap-merlin```
 ## Developing
 It is highly recommended to work within a virtual environment.
 ```bash
-$ conda create --name merlin
+$ conda create --name merlin python=3.6
 $ source activate merlin
 ```
 
