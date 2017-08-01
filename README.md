@@ -1,6 +1,6 @@
 
-
-# lcmap-merlin [![Build Status](https://travis-ci.org/USGS-EROS/lcmap-merlin.svg?branch=develop)](https://travis-ci.org/USGS-EROS/lcmap-merlin)
+[![Build Status](https://travis-ci.org/USGS-EROS/lcmap-merlin.svg?branch=develop)](https://travis-ci.org/USGS-EROS/lcmap-merlin)
+# lcmap-merlin 
 Turns lcmap spatial data into time series like magic.
 
 ## Features
