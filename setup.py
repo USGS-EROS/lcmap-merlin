@@ -1,3 +1,4 @@
+from setuptools import find_packages
 from setuptools import setup
 
 
@@ -7,7 +8,7 @@ def readme():
 
 
 setup(name='lcmap-merlin',
-      version='0.5.2',
+      version='0.5.3',
       description='Python client library for LCMAP-Aardvark',
       long_description=readme(),
       classifiers=[
@@ -20,7 +21,7 @@ setup(name='lcmap-merlin',
       author='USGS EROS LCMAP',
       author_email='',
       license='Unlicense',
-      packages=['merlin'],
+      packages=find_packages(),
       install_requires=[
           'numpy',
           'requests',

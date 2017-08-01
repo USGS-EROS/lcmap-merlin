@@ -1,6 +1,6 @@
 
 [![Build Status](https://travis-ci.org/USGS-EROS/lcmap-merlin.svg?branch=develop)](https://travis-ci.org/USGS-EROS/lcmap-merlin)
-# lcmap-merlin 
+# lcmap-merlin
 Turns lcmap spatial data into time series like magic.
 
 ## Features
@@ -81,7 +81,7 @@ Execute ```data.update_specs()``` and ```data.update_chips()``` from a repl.
 >>> specs_url = 'http://localhost:5678/landsat/v1/chip-specs'
 >>> chips_url = 'http://localhost:5678/landsat/v1/chips'
 >>>
->>> from test import data
+>>> from merlin.support import data
 >>> data.update_specs(specs_url=specs_url)
 >>> data.update_chips(chips_url=chips_url, specs_url=specs_url)
 ```
