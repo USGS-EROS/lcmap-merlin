@@ -87,7 +87,7 @@ def spec_query_id(url):
 def spec_query_ids(specs_url):
     """Returns the query portion of the chip_spec_url keyed to its spectra"""
     return {k: spec_query_id(v)
-            for k, v in test.chip_spec_urls(specs_url).items()}
+            for k, v in support.chip_spec_queries(specs_url).items()}
 
 
 def spectra_from_queryid(queryid, root_dir=SPECS_DIR):
@@ -111,7 +111,7 @@ def test_specs(root_dir=SPECS_DIR):
 def live_specs(specs_url):
     """Returns a dict of all chip specs defined by the driver.chip_spec_urls
     keyed by spectra"""
-    return {k: mcs.get(v) for k, v in test.chip_spec_urls(specs_url).items()}
+    return {k: mcs.get(v) for k, v in support.chip_spec_queries(specs_url).items()}
 
 
 def update_specs(specs_url, conf=support.data_config()):
