@@ -12,7 +12,7 @@ setup(name='lcmap-merlin',
       long_description=readme(),
       classifiers=[
         'Development Status :: 4 - Beta',
-        'License :: OSI Approved :: Unlicense',
+        'License :: Public Domain',
         'Programming Language :: Python :: 3.6',
       ],
       keywords='usgs lcmap eros',
