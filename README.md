@@ -1,3 +1,8 @@
+Branch | Status | 
+--- | --- |
+Master | https://travis-ci.org/USGS-EROS/lcmap-merlin.svg?branch=master | 
+Develop | https://travis-ci.org/USGS-EROS/lcmap-merlin.svg?branch=develop |
+
 # lcmap-merlin
 Turns lcmap spatial data into time series like magic.
 
