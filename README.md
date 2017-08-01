@@ -41,7 +41,6 @@ running locally on port 5678.
                                  'swir2s': [], 'thermals': [], 'quality': []}))
 ...
 ```
-<aside class="notice">
 Version 0.5 of timeseries.pyccd trims each chips arrays to match the
 common intersection of dates received for all chip arrays.  This means variable
 results may be returned from repeated calls to timeseries.pyccd depending on the
@@ -49,7 +48,6 @@ behaviour of the backend storage system.
 
 Verion 1.0 will implement a check function instead, which will raise an
 exception if all chip arrays are not symmetrical.
-</aside>
 
 ## Installing
 
