@@ -29,13 +29,3 @@ def chip_spec_queries(url):
             'swir2s':   ''.join([url, '?q=tags:swir2 AND sr']),
             'thermals': ''.join([url, '?q=tags:bt AND thermal AND NOT tirs2']),
             'quality':  ''.join([url, '?q=tags:pixelqa'])}
-
-
-def data_config():
-    """ Controls the test data that is loaded into the system """
-    return {'x': -1821585,
-            'y': 2891595,
-            'acquired': '1982-01-01/2015-12-12',
-            'dataset_name': 'ARD',
-            'chips_dir': os.path.join(CWD, 'resources/data/chips'),
-            'specs_dir': os.path.join(CWD, 'resources/data/specs')}
