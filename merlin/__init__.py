@@ -1,1 +1,1 @@
-from .inputs import pyccd
+from .timeseries import pyccd
