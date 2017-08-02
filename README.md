@@ -76,10 +76,15 @@ $ pytest
 
 Occasionally chip and chip spec test data may need to be updated if the source
 specifications change.
+
 Execute ```data.update_specs()``` and ```data.update_chips()``` from a repl.
+The date range and spatial location of the data may be altered
+in ```merlin/support/__init__.py```.  When expanding the data query date range,
+please note that PyPi has a limit of 60MB per artifact.  Uploads exceeding this
+limit will result in failure messages while publishing.
 ```
->>> specs_url = 'http://localhost:5678/landsat/v1/chip-specs'
->>> chips_url = 'http://localhost:5678/landsat/v1/chips'
+>>> specs_url = 'http://localhost:5678/v1/landsat/chip-specs'
+>>> chips_url = 'http://localhost:5678/v1/landsat/chips'
 >>>
 >>> from merlin.support import data
 >>> data.update_specs(specs_url=specs_url)
