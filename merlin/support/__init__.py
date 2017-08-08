@@ -31,7 +31,7 @@ def data_config():
     """ Controls the test data that is loaded into the system """
     return {'x': -1821585,
             'y': 2891595,
-            'acquired': '2012-01-01/2014-12-12',
+            'acquired': '1980-01-01/2014-12-12',
             'dataset_name': 'ARD',
             'chips_dir': os.path.join(CWD, 'data/chips'),
             'specs_dir': os.path.join(CWD, 'data/specs')}
