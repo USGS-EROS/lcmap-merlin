@@ -1,14 +1,18 @@
 """functions.py is a module of generalized, reusable functions"""
 
 from collections import OrderedDict
+from datetime import datetime
 from functools import reduce
 from functools import singledispatch
 import functools
 import hashlib
 import itertools
 import json
+import logging
 import numpy as np
 import re
+
+logger = logging.getLogger(__name__)
 
 
 def first(sequence):
@@ -252,3 +256,20 @@ def isnumeric(value):
         return True
     except:
         return False
+
+
+def timed(f):
+    """Timing wrapper for functions.  Prints start and stop time to INFO
+    along with function name, arguments and keyword arguments.
+    :param f: Function to be timed
+    :return: Wrapped function
+    """
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        """Wrapper function."""
+        msg = '{}(args={}, kwargs={}):'.format(f.__name__,  args, kwargs)
+        logger.info('{} start:{}'.format(msg, datetime.now().isoformat()))
+        r = f(*args, **kwargs)
+        logger.info('{} stop:{}'.format(msg, datetime.now().isoformat()))
+        return r
+    return wrapper

@@ -71,24 +71,6 @@ def test_trim():
     assert set(included) == set(map(lambda x: x['acquired'], trimmed))
 
 
-def test_check():
-    inputs = list()
-    inputs.append({'include': True, 'acquired': '2015-04-01'})
-    inputs.append({'include': True, 'acquired': '2017-04-01'})
-    inputs.append({'include': False, 'acquired': '2017-01-01'})
-    inputs.append({'include': True, 'acquired': '2016-04-01'})
-    included = tuple(filter(lambda d: d['include'] is True, inputs))
-    included_dates = mc.dates(included)
-
-    with pytest.raises(Exception) as ex:
-        mc.check(inputs, included_dates)
-
-    with pytest.raises(Exception) as ex:
-        mc.check(inputs[0:2], included_dates)
-
-    assert mc.check(included, included_dates) == included
-
-
 def test_to_numpy():
     """ Builds combos of shapes and numpy data types and tests
         aardvark.to_numpy() with all of them """

@@ -34,3 +34,39 @@ def is_acquired(acquired):
     # 1980-01-01/2015-12-31
     regex = '^[0-9]{4}-[0-9]{2}-[0-9]{2}\/[0-9]{4}-[0-9]{2}-[0-9]{2}$'
     return bool(re.match(regex, acquired))
+
+
+def checked(chips):
+    """Ensures a complete set of chips exist for a chip stack when compared to
+    all dates for all chip stacks.
+    :param chips: dict of spectra: chip sequence
+    :returns: Sequence of datestrings or Exception
+    """
+    #dates = list(map(fchips.dates, chips.values()))
+    #intersect = f.intersection(dates)
+    #union = set(f.flatten(dates))
+
+    #intersect = f.intersection(map(fchips.dates, [c for c in chips.values()]))
+    #union = set(map(fchips.dates, [v for k, v in chips.values()]))
+
+    cdates = list(map(lambda c: c['acquired'], chips))
+    cdateset = set(cdates)
+    dateset  = set(unioned_dates)
+    datelength = len(unioned_dates)
+    chiplength = len(chips)
+
+    if sorted(dates) == sorted(cdates) and datelength == chiplength:
+        return tuple(chips)
+    else:
+        extras = cdateset - dateset
+        missing = dateset - cdateset
+        ubids = set(map(lambda c: c['ubid'], chips))
+        msg = ("Inconsistent chip set for ubids:{} "
+               "Dates count:{} Chips count:{} "
+               "Extra dates:{} Missing dates:{}".format(ubids,
+                                                        datelength,
+                                                        chiplength,
+                                                        extras,
+                                                        missing))
+        logger.error(msg)
+        raise Exception(msg)
