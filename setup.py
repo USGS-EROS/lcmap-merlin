@@ -23,6 +23,7 @@ setup(name='lcmap-merlin',
       license='Unlicense',
       packages=find_packages(),
       install_requires=[
+          'cytoolz',
           'numpy',
           'requests',
           'python-dateutil',

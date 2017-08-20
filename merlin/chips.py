@@ -213,39 +213,10 @@ def dates(chips):
 def trim(chips, dates):
     """Eliminates chips that are not from the specified dates
     :param chips: Sequence of chips
-    :param dates: Sequence of dates
+    :param dates: Sequence of dates that should be included in result
     :returns: Sequence of filtered chips
     """
     return tuple(filter(lambda c: c['acquired'] in dates, chips))
-
-
-def check(chips, dates):
-    """Ensures a complete set of chips exist when compared to a set of dates
-    :param chips: Sequence of chips
-    :param dates: Sequence of dates
-    :returns: Sequence of chips or exception
-    """
-    cdates = list(map(lambda c: c['acquired'], chips))
-    cdateset = set(cdates)
-    dateset  = set(dates)
-    datelength = len(dates)
-    chiplength = len(chips)
-
-    if sorted(dates) == sorted(cdates):
-        return tuple(chips)
-    else:
-        extras = cdateset - dateset
-        missing = dateset - cdateset
-        ubids = set(map(lambda c: c['ubid'], chips))
-        msg = ("Inconsistent chip set for ubids:{} "
-               "Dates count:{} Chips count:{} "
-               "Extra dates:{} Missing dates:{}".format(ubids,
-                                                        datelength,
-                                                        chiplength,
-                                                        extras,
-                                                        missing))
-        logger.error(msg)
-        raise Exception(msg)
 
 
 def chip_to_numpy(chip, chip_spec):

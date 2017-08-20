@@ -1,6 +1,8 @@
 from merlin import timeseries
 from merlin.support import aardvark as ma
 import test
+import pytest
+
 
 def test_csort():
     data = list()
@@ -25,19 +27,33 @@ def test_sort():
     assert 1 > 0
 
 
-def test_pyccd():
-
+def test_create():
+    from cytoolz import dissoc
     # data should be shaped: ( ((),{}), ((),{}), ((),{}) )
-    data = timeseries.pyccd(point=(-182000, 300400),
-                            specs_url='http://localhost',
-                            specs_fn=ma.chip_specs,
-                            chips_url='http://localhost',
-                            chips_fn=ma.chips,
-                            acquired='1980-01-01/2015-12-31',
-                            queries=test.chip_spec_queries('http://localhost'))
+    # This should pass since we are dissoc'ing quality, which has additional
+    # chips.
+    data = timeseries.create(
+               point=(-182000, 300400),
+               specs_fn=ma.chip_specs,
+               chips_url='http://localhost',
+               chips_fn=ma.chips,
+               acquired='1980-01-01/2015-12-31',
+               queries=dissoc(test.chip_spec_queries('http://localhost'),
+                              'quality'))
+
     assert len(data) == 10000
     assert isinstance(data, tuple)
     assert isinstance(data[0], tuple)
     assert isinstance(data[0][0], tuple)
     assert isinstance(data[0][1], dict)
     assert len(data[0][0]) == 3
+
+    # This should fail because the test data contains additional qa chips
+    with pytest.raises(Exception):
+        data = timeseries.create(
+                   point=(-182000, 300400),
+                   specs_fn=ma.chip_specs,
+                   chips_url='http://localhost',
+                   chips_fn=ma.chips,
+                   acquired='1980-01-01/2015-12-31',
+                   queries=test.chip_spec_queries('http://localhost'))
