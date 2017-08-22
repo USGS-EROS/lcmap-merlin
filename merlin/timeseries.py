@@ -12,8 +12,8 @@ from cytoolz import thread_first
 from datetime import datetime
 from merlin.composite import chips_and_specs
 from merlin.composite import locate
-from merlin import chips as fchips
-from merlin import chip_specs as fspecs
+from merlin import chips
+from merlin import chip_specs as specs
 from merlin import dates as fdates
 from merlin import functions as f
 from merlin import rods as frods
@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 
 def sort(chips, key=lambda c: c['acquired']):
     """Sorts all the returned chips by date.
+
     :param chips: sequence of chips
     :returns: sorted sequence of chips
     """
@@ -33,6 +34,7 @@ def sort(chips, key=lambda c: c['acquired']):
 
 def add_dates(dates, dods, key='dates'):
     """Inserts dates into each subdictionary of the parent dictionary.
+
     :param dod: A dictionary of dictionaries
     :param dates: A sequence of dates
     :param key: Subdict key where dates values is inserted
@@ -47,6 +49,7 @@ def add_dates(dates, dods, key='dates'):
 
 def identify(chip_x, chip_y, rod):
     """Adds chip ids (chip_x, chip_y) to the key for each dict entry
+
     :param chip_x: x coordinate that identifies the source chip
     :param chip_y: y coordinate that identifies the source chip
     :param rod: dict of (x, y): [values]
@@ -58,6 +61,7 @@ def identify(chip_x, chip_y, rod):
 def symmetrical_dates(data):
     """Returns a sequence of dates for chips that should be included in
     downstream functions.  May raise Exception.
+
     :param data: {key: [chips],[specs]}
     :return: Sequence of date strings or Exception
     :example:
@@ -78,6 +82,7 @@ def symmetrical_dates(data):
     def check(a, b):
         """Reducer for efficiently comparing two unordered sequences.
         Executes in linear(On) time.
+
         :param a: {k:[datestring1, datestring2...]}
         :param b: {k:[datestring2, datestring1...]}
         :return: b if a == b, else Exception with details
@@ -91,12 +96,13 @@ def symmetrical_dates(data):
             msgb = '{}{}'.format(first(b), second(b))
             raise Exception('\n'.join([msg, msga, msgb]))
 
-    return second(reduce(check, {k: fchips.dates(first(v))
+    return second(reduce(check, {k: chips.dates(first(v))
                                  for k, v in data.items()}.items()))
 
 
 def refspec(data):
     """Returns the first chip spec from the first key to use as a reference.
+
     :param data: {key: [chips],[specs]}
     :return: chip spec dict
     """
@@ -105,6 +111,7 @@ def refspec(data):
 
 def pyccd_format(chip_x, chip_y, chip_locations, chips_and_specs, dates):
     """Builds inputs for the pyccd algorithm.
+
     :param chip_x: x coordinate for chip identifier
     :param chip_y: y coordinate for chip identifier
     :param chip_locations: chip shaped 2d array of projection coordinates
@@ -126,10 +133,10 @@ def pyccd_format(chip_x, chip_y, chip_locations, chips_and_specs, dates):
                                      frods.locate(
                                          chip_locations,
                                          frods.from_chips(
-                                             fchips.to_numpy(
-                                                 sort(fchips.trim(first(v),
-                                                                  dates)),
-                                                 fspecs.byubid(second(v))))))
+                                             chips.to_numpy(
+                                                 sort(chips.trim(first(v),
+                                                                 dates)),
+                                                 specs.byubid(second(v))))))
                               for k, v in chips_and_specs.items()}))
 
     return tuple((k, v) for k, v in rods.items())
@@ -137,14 +144,16 @@ def pyccd_format(chip_x, chip_y, chip_locations, chips_and_specs, dates):
 
 def errorhandler(msg='', raises=False):
     """Constructs, logs and raises error messages
+
     :param msg: Custom message string
     :param raises: Whether to raise an exception or not
     :return: exception handler function
     """
     def handler(e):
         """logs and raises exception messages
+
         :param e: An exception or string
-        :return: error message or raises Exception
+        :return:  Error message or raises Exception
         """
         msg2 = ' '.join([msg, 'Exception: {}'.format(e)])
 
@@ -155,17 +164,18 @@ def errorhandler(msg='', raises=False):
     return handler
 
 
-def create(point, specs_fn, chips_url, chips_fn, acquired, queries,
-           dates_fn=symmetrical_dates, format_fn=pyccd_format):
+def create(point,  chips_url, acquired, queries, chips_fn=chips.get,
+           dates_fn=symmetrical_dates, format_fn=pyccd_format,
+           specs_fn=specs.get):
     """Queries data, performs date filtering/checking and formats the results.
+
     :param point:     Tuple of (x, y) which is within the extents of a chip
-    :param specs_fn:  Function that accepts a url query and returns chip specs
     :param chips_url: URL to the chips host:port/context
-    :param chips_fn:  Function that accepts x, y, acquired, url, ubids and
-                      returns chips.
     :param acquired:  Date range string as start/end, ISO 8601 date format
     :param queries:   dict of URL queries to retrieve chip specs keyed by
                       spectra
+    :param chips_fn:  Function that accepts x, y, acquired, url, ubids and
+                      returns chips.
     :param dates_fn:  Function that accepts dict of {spectra: [specs],[chips]}
                       and returns a sequence of dates that should be included
                       in the time series.
@@ -173,7 +183,8 @@ def create(point, specs_fn, chips_url, chips_fn, acquired, queries,
     :param format_fn: Function that accepts chip_x, chip_y, chip_locations,
                       chips_and_specs, dates and returns it's representation
                       of a time series.
-    :returns: Return value from format_fn
+    :param specs_fn:  Function that accepts a url query and returns chip specs
+    :return:          Return value from format_fn
     """
     cas_fn = partial(chips_and_specs,
                      point=point,
