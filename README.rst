@@ -1,5 +1,7 @@
 
-[![Build Status](https://travis-ci.org/USGS-EROS/lcmap-merlin.svg?branch=develop)](https://travis-ci.org/USGS-EROS/lcmap-merlin)
+.. image:: https://travis-ci.org/USGS-EROS/lcmap-merlin.svg?branch=develop
+    :target: https://travis-ci.org/USGS-EROS/lcmap-merlin
+
 $lcmap-merlin
 =============
 
@@ -13,42 +15,32 @@ Features
 * Built with efficiency in mind... leverages Numpy for heavy lifting.
 * Tested with cPython 3.5 & 3.6
 
+
 Example
 -------
-This will retrieve pyccd flavored time-series data from an Aardvark instance
-running locally on port 5678.
-```
->>> from merlin import timeseries
->>> aardvark = 'http://localhost:5678'
->>> chips = '{}/{}'.format(aardvark, 'landsat/v1/chips')
->>> specs = '{}/{}'.format(aardvark, 'landsat/v1/chip-specs')
->>>
->>> def queries(url):
-    return {'reds':     ''.join([url, '?q=tags:red AND sr']),
-            'greens':   ''.join([url, '?q=tags:green AND sr']),
-            'blues':    ''.join([url, '?q=tags:blue AND sr']),
-            'nirs':     ''.join([url, '?q=tags:nir AND sr']),
-            'swir1s':   ''.join([url, '?q=tags:swir1 AND sr']),
-            'swir2s':   ''.join([url, '?q=tags:swir2 AND sr']),
-            'thermals': ''.join([url, '?q=tags:bt AND thermal AND NOT tirs2']),
-            'quality':  ''.join([url, '?q=tags:pixelqa'])}
+.. code-block:: python3
 
->>> data = timeseries.pyccd(point=(-182000, 300400),
-                            specs_url=specs,
-                            chips_url=chips,
-                            acquired='1980-01-01/2015-12-31',
-                            queries=queries(specs)
->>> data
->>> (((chip_x, chip_y, x1, y1), {'dates': [],  'reds': [],     'greens': [],
-                                 'blues': [],  'nirs1': [],    'swir1s': [],
-                                 'swir2s': [], 'thermals': [], 'quality': []}),
-     ((chip_x, chip_y, x1, y2), {'dates': [],  'reds': [],     'greens': [],
-                                 'blues': [],  'nirs1': [],    'swir1s': [],
-                                 'swir2s': [], 'thermals': [], 'quality': []}))
-...
-```
-Version 1.0 will implement a check function instead, which will raise an
-exception if all chip arrays are not symmetrical.
+    import merlin
+
+    queries = {'red':   'http://host/landsat/v1/chip-specs?q=tags:red AND sr',
+               'green': 'http://host/landsat/v1/chip-specs?q=tags:green AND sr',
+               'blue':  'http://host/landsat/v1/chip-specs?q=tags:blue AND sr'}
+
+    timeseries = merlin.create(point=(123, 456),
+                               acquired='1980-01-01/2017-01-01',
+                               queries=queries,
+                               chips_url='http://host/landsat/v1/chips')
+
+    print(timeseries)
+
+    (((123, 456): {'red'  : [9, 8, 7 ...],
+                   'green': [99, 88, 77 ...]},
+                   'blue' : [12, 22, 33 ...],
+                   'dates': ['2017-01-01', '2016-12-31', '2016-12-30' ...]}),
+      (124, 456): {'red'  : [4, 3, 22 ...],
+                   'green': [19, 8, 77 ...]},
+                   'blue' : [1, 11, 3 ...],
+                   'dates': ['2017-01-01', '2016-12-31', '2016-12-30' ...]}),)
 
 Installing
 ----------
