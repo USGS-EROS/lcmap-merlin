@@ -46,6 +46,7 @@ Installing
 ----------
 
 From pypi:
+
 .. code-block:: bash
 
     $ pip install lcmap-merlin
@@ -53,6 +54,7 @@ From pypi:
 Developing
 ----------
 It is highly recommended to work within a virtual environment.
+
 .. code-block:: bash
 
     $ conda create --name merlin python=3.6
@@ -60,6 +62,7 @@ It is highly recommended to work within a virtual environment.
 
 
 From there, clone this repo and install merlin's dependencies.
+
 .. code-block:: bash
 
     $ git clone git@github.com:usgs-eros/lcmap-merlin
@@ -69,6 +72,7 @@ From there, clone this repo and install merlin's dependencies.
 
 Testing
 -------
+
 .. code-block:: bash
 
     $ pytest
@@ -82,7 +86,9 @@ The date range and spatial location of the data may be altered
 in :code:`merlin/support/__init__.py`.  When expanding the data query date
 range, please note that PyPi has a limit of 60MB per artifact.
 Uploads exceeding this limit will result in failure messages while publishing.
+
 .. code-block:: python3
+
     specs_url = 'http://localhost:5678/v1/landsat/chip-specs'
     chips_url = 'http://localhost:5678/v1/landsat/chips'
 
