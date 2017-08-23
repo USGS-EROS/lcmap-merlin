@@ -3,7 +3,7 @@ from setuptools import setup
 
 
 def readme():
-    with open('README.rst') as f:
+    with open('docs/source/index.rst') as f:
         return f.read()
 
 
