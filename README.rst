@@ -1,6 +1,11 @@
 .. image:: https://travis-ci.org/USGS-EROS/lcmap-merlin.svg?branch=develop
     :target: https://travis-ci.org/USGS-EROS/lcmap-merlin
 
+.. toctree::
+  :maxdepth: 2
+
+  docs/source/cookbook.rst
+  docs/source/api/index.rst
 
 Merlin
 ============
