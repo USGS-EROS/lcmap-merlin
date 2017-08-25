@@ -5,6 +5,7 @@ python:
 install:
 - pip install --upgrade pip
 - pip install .[test]
+- pip install .[doc]
 script: pytest
 notifications:
   slack:
@@ -15,7 +16,7 @@ deploy:
   user: davidvhill
   password:
     secure: 6qn0Cmf03nP0/P77lZpWTrmjXjZKtHo/8U6m/iTPK+mIcDjnuxN+tlsak2k0DNIUceGW0FJJkvMIJj6uIVG/mKfxD924uTKxUjDsAMymTso1jgoa6HqOqbSKOlDnorfQQ2ob4WsTNvtE/ZctOpp8hHh8HNsZzHBSt2MkhNbNH7jZA3+xJlYbTM3D350LyaRH6hNSU/k98O06EGtbOQCYv1xwRKwLVljhTRt4IHJk4TnVopbSClrScSbjxoVgXgUROjiZoXrmAchdtSviKCP1WXEY3M2AcUNOpxLcWHqq7kyYW7neGM6VDBJQ5ADzF1RDp3mtMrGgt93curkTm7j4FlqeYar5I7yELcbGEfJRDG/BwPOWBN08WA94sXOBqN/TNT1DipaqC2/BWboXDFFqKW6uQ7RbGTp202Up5XHkqwWBMRmxIiR/nnZd8N7uzpohq93WJ/gb4FpMaWu5Cytu5sLZS/ZVkAOlwYATG6i2gaVPpUv/0P2Xsa8Dlt9c73bUT7XlX9La0EUWVMX3ql8+qmJMW494ZSBwS1YFGJnKJgfEFHvqA8tq5eJ6NvrJ2Ov7p63R0z3ULBOHiNCq033/EDgs7dXP3YF34QCJzz8+WkuCMOH7cK92e3TTwzsJ5VDm54xoR0lHsNq1F/ac+EH5C6VYmEJiy/Pe6GHgnnY1hNg=
+  distributions: sdist bdist_wheel
   on:
-    distributions: sdist bdist_wheel
     repo: USGS-EROS/lcmap-merlin
     branch: master

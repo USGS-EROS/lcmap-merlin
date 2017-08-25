@@ -3,12 +3,12 @@ from setuptools import setup
 
 
 def readme():
-    with open('README.md') as f:
+    with open('README.rst') as f:
         return f.read()
 
 
 setup(name='lcmap-merlin',
-      version='0.6',
+      version='1.0-rc1',
       description='Python client library for LCMAP-Aardvark',
       long_description=readme(),
       classifiers=[
@@ -23,6 +23,7 @@ setup(name='lcmap-merlin',
       license='Unlicense',
       packages=find_packages(),
       install_requires=[
+          'cytoolz',
           'numpy',
           'requests',
           'python-dateutil',
@@ -36,7 +37,10 @@ setup(name='lcmap-merlin',
                    'hypothesis',
                    'mock',
                   ],
-          'dev': ['jupyter',],
+          'doc': ['sphinx',
+                  'sphinx-autobuild',
+                  'sphinx_rtd_theme'],
+          'dev': ['jupyter'],
       },
       # entry_points={
           #'console_scripts': [''],
