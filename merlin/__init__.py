@@ -1,1 +1,1 @@
-from .timeseries import pyccd
+from .timeseries import create
