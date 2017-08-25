@@ -166,6 +166,7 @@ def ids(ulx, uly, lrx, lry, chip_spec):
         tuple: tuple of tuples of chip ids ((x1,y1), (x2,y1) ...)
 
     This example assumes chip sizes of 500 pixels.
+    
     Example:
         >>> chip_ids = ids(1000, -1000, -500, 500, chip_spec)
         ((-1000, 500), (-500, 500), (-1000, -500), (-500, -500))

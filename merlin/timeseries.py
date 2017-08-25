@@ -10,13 +10,13 @@ from cytoolz import reduce
 from cytoolz import second
 from cytoolz import thread_first
 from datetime import datetime
-from merlin.composite import chips_and_specs
-from merlin.composite import locate
 from merlin import chips
 from merlin import chip_specs as specs
 from merlin import dates as fdates
 from merlin import functions as f
 from merlin import rods as frods
+from merlin.composite import chips_and_specs
+from merlin.composite import locate
 from merlin.functions import timed
 import logging
 
