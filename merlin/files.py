@@ -34,7 +34,7 @@ def readb(path):
 
 
 def readlines(path):
-    """Read lines from text file.
+    """Read lines from a text file.
 
     Args:
         path (str): Full path to file
@@ -48,7 +48,7 @@ def readlines(path):
 
 
 def readlinesb(path):
-    """Read lines from binary file.
+    """Read lines from a binary file.
 
     Args:
         path (str): Full path to file
@@ -122,7 +122,7 @@ def appendb(path, data):
 
 
 def delete(path):
-    """Delete a file
+    """Delete a file.
 
     Args:
         path (str): Full path to file
@@ -143,7 +143,7 @@ def delete(path):
 
 
 def exists(path):
-    """Determine if a file exists
+    """Determine if a file exists.
 
     Args:
         path (str): Full path to file

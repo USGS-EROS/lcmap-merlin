@@ -82,15 +82,15 @@ def symmetrical_dates(data):
 
     Example:
 
-        >>> symmetrical_dates({'red':  ([chip3, chip1, chip2],
+        >>> symmetrical_dates({"red":  ([chip3, chip1, chip2],
                                         [specA, specB, specN]),
-                               'blue': ([chip2, chip3, chip1],
+                               "blue": ([chip2, chip3, chip1],
                                         [specD, specE, specX]}))
         [2, 3, 1]
         >>>
-        >>> symmetrical_dates({'red':  ([chip3, chip1],
+        >>> symmetrical_dates({"red":  ([chip3, chip1],
                                         [specA, specB, specN]),
-                               'blue': ([specD, specE, specX],
+                               "blue": ([specD, specE, specX],
                                         [chip2, chip3, chip1]}))
         Exception: red:[3, 1] does not match blue:[2, 3, 1]
     """
@@ -145,13 +145,24 @@ def pyccd_format(chip_x, chip_y, chip_locations, chips_and_specs, dates):
 
     Returns:
         A tuple of tuples.
-        
-        (((chip_x, chip_y, x1, y1), {'dates': [],  'reds': [],     'greens': [],
-                                     'blues': [],  'nirs1': [],    'swir1s': [],
-                                     'swir2s': [], 'thermals': [], 'quality': []}),
-        ((chip_x, chip_y, x1, y2), {'dates': [],  'reds': [],     'greens': [],
-                                    'blues': [],  'nirs1': [],    'swir1s': [],
-                                    'swir2s': [], 'thermals': [], 'quality': []}))
+
+    Description:
+        The pyccd format requires a key of (chip_x, chip_y, x, y) with a
+        dictionary of sorted numpy arrays representing each spectra plus an
+        additional sorted dates array.
+
+        >>> pyccd_format(*args)
+        (((chip_x, chip_y, x1, y1), {"dates": [],  "reds": [],
+                                     "greens": [], "blues": [],
+                                     "nirs1": [],  "swir1s": [],
+                                     "swir2s": [], "thermals": [],
+                                     "quality": []}),
+         ((chip_x, chip_y, x1, y2), {"dates": [],  "reds": [],
+                                     "greens": [], "blues": [],
+                                     "nirs1": [],  "swir1s": [],
+                                     "swir2s": [], "thermals": [],
+                                     "quality": []}))
+        ...
     """
 
     rods = add_dates(map(fdates.to_ordinal, sort(dates, key=None)),
