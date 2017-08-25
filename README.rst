@@ -1,6 +1,10 @@
 .. image:: https://travis-ci.org/USGS-EROS/lcmap-merlin.svg?branch=develop
     :target: https://travis-ci.org/USGS-EROS/lcmap-merlin
 
+.. image:: https://readthedocs.org/projects/lcmap-merlin/badge/?version=latest
+    :target: http://lcmap-merlin.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
 
 Merlin
 ============
