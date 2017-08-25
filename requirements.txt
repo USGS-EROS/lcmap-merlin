@@ -1,4 +1,1 @@
-cytoolz
-numpy
-requests
-python-dateutil
+-e .
