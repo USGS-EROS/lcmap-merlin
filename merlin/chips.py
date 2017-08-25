@@ -9,25 +9,28 @@ logger = logging.getLogger(__name__)
 
 def get(url, x, y, acquired, ubids):
     """Returns aardvark chips for given x, y, date range and ubid sequence
-    :param url: full url to aardvark endpoint
-    :param x: longitude
-    :param y: latitude
-    :param acquired: date range as iso8601 strings '2012-01-01/2014-01-03'
-    :param ubids: sequence of ubid strings
-    :type url: string
-    :type x: number
-    :type y: number
-    :type acquired: string
-    :type ubids: sequence
-    :returns: TBD
 
-    :example:
-    >>> chips(url='http://host:port/landsat/chips',
-              x=123456,
-              y=789456,
-              acquired='2012-01-01/2014-01-03',
-              ubids=['LANDSAT_7/ETM/sr_band1', 'LANDSAT_5/TM/sr_band1'])
+    Args:
+        url: full url to aardvark endpoint
+        x: longitude
+        y: latitude
+        acquired: ISO8601 daterange '2012-01-01/2014-01-03'
+        ubids: sequence of ubid strings
+        url: string
+        x: number
+        y: number
+
+    Returns:
+        tuple: chips
+
+    Example:
+        >>> chips(url='http://host:port/landsat/chips',
+                  x=123456,
+                  y=789456,
+                  acquired='2012-01-01/2014-01-03',
+                  ubids=['LANDSAT_7/ETM/sr_band1', 'LANDSAT_5/TM/sr_band1'])
     """
+
     return tuple(requests.get(url, params={'x': x,
                                            'y': y,
                                            'acquired': acquired,
@@ -51,11 +54,15 @@ def difference(point, interval):
     using a negative value helps us avoid special cases for finding the
     nearest tile-point.
 
-    :param point: a scalar value on the real number line
-    :param interval: a scalar value describing regularly spaced points
-                     on the real number line
-    :returns: difference between a point and prior point on an interval.
+    Args:
+        point: a scalar value on the real number line
+        interval: a scalar value describing regularly spaced points
+            on the real number line
+
+    Returns:
+        difference between a point and prior point on an interval.
     """
+
     return point % interval
 
 
@@ -70,13 +77,17 @@ def near(point, interval, offset):
     This function is used to calculate the nearest points along the
     x- and y- axis.
 
-    :param point: a scalar value on the real number line
-    :param interval: a scalar value describing regularly spaced points
-                     on the real number line
-    :param offset: a scalar value used to shift point before and after
-                  finding the 'preceding' interval.
-    :returns: a number representing a point.
+    Args:
+        point: a scalar value on the real number line
+        interval: a scalar value describing regularly spaced points
+                  on the real number line
+        offset: a scalar value used to shift point before and after
+                finding the 'preceding' interval.
+
+    Returns:
+        a number representing a point.
     """
+
     # original clojure code
     # (-> point (- offset) (/ interval) (Math/floor) (* interval) (+ offset)))
     return ((math.floor((point - offset) / interval)) * interval) + offset
@@ -100,15 +111,18 @@ def point_to_chip(x, y, x_interval, y_interval, x_offset, y_offset):
     The offset value is used for grids that are not aligned with the
     origin of the projection coordinate system.
 
-    :param x: longitudinal value
-    :param y: latitude value
-    :param x_interval:
-    :param y_interval:
-    :param x_offset:
-    :param y_offset:
-    :returns: a tuple containing x, y where x and y are the identifying
-              coordinates of a chip.
+    Args:
+        x: longitudinal value
+        y: latitude value
+        x_interval:
+        y_interval:
+        x_offset:
+        y_offset:
+
+    Returns:
+        tuple: x,y where x and y are the identifying coordinates of a chip.
     """
+
     return (near(x, x_interval, x_offset),
             near(y, y_interval, y_offset))
 
@@ -120,11 +134,15 @@ def snap(x, y, chip_spec):
     This function only works when working with points on a cartesian plane,
     it cannot be used with other coordinate systems.
 
-    :param x: x coordinate
-    :param y: y coordinate
-    :param chip_spec: parameters for a chip's grid system
-    :returns: tuple of chip x & y
+    Args:
+        x: x coordinate
+        y: y coordinate
+        chip_spec: parameters for a chip's grid system
+
+    Returns:
+        tuple: chip x,y
     """
+
     chip_x = chip_spec['chip_x']
     chip_y = chip_spec['chip_y']
     shift_x = chip_spec['shift_x']
@@ -137,17 +155,22 @@ def ids(ulx, uly, lrx, lry, chip_spec):
     """Returns all the chip ids that are needed to cover a supplied bounding
     box.
 
-    :param ulx: upper left x coordinate
-    :param uly: upper left y coordinate
-    :param lrx: lower right x coordinate
-    :param lry: lower right y coordinate
-    :param chip_spec: dict containing chip_x, chip_y, shift_x, shift_y
-    :returns: generator of tuples containing chip ids
-    :example:
-    # assumes chip sizes of 500 pixels
-    >>> chip_ids = ids(1000, -1000, -500, 500, chip_spec)
-    ((-1000, 500), (-500, 500), (-1000, -500), (-500, -500))
+    Args:
+        ulx: upper left x coordinate
+        uly: upper left y coordinate
+        lrx: lower right x coordinate
+        lry: lower right y coordinate
+        chip_spec: dict containing chip_x, chip_y, shift_x, shift_y
+
+    Returns:
+        tuple: tuple of tuples of chip ids ((x1,y1), (x2,y1) ...)
+
+    This example assumes chip sizes of 500 pixels.
+    Example:
+        >>> chip_ids = ids(1000, -1000, -500, 500, chip_spec)
+        ((-1000, 500), (-500, 500), (-1000, -500), (-500, -500))
     """
+
     cwidth = chip_spec['chip_x']    # e.g.  3000 meters, width of chip
     cheight = chip_spec['chip_y']   # e.g. -3000 meters, height of chip
 
@@ -161,14 +184,20 @@ def ids(ulx, uly, lrx, lry, chip_spec):
 def bounds_to_ids(bounds, spec):
     """Returns chip ids from a sequence of bounds.  Performs minbox operation
     on bounds, thus irregular geometries may be supplied.
-    :param bounds: A sequence of bounds.
-    :param spec: A chip spec representing chip geometry
-    :return: Tuple of chip ids
-    :example:
-    >>> ids = bounds_to_ids(bounds = ((112, 443), (112, 500), (100, 443)),
-                           spec=chip_spec)
-    >>> ((100, 500),)
+
+    Args:
+        bounds: a sequence of bounds.
+        spec: a chip spec representing chip geometry
+
+    Returns:
+        tuple: chip ids
+
+    Example:
+        >>> ids = bounds_to_ids(bounds = ((112, 443), (112, 500), (100, 443)),
+                               spec=chip_spec)
+        >>> ((100, 500),)
     """
+
     return ids(ulx=f.minbox(bounds)['ulx'],
                uly=f.minbox(bounds)['uly'],
                lrx=f.minbox(bounds)['lrx'],
@@ -181,10 +210,15 @@ def locations(startx, starty, chip_spec):
     specified by chip_spec['data_shape'] using the startx and starty as
     the origin.  locations() does not snap() the startx and starty... this
     should be done prior to calling locations() if needed.
-    :param startx: x coordinate (longitude) of upper left pixel of chip
-    :param starty: y coordinate (latitude) of upper left pixel of chip
-    :returns: A two (three) dimensional numpy array of [x, y] coordinates
+
+    Args:
+        startx: x coordinate (longitude) of upper left pixel of chip
+        starty: y coordinate (latitude) of upper left pixel of chip
+
+    Returns:
+        a two (three) dimensional numpy array of [x, y] coordinates
     """
+
     cw = chip_spec['data_shape'][0]  # 100
     ch = chip_spec['data_shape'][1]  # 100
 
@@ -204,56 +238,42 @@ def locations(startx, starty, chip_spec):
 
 def dates(chips):
     """Dates for a sequence of chips
-    :param chips: sequence of chips
-    :returns: sequence of dates
+
+    Args:
+        chips: sequence of chips
+
+    Returns:
+        tuple: datestrings
     """
+
     return tuple([c['acquired'] for c in chips])
 
 
 def trim(chips, dates):
     """Eliminates chips that are not from the specified dates
-    :param chips: Sequence of chips
-    :param dates: Sequence of dates
-    :returns: Sequence of filtered chips
+
+    Args:
+        chips: Sequence of chips
+        dates: Sequence of dates that should be included in result
+
+    Returns:
+        tuple: filtered chips
     """
+
     return tuple(filter(lambda c: c['acquired'] in dates, chips))
-
-
-def check(chips, dates):
-    """Ensures a complete set of chips exist when compared to a set of dates
-    :param chips: Sequence of chips
-    :param dates: Sequence of dates
-    :returns: Sequence of chips or exception
-    """
-    cdates = list(map(lambda c: c['acquired'], chips))
-    cdateset = set(cdates)
-    dateset  = set(dates)
-    datelength = len(dates)
-    chiplength = len(chips)
-
-    if sorted(dates) == sorted(cdates):
-        return tuple(chips)
-    else:
-        extras = cdateset - dateset
-        missing = dateset - cdateset
-        ubids = set(map(lambda c: c['ubid'], chips))
-        msg = ("Inconsistent chip set for ubids:{} "
-               "Dates count:{} Chips count:{} "
-               "Extra dates:{} Missing dates:{}".format(ubids,
-                                                        datelength,
-                                                        chiplength,
-                                                        extras,
-                                                        missing))
-        logger.error(msg)
-        raise Exception(msg)
 
 
 def chip_to_numpy(chip, chip_spec):
     """Removes base64 encoding of chip data and converts it to a numpy array
-    :param chip: A chip
-    :param chip_spec: Corresponding chip_spec
-    :returns: A decoded chip with data as a shaped numpy array
+
+    Args:
+        chip: A chip
+        chip_spec: Corresponding chip_spec
+
+    Returns:
+        a decoded chip with data as a shaped numpy array
     """
+
     shape = chip_spec['data_shape']
     dtype = chip_spec['data_type'].lower()
     cdata = b64decode(chip['data'])
@@ -264,8 +284,13 @@ def chip_to_numpy(chip, chip_spec):
 
 def to_numpy(chips, chip_specs_byubid):
     """Converts the data for a sequence of chips to numpy arrays
-    :param chips: a sequence of chips
-    :param chip_specs_byubid: chip_spec dict keyed by ubid
-    :returns: sequence of chips with data as numpy arrays
+
+    Args:
+        chips: a sequence of chips
+        chip_specs_byubid: chip_spec dict keyed by ubid
+
+    Returns:
+        sequence of chips with data as numpy arrays
     """
+
     return map(lambda c: chip_to_numpy(c, chip_specs_byubid[c['ubid']]), chips)
