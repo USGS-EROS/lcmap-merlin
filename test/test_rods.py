@@ -26,7 +26,7 @@ def test_from_chips():
     # happiness is not doing this and relying on functional principles only
     # because direct manipulation of memory locations is error prone and
     # very difficult to think about.
-    # We're mapping array locations between two things like that look like this:
+    # We're mapping array locations between two things that look like this:
     # [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27 ...]
     # [11, 21, 31, 12, 22, 32, 13, 23, 33, 14, 24, 34, 15, 25, 35, 16, 26 ...]
     # This alone should serve as all the evidence needed to prove that

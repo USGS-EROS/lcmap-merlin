@@ -1,8 +1,12 @@
 """functions.py is a module of generalized, reusable functions"""
 
+from collections import Counter
+from collections import OrderedDict
+from cytoolz import drop
+from cytoolz import first
 from cytoolz import merge
 from cytoolz import reduce
-from collections import OrderedDict
+from cytoolz import second
 from datetime import datetime
 from functools import singledispatch
 import functools
@@ -50,7 +54,7 @@ def extract(sequence, elements):
         return sequence
     else:
         seq = sequence[first(e)]
-        return extract(seq, rest(e))
+        return extract(seq, drop(1, e))
 
 
 def flatten(iterable):
@@ -293,3 +297,74 @@ def timed(f):
         logger.info('{} stop:{}'.format(msg, datetime.now().isoformat()))
         return r
     return wrapper
+
+
+def seqeq(a, b):
+    """Determine if two unordered sequences are equal.
+
+    Args:
+        a - sequence a
+        b - sequence b
+
+    Returns:
+        bool: True or False
+    """
+
+    #runs in linear (On) time.
+    return Counter(a) == Counter(b)
+
+
+def issubset(a, b):
+    """Determines if a exists in b
+
+    Args:
+        a - sequence a
+        b - sequence b
+
+    Returns:
+        bool: True or False
+    """
+
+    return set(a).issubset(set(b))
+
+
+def difference(a, b):
+    """Subtracts items in b from items in a.
+
+    Args:
+        a - sequence a
+        b - sequence b
+
+    Returns;
+        set: items that exist in a but not b
+    """
+
+    return set(a) - set(b)
+
+
+def chexists(dictionary, keys, check_fn):
+    """applies check_fn against dictionary minus keys then ensures the items
+    returned from check_fn exist in dictionary[keys]
+
+    Args:
+        dictionary (dict): {key: [v1, v3, v2]}
+        keys (sequence): A sequence of keys in dictionary
+        check_fn (function): Function that accepts dict and returns
+                             sequence of items or Exception
+
+    Returns:
+        sequence: A sequence of items that are returned from check_fn and
+                  exist in dictionary[keys] or Exception
+    """
+    def exists_in(a, b):
+        if issubset(a, second(b)):
+            return True
+        else:
+            msg =  '{} is missing data.'.format(first(b))
+            msg2 = '{} is not a subset of {}'.format(a, second(b))
+            raise Exception('\n'.join([msg, msg2]))
+
+    popped   = {k: dictionary[k] for k in keys}
+    checked  = check_fn({k: dictionary[k] for k in difference(dictionary, keys)})
+    all(map(partial(exists_in, a=checked), popped.items()))
+    return checked
