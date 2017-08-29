@@ -10,6 +10,7 @@ Merlin
 ============
 A Python3 library for turning LCMAP spatial data into timeseries like magic.
 
+
 Features
 --------
 * Retrieve chips & chip specs
@@ -45,6 +46,11 @@ Example
                    'green': [19, 8, 77 ...]},
                    'blue' : [1, 11, 3 ...],
                    'dates': ['2017-01-01', '2016-12-31', '2016-12-30' ...]}),)
+
+
+Documentation
+-------------
+Complete documentation is available at http://lcmap-merlin.readthedocs.io/
 
 
 Installation

@@ -6,7 +6,6 @@ from functools import reduce
 from itertools import product
 from numpy.random import randint
 import numpy as np
-import pytest
 
 
 def test_difference():
