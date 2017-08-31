@@ -169,8 +169,9 @@ def pyccd_format(chip_x, chip_y, chip_locations, chips_and_specs, dates):
                                          chip_locations,
                                          mrods.from_chips(
                                              chips.to_numpy(
-                                                 sort(chips.trim(first(v),
-                                                                 dates)),
+                                                 sort(chips.deduplicate(
+                                                          chips.trim(first(v),
+                                                                     dates))),
                                                  specs.byubid(second(v))))))
                               for k, v in chips_and_specs.items()}))
 
@@ -243,9 +244,9 @@ def create(point,  chips_url, acquired, queries, chips_fn=chips.get,
     msg = ('point:{} specs_fn:{} '
            'chips_url:{} acquired:{} '
            'queries:{} dates_fn:{} '
-           'format_fn:{}').format(point, specs_fn.__name__, chips_url,
+           'format_fn:{}').format(point, specs_fn, chips_url,
                                   acquired, queries,
-                                  dates_fn.__name__, format_fn.__name__)
+                                  dates_fn, format_fn)
 
     timed_cas_fn  = timed(excepts(Exception,
                                   cas_fn,
@@ -255,7 +256,7 @@ def create(point,  chips_url, acquired, queries, chips_fn=chips.get,
                             dates_fn,
                             errorhandler(msg, raises=True))
 
-    cas   = {k: timed_cas_fn(query=v) for k, v in queries.items()}
+    cas = {k: timed_cas_fn(query=v) for k, v in queries.items()}
 
     return format_fn(*locate(point, refspec(cas)),
                      cas,
