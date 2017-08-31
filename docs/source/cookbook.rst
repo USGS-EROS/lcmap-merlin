@@ -68,7 +68,7 @@ Retrieve Chips & Specs
         'green': 'http://host/landsat/v1/chip-specs?q=tags:green AND sr',
         'blue':  'http://host/landsat/v1/chip-specs?q=tags:blue AND sr'}
 
-    chips, specs = chips_and_specs(point=(123,456),
+    chips, specs = chips_and_specs(point=(123, 456),
                                    acquired='1980-01-01/2017-08-22',
                                    queries=queries,
                                    chips_fn=chips_fn,

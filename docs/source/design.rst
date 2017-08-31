@@ -38,10 +38,10 @@ individual observation's x & y to enable consistent partitioning from source
 through downstream functions.
 
 Finally, a properly sorted dates array is associated into the top level
-data structure beside (and corresponding to) the order of each observation in
-the spectral stacks.
+data structure beside the spectral stacks.  The order of the dates array matches
+the order of observations.
 
-The final data structure appears as:
+The final data structure appears as...
 
 .. code-block:: python3
 
