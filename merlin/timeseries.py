@@ -12,9 +12,9 @@ from cytoolz import thread_first
 from datetime import datetime
 from merlin import chips
 from merlin import chip_specs as specs
-from merlin import dates as fdates
+from merlin import dates as mdates
 from merlin import functions as f
-from merlin import rods as frods
+from merlin import rods as mrods
 from merlin.composite import chips_and_specs
 from merlin.composite import locate
 from merlin.functions import timed
@@ -70,28 +70,24 @@ def identify(chip_x, chip_y, rod):
     return {((chip_x, chip_y), k[0], k[1]): v for k, v in rod.items()}
 
 
-def symmetrical_dates(data):
+def symmetric_dates(dates):
     """Returns a sequence of dates for chips that should be included in
     downstream functions.  May raise Exception.
 
     Args:
-        data: {key: [chips],[specs]}
+        dates: {key: [datestrings,]}
 
     Returns:
         Sequence of date strings or Exception
 
     Example:
 
-        >>> symmetrical_dates({"red":  ([chip3, chip1, chip2],
-                                        [specA, specB, specN]),
-                               "blue": ([chip2, chip3, chip1],
-                                        [specD, specE, specX]}))
+        >>> symmetrical_dates({"red":  [ds3, ds1, ds2],
+                               "blue": [ds2, ds3, ds1]})
         [2, 3, 1]
         >>>
-        >>> symmetrical_dates({"red":  ([chip3, chip1],
-                                        [specA, specB, specN]),
-                               "blue": ([specD, specE, specX],
-                                        [chip2, chip3, chip1]}))
+        >>> symmetrical_dates({"red":  [ds3, ds1],
+                               "blue": [ds2, ds3, ds1]})
         Exception: red:[3, 1] does not match blue:[2, 3, 1]
     """
 
@@ -107,7 +103,7 @@ def symmetrical_dates(data):
             b if a == b, else Exception with details
         """
 
-        if Counter(second(a)) == Counter(second(b)):
+        if f.seqeq(second(a), second(b)):
             return b
         else:
             msg = ('assymetric dates detected - {} != {}'
@@ -116,21 +112,20 @@ def symmetrical_dates(data):
             msgb = '{}{}'.format(first(b), second(b))
             raise Exception('\n'.join([msg, msga, msgb]))
 
-    return second(reduce(check, {k: chips.dates(first(v))
-                                 for k, v in data.items()}.items()))
+    return second(reduce(check, dates.items()))
 
 
-def refspec(data):
+def refspec(cas):
     """Returns the first chip spec from the first key to use as a reference.
 
     Args:
-        data: {key: [chips],[specs]}
+        cas: chips and specs {key: [chips],[specs]}
 
     Returns:
         dict: chip spec
     """
 
-    return first(second(data[first(data)]))
+    return first(second(cas[first(cas)]))
 
 
 def pyccd_format(chip_x, chip_y, chip_locations, chips_and_specs, dates):
@@ -165,17 +160,18 @@ def pyccd_format(chip_x, chip_y, chip_locations, chips_and_specs, dates):
         ...
     """
 
-    rods = add_dates(map(fdates.to_ordinal, sort(dates, key=None)),
+    rods = add_dates(map(mdates.to_ordinal, sort(dates, key=None)),
                          f.flip_keys(
                              {k: identify(
                                      chip_x,
                                      chip_y,
-                                     frods.locate(
+                                     mrods.locate(
                                          chip_locations,
-                                         frods.from_chips(
+                                         mrods.from_chips(
                                              chips.to_numpy(
-                                                 sort(chips.trim(first(v),
-                                                                 dates)),
+                                                 sort(chips.deduplicate(
+                                                          chips.trim(first(v),
+                                                                     dates))),
                                                  specs.byubid(second(v))))))
                               for k, v in chips_and_specs.items()}))
 
@@ -213,7 +209,7 @@ def errorhandler(msg='', raises=False):
 
 
 def create(point,  chips_url, acquired, queries, chips_fn=chips.get,
-           dates_fn=symmetrical_dates, format_fn=pyccd_format,
+           dates_fn=symmetric_dates, format_fn=pyccd_format,
            specs_fn=specs.get):
     """Queries data, performs date filtering/checking and formats the results.
 
@@ -248,9 +244,9 @@ def create(point,  chips_url, acquired, queries, chips_fn=chips.get,
     msg = ('point:{} specs_fn:{} '
            'chips_url:{} acquired:{} '
            'queries:{} dates_fn:{} '
-           'format_fn:{}').format(point, specs_fn.__name__, chips_url,
+           'format_fn:{}').format(point, specs_fn, chips_url,
                                   acquired, queries,
-                                  dates_fn.__name__, format_fn.__name__)
+                                  dates_fn, format_fn)
 
     timed_cas_fn  = timed(excepts(Exception,
                                   cas_fn,
@@ -260,8 +256,8 @@ def create(point,  chips_url, acquired, queries, chips_fn=chips.get,
                             dates_fn,
                             errorhandler(msg, raises=True))
 
-    cas   = {k: timed_cas_fn(query=v) for k, v in queries.items()}
-    dates = safe_dates_fn(cas)
-    spec  = refspec(cas)
+    cas = {k: timed_cas_fn(query=v) for k, v in queries.items()}
 
-    return format_fn(*locate(point, spec), cas, dates)
+    return format_fn(*locate(point, refspec(cas)),
+                     cas,
+                     safe_dates_fn(mdates.from_cas(cas)))

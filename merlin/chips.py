@@ -1,4 +1,7 @@
 from base64 import b64decode
+from cytoolz import drop
+from cytoolz import first
+from cytoolz import unique
 from merlin import functions as f
 import logging
 import math
@@ -151,24 +154,24 @@ def snap(x, y, chip_spec):
     return float(chip[0]), float(chip[1])
 
 
-def ids(ulx, uly, lrx, lry, chip_spec):
-    """Returns all the chip ids that are needed to cover a supplied bounding
-    box.
+def coordinates(ulx, uly, lrx, lry, chip_spec):
+    """Returns all the chip coordinates that are needed to cover a supplied
+    bounding box.
 
     Args:
-        ulx: upper left x coordinate
-        uly: upper left y coordinate
-        lrx: lower right x coordinate
-        lry: lower right y coordinate
+        ulx: upper left x
+        uly: upper left y
+        lrx: lower right x
+        lry: lower right y
         chip_spec: dict containing chip_x, chip_y, shift_x, shift_y
 
     Returns:
-        tuple: tuple of tuples of chip ids ((x1,y1), (x2,y1) ...)
+        tuple: tuple of tuples of chip coordinates ((x1,y1), (x2,y1) ...)
 
     This example assumes chip sizes of 500 pixels.
-    
+
     Example:
-        >>> chip_ids = ids(1000, -1000, -500, 500, chip_spec)
+        >>> chip_coordinates = coordinates(1000, -1000, -500, 500, chip_spec)
         ((-1000, 500), (-500, 500), (-1000, -500), (-500, -500))
     """
 
@@ -182,28 +185,29 @@ def ids(ulx, uly, lrx, lry, chip_spec):
                         for y in np.arange(start_y, end_y + cheight, cheight))
 
 
-def bounds_to_ids(bounds, spec):
-    """Returns chip ids from a sequence of bounds.  Performs minbox operation
-    on bounds, thus irregular geometries may be supplied.
+def bounds_to_coordinates(bounds, spec):
+    """Returns chip coordinates from a sequence of bounds.  Performs minbox
+    operation on bounds, thus irregular geometries may be supplied.
 
     Args:
         bounds: a sequence of bounds.
         spec: a chip spec representing chip geometry
 
     Returns:
-        tuple: chip ids
+        tuple: chip coordinates
 
     Example:
-        >>> ids = bounds_to_ids(bounds = ((112, 443), (112, 500), (100, 443)),
-                               spec=chip_spec)
+        >>> xys = bounds_to_coordinates(
+                                    bounds=((112, 443), (112, 500), (100, 443)),
+                                    spec=chip_spec)
         >>> ((100, 500),)
     """
 
-    return ids(ulx=f.minbox(bounds)['ulx'],
-               uly=f.minbox(bounds)['uly'],
-               lrx=f.minbox(bounds)['lrx'],
-               lry=f.minbox(bounds)['lry'],
-               chip_spec=spec)
+    return coordinates(ulx=f.minbox(bounds)['ulx'],
+                       uly=f.minbox(bounds)['uly'],
+                       lrx=f.minbox(bounds)['lrx'],
+                       lry=f.minbox(bounds)['lry'],
+                       chip_spec=spec)
 
 
 def locations(startx, starty, chip_spec):
@@ -287,11 +291,40 @@ def to_numpy(chips, chip_specs_byubid):
     """Converts the data for a sequence of chips to numpy arrays
 
     Args:
-        chips: a sequence of chips
-        chip_specs_byubid: chip_spec dict keyed by ubid
+        chips (sequence): a sequence of chips
+        chip_specs_byubid (dict): chip_specs keyed by ubid
 
     Returns:
-        sequence of chips with data as numpy arrays
+        sequence: chips with data as numpy arrays
     """
 
     return map(lambda c: chip_to_numpy(c, chip_specs_byubid[c['ubid']]), chips)
+
+
+def identity(chip):
+    """Determine the identity of a chip.
+
+    Args:
+        chip (dict): A chip
+
+    Returns:
+        tuple: Tuple of the chip identity field
+    """
+
+    return tuple([chip['x'], chip['y'],
+                  chip['ubid'], chip['acquired']])
+
+
+def deduplicate(chips):
+    """Accepts a sequence of chips and returns a sequence of chips minus
+    any duplicates.  A chip is considered a duplicate if it shares an x, y, UBID
+    and acquired date with another chip.
+
+    Args:
+        chips (sequence): Sequence of chips
+
+    Returns:
+        tuple: A nonduplicated tuple of chips
+    """
+
+    return tuple(unique(chips, key=identity))
