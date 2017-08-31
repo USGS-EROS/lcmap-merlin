@@ -67,7 +67,7 @@ def identify(chip_x, chip_y, rod):
         dict: {(chip_x, chip_y, x, y): [values]}
     """
 
-    return {((chip_x, chip_y), k[0], k[1]): v for k, v in rod.items()}
+    return {(chip_x, chip_y, k[0], k[1]): v for k, v in rod.items()}
 
 
 def symmetric_dates(dates):
@@ -110,7 +110,7 @@ def symmetric_dates(dates):
                    .format(first(a), first(b)))
             msga = '{}{}'.format(first(a), second(a))
             msgb = '{}{}'.format(first(b), second(b))
-            raise Exception('\n'.join([msg, msga, msgb]))
+            raise Exception('\n\n'.join([msg, msga, msgb]))
 
     return second(reduce(check, dates.items()))
 
@@ -160,7 +160,7 @@ def pyccd_format(chip_x, chip_y, chip_locations, chips_and_specs, dates):
         ...
     """
 
-    rods = add_dates(map(mdates.to_ordinal, sort(dates, key=None)),
+    rods = add_dates(list(map(mdates.to_ordinal, sort(dates, key=None))),
                          f.flip_keys(
                              {k: identify(
                                      chip_x,

@@ -363,7 +363,7 @@ def chexists(dictionary, keys, check_fn):
         else:
             msg =  '{} is missing data.'.format(first(superset))
             msg2 = '{} is not a subset of {}'.format(subset, second(superset))
-            raise Exception('\n'.join([msg, msg2]))
+            raise Exception('\n\n'.join([msg, msg2]))
 
     popped  = {k: dictionary[k] for k in keys}
     checked = check_fn({k: dictionary[k] for k in difference(dictionary, keys)})
