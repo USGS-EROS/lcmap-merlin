@@ -291,11 +291,11 @@ def to_numpy(chips, chip_specs_byubid):
     """Converts the data for a sequence of chips to numpy arrays
 
     Args:
-        chips: a sequence of chips
-        chip_specs_byubid: chip_spec dict keyed by ubid
+        chips (sequence): a sequence of chips
+        chip_specs_byubid (dict): chip_specs keyed by ubid
 
     Returns:
-        sequence of chips with data as numpy arrays
+        sequence: chips with data as numpy arrays
     """
 
     return map(lambda c: chip_to_numpy(c, chip_specs_byubid[c['ubid']]), chips)
@@ -321,8 +321,7 @@ def deduplicate(chips):
     and acquired date with another chip.
 
     Args:
-        chips:         Sequence of chips
-        accum (tuple): Accumulator tuple for recursive call
+        chips (sequence): Sequence of chips
 
     Returns:
         tuple: A nonduplicated tuple of chips

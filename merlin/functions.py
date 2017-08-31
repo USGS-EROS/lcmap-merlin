@@ -303,8 +303,8 @@ def seqeq(a, b):
     """Determine if two unordered sequences are equal.
 
     Args:
-        a - sequence a
-        b - sequence b
+        a: sequence a
+        b: sequence b
 
     Returns:
         bool: True or False
@@ -318,8 +318,8 @@ def issubset(a, b):
     """Determines if a exists in b
 
     Args:
-        a - sequence a
-        b - sequence b
+        a: sequence a
+        b: sequence b
 
     Returns:
         bool: True or False
@@ -332,8 +332,8 @@ def difference(a, b):
     """Subtracts items in b from items in a.
 
     Args:
-        a - sequence a
-        b - sequence b
+        a: sequence a
+        b: sequence b
 
     Returns;
         set: items that exist in a but not b
@@ -353,9 +353,10 @@ def chexists(dictionary, keys, check_fn):
                              sequence of items or Exception
 
     Returns:
-        sequence: A sequence of items that are returned from check_fn and
-                  exist in dictionary[keys] or Exception
+        A sequence of items that are returned from check_fn and exist in
+        dictionary[keys] or Exception
     """
+
     def exists_in(superset, subset):
         if issubset(subset, second(superset)):
             return True
