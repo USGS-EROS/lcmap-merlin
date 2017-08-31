@@ -16,6 +16,7 @@ Features
 * Retrieve chips & chip specs
 * Convert chips & chip specs into time series rods
 * Many composable functions
+* Works with symmetric or assymetric data arrays
 * Built with efficiency in mind... leverages Numpy for heavy lifting.
 * Tested with cPython 3.5 & 3.6
 
