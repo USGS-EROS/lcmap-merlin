@@ -1,6 +1,7 @@
 from cytoolz import first
 from cytoolz import second
 from merlin import functions as f
+import pytest
 
 
 def test_extract():
@@ -65,12 +66,12 @@ def test_serialization():
     def serialize_deserialize(t):
         assert f.deserialize(second(f.serialize(t))) == t
 
-    targets = ['farva', 1, 2.0, True]
+    targets = ['farva', 1, 2.0, True, None]
 
     all(map(serialize_deserialize, targets))
 
 
-def test_flipkeys():
+def test_flip_keys():
     dods = {'a': {1: 'a1', 2: 'a2'},
             'b': {1: 'b1', 2: 'b2'},
             'c': {1: 'c1', 2: 'c2'}}
@@ -101,7 +102,7 @@ def test_isnumeric():
     assert all(map(f.isnumeric, good))
 
     bad = ['a', 'a1', '1a']
-    assert not all(map(f.isnumeric, bad))
+    assert not any(map(f.isnumeric, bad))
 
 
 def test_seqeq():
@@ -127,5 +128,18 @@ def test_difference():
 
 
 def test_chexists():
-    #def chexists(dictionary, keys, check_fn):
-    pass
+
+    # simple check function that will return the first list
+    def check_fn(dictionary):
+        return dictionary[first(dictionary)]
+
+    # simulate assymetric list values, telling chexists 'c' is supposed to be
+    # bigger.
+    d = {'a': [1, 2, 3], 'b': [1, 2, 3], 'c': [1, 2, 3, 4, 5]}
+    assert f.chexists(d, ['c'], check_fn) == d[first(d)]
+
+    # make sure we throw an exception if c does not contain all values from
+    # check_fn
+    with pytest.raises(Exception):
+        d = {'a': [1, 2, 3], 'b': [1, 2, 3], 'c': [1, 2, 4, 5]}
+        assert f.chexists(d, ['c'], check_fn) == d[first(d)]

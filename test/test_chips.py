@@ -1,4 +1,5 @@
 from base64 import b64encode
+from cytoolz import drop
 from merlin import chips as mc
 from merlin import chip_specs as mcs
 from functools import partial
@@ -33,10 +34,10 @@ def test_snap():
     assert (3000, -3000) == mc.snap(3000, -3000, spec)
 
 
-def test_ids():
-    spec = {'chip_x': 3000, 'chip_y': -3000, 'shift_x': 0, 'shift_y': 0}
-    ids  = set(((0, 0), (3000, -3000), (3000, 0), (0, -3000)))
-    assert set(mc.ids(0, 0, 3000, -3000, spec)) == ids
+def test_coordinates():
+    spec   = {'chip_x': 3000, 'chip_y': -3000, 'shift_x': 0, 'shift_y': 0}
+    coords = set(((0, 0), (3000, -3000), (3000, 0), (0, -3000)))
+    assert set(mc.coordinates(0, 0, 3000, -3000, spec)) == coords
 
 
 def test_numpy():
@@ -104,3 +105,20 @@ def test_to_numpy():
     # run assertions
     checker = partial(_check, specs_byubid=specs_byubid)
     all(map(checker, mc.to_numpy(chips, specs_byubid)))
+
+
+def test_identity():
+    chip = {'x': 1, 'y': 2, 'acquired': '1980-01-01', 'ubid': 'a/b/c/d'}
+    assert mc.identity(chip) == tuple([chip['x'], chip['y'],
+                                       chip['ubid'], chip['acquired']])
+
+
+def test_deduplicate():
+    inputs = [{'x': 1, 'y': 2, 'acquired': '1980-01-01', 'ubid': 'a/b/c/d'},
+              {'x': 1, 'y': 2, 'acquired': '1980-01-01', 'ubid': 'a/b/c/d'},
+              {'x': 2, 'y': 2, 'acquired': '1980-01-01', 'ubid': 'a/b/c/d'},
+              {'x': 1, 'y': 3, 'acquired': '1980-01-01', 'ubid': 'a/b/c/d'},
+              {'x': 1, 'y': 2, 'acquired': '1980-01-02', 'ubid': 'a/b/c/d'},
+              {'x': 1, 'y': 2, 'acquired': '1980-01-01', 'ubid': 'a/b/c'}]
+
+    assert mc.deduplicate(inputs) == tuple(drop(1, inputs))

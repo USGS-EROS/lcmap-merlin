@@ -1,10 +1,10 @@
 """functions.py is a module of generalized, reusable functions"""
 
 from collections import Counter
-from collections import OrderedDict
 from cytoolz import drop
 from cytoolz import first
 from cytoolz import merge
+from cytoolz import partial
 from cytoolz import reduce
 from cytoolz import second
 from datetime import datetime
@@ -356,15 +356,15 @@ def chexists(dictionary, keys, check_fn):
         sequence: A sequence of items that are returned from check_fn and
                   exist in dictionary[keys] or Exception
     """
-    def exists_in(a, b):
-        if issubset(a, second(b)):
+    def exists_in(superset, subset):
+        if issubset(subset, second(superset)):
             return True
         else:
-            msg =  '{} is missing data.'.format(first(b))
-            msg2 = '{} is not a subset of {}'.format(a, second(b))
+            msg =  '{} is missing data.'.format(first(superset))
+            msg2 = '{} is not a subset of {}'.format(subset, second(superset))
             raise Exception('\n'.join([msg, msg2]))
 
-    popped   = {k: dictionary[k] for k in keys}
-    checked  = check_fn({k: dictionary[k] for k in difference(dictionary, keys)})
-    all(map(partial(exists_in, a=checked), popped.items()))
+    popped  = {k: dictionary[k] for k in keys}
+    checked = check_fn({k: dictionary[k] for k in difference(dictionary, keys)})
+    all(map(partial(exists_in, subset=checked), popped.items()))
     return checked

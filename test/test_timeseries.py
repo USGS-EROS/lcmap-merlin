@@ -1,3 +1,5 @@
+from cytoolz import partial
+from merlin import functions as f
 from merlin import timeseries
 from merlin.support import aardvark as ma
 import test
@@ -57,3 +59,15 @@ def test_create():
                    chips_fn=ma.chips,
                    acquired='1980-01-01/2015-12-31',
                    queries=test.chip_spec_queries('http://localhost'))
+
+    # test with chexists to handle quality assymetry
+    data = timeseries.create(
+                    point=(-182000, 300400),
+                    dates_fn=partial(f.chexists,
+                                     check_fn=timeseries.symmetric_dates,
+                                     keys=['quality']),
+                    specs_fn=ma.chip_specs,
+                    chips_url='http://localhost',
+                    chips_fn=ma.chips,
+                    acquired='1980-01-01/2015-12-31',
+                    queries=test.chip_spec_queries('http://localhost'))
