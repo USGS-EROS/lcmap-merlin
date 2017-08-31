@@ -1,9 +1,14 @@
+from cytoolz import dissoc
 from cytoolz import partial
+from cytoolz import reduce
+from cytoolz import sliding_window
 from merlin import functions as f
 from merlin import timeseries
 from merlin.support import aardvark as ma
-import test
+from operator import eq
+from operator import gt
 import pytest
+import test
 
 
 def test_csort():
@@ -17,38 +22,9 @@ def test_csort():
            results[2]['acquired'] > results[3]['acquired'])
 
 
-def test_to_rod():
-    assert 1 > 0
-
-
-def test_to_pyccd():
-    assert 1 > 0
-
-
-def test_sort():
-    assert 1 > 0
-
-
 def test_create():
-    from cytoolz import dissoc
-    # data should be shaped: ( ((),{}), ((),{}), ((),{}) )
-    # This should pass since we are dissoc'ing quality, which has additional
-    # chips.
-    data = timeseries.create(
-               point=(-182000, 300400),
-               specs_fn=ma.chip_specs,
-               chips_url='http://localhost',
-               chips_fn=ma.chips,
-               acquired='1980-01-01/2015-12-31',
-               queries=dissoc(test.chip_spec_queries('http://localhost'),
-                              'quality'))
-
-    assert len(data) == 10000
-    assert isinstance(data, tuple)
-    assert isinstance(data[0], tuple)
-    assert isinstance(data[0][0], tuple)
-    assert isinstance(data[0][1], dict)
-    assert len(data[0][0]) == 3
+    # data should be shaped: ( ((chip_x, chip_y, x1, y1),{}),
+    #                          ((chip_x, chip_y, x1, y2),{}), )
 
     # This should fail because the test data contains additional qa chips
     with pytest.raises(Exception):
@@ -59,6 +35,7 @@ def test_create():
                    chips_fn=ma.chips,
                    acquired='1980-01-01/2015-12-31',
                    queries=test.chip_spec_queries('http://localhost'))
+
 
     # test with chexists to handle quality assymetry
     data = timeseries.create(
@@ -71,3 +48,23 @@ def test_create():
                     chips_fn=ma.chips,
                     acquired='1980-01-01/2015-12-31',
                     queries=test.chip_spec_queries('http://localhost'))
+
+    # make sure we have 10000 results
+    assert len(data) == 10000
+    assert isinstance(data, tuple)
+    assert isinstance(data[0], tuple)
+    assert isinstance(data[0][0], tuple)
+    assert isinstance(data[0][1], dict)
+
+    # chip_x, chip_y, x, y.  data[0][1] is the dictionary of measurements
+    assert len(data[0][0]) == 4
+
+    # check to make sure we have equal length values and that the values
+    # are not empty.  FYI -- only spot checking the first returned result
+    queries = test.chip_spec_queries('http://localhost')
+    lens = [len(data[0][1][item]) for item in queries]
+    print("Lengths:{}".format(lens))
+    assert all([eq(*x) for x in sliding_window(2, lens)]) == True
+
+    # make sure everything isn't zero length
+    assert all([gt(x, 0) for x in lens]) == True
