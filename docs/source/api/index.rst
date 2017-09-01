@@ -11,3 +11,4 @@ API Reference
   functions.rst
   rods.rst
   timeseries.rst
+  support.rst
