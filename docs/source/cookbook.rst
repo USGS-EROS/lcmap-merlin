@@ -1,5 +1,5 @@
 Cookbook
-============
+========
 
 Create Timeseries
 -------------------
