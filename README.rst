@@ -28,14 +28,14 @@ Example
     import merlin
 
     queries = {
-        'red':   'http://host/landsat/v1/chip-specs?q=tags:red AND sr',
-        'green': 'http://host/landsat/v1/chip-specs?q=tags:green AND sr',
-        'blue':  'http://host/landsat/v1/chip-specs?q=tags:blue AND sr'}
+        'red':   'http://host/v1/landsat/chip-specs?q=tags:red AND sr',
+        'green': 'http://host/v1/landsat/chip-specs?q=tags:green AND sr',
+        'blue':  'http://host/v1/landsat/chip-specs?q=tags:blue AND sr'}
 
     timeseries = merlin.create(point=(123, 456),
                                acquired='1980-01-01/2017-01-01',
                                queries=queries,
-                               chips_url='http://host/landsat/v1/chips')
+                               chips_url='http://host/v1/landsat/chips')
 
     print(timeseries)
 
@@ -72,7 +72,7 @@ Get The Source
     $ conda create --name merlin python=3.6
     $ source activate merlin
     $ cd lcmap-merlin
-    $ pip install -e .[test]
+    $ pip install -e .[test, dev, doc]
 
 
 Testing
@@ -81,6 +81,17 @@ Testing
 .. code-block:: bash
 
    $ pytest
+
+
+Build Sphinx Docs
+-----------------
+This is only necessary during development.  Release documents are built
+automatically by readthedocs.io.
+
+.. code-block:: bash
+
+  $ cd docs
+  $ make html
 
 
 Occasionally chip and chip spec test data may need to be updated if the source

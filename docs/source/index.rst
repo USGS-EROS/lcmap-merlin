@@ -6,3 +6,4 @@
   cookbook.rst
   design.rst
   api/index.rst
+  faq.rst
