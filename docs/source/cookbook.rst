@@ -9,14 +9,14 @@ Create Timeseries
     import merlin
 
     queries = {
-        'red':   'http://host/landsat/v1/chip-specs?q=tags:red AND sr',
-        'green': 'http://host/landsat/v1/chip-specs?q=tags:green AND sr',
-        'blue':  'http://host/landsat/v1/chip-specs?q=tags:blue AND sr'}
+        'red':   'http://host/v1/landsat/chip-specs?q=tags:red AND sr',
+        'green': 'http://host/v1/landsat/chip-specs?q=tags:green AND sr',
+        'blue':  'http://host/v1/landsat/chip-specs?q=tags:blue AND sr'}
 
     timeseries = merlin.create(point=(123, 456),
                                acquired='1980-01-01/2017-01-01',
                                queries=queries,
-                               chips_url='http://host/landsat/v1/chips')
+                               chips_url='http://host/v1/landsat/chips')
 
     print(timeseries)
 
@@ -40,10 +40,10 @@ Create Timeseries From Assymetric Data
     import merlin
 
     queries = {
-        'red':     'http://host/landsat/v1/chip-specs?q=tags:red AND sr',
-        'green':   'http://host/landsat/v1/chip-specs?q=tags:green AND sr',
-        'blue':    'http://host/landsat/v1/chip-specs?q=tags:blue AND sr',
-        'quality': 'http://host/landsat/v1/chip-specs?q=tags:pixelqa'}
+        'red':     'http://host/v1/landsat/chip-specs?q=tags:red AND sr',
+        'green':   'http://host/v1/landsat/chip-specs?q=tags:green AND sr',
+        'blue':    'http://host/v1/landsat/chip-specs?q=tags:blue AND sr',
+        'quality': 'http://host/v1/landsat/chip-specs?q=tags:pixelqa'}
 
     data = timeseries.create(
                       point=(123, 456),
@@ -52,7 +52,7 @@ Create Timeseries From Assymetric Data
                                        keys=['quality',]),
                       chips_url='http://localhost',
                       acquired='1980-01-01/2015-12-31',
-                      queries=test.chip_spec_queries('http://localhost'))
+                      queries=queries)
 
 Retrieve Chips & Specs
 ----------------------
@@ -64,13 +64,13 @@ Retrieve Chips & Specs
     from merlin.composite  import chips_and_specs
 
     queries = {
-        'red':   'http://host/landsat/v1/chip-specs?q=tags:red AND sr',
-        'green': 'http://host/landsat/v1/chip-specs?q=tags:green AND sr',
-        'blue':  'http://host/landsat/v1/chip-specs?q=tags:blue AND sr'}
+        'red':   'http://host/v1/landsat/chip-specs?q=tags:red AND sr',
+        'green': 'http://host/v1/landsat/chip-specs?q=tags:green AND sr',
+        'blue':  'http://host/v1/landsat/chip-specs?q=tags:blue AND sr'}
 
     chips, specs = chips_and_specs(point=(123, 456),
                                    acquired='1980-01-01/2017-08-22',
                                    queries=queries,
                                    chips_fn=chips_fn,
                                    specs_fn=specs_fn,
-                                   chips_url='http://host/landsat/v1/chips')
+                                   chips_url='http://host/v1/landsat/chips')
