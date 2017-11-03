@@ -136,10 +136,10 @@ def test_chexists():
     # simulate assymetric list values, telling chexists 'c' is supposed to be
     # bigger.
     d = {'a': [1, 2, 3], 'b': [1, 2, 3], 'c': [1, 2, 3, 4, 5]}
-    assert f.chexists(d, ['c'], check_fn) == d[first(d)]
+    assert f.chexists(d, ['c'], check_fn) == d['a']
 
     # make sure we throw an exception if c does not contain all values from
     # check_fn
     with pytest.raises(Exception):
         d = {'a': [1, 2, 3], 'b': [1, 2, 3], 'c': [1, 2, 4, 5]}
-        assert f.chexists(d, ['c'], check_fn) == d[first(d)]
+        assert f.chexists(d, ['c'], check_fn) == d['a']
