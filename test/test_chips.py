@@ -36,8 +36,8 @@ def test_snap():
 
 def test_coordinates():
     spec   = {'chip_x': 3000, 'chip_y': -3000, 'shift_x': 0, 'shift_y': 0}
-    coords = set(((0, 0), (3000, -3000), (3000, 0), (0, -3000)))
-    assert set(mc.coordinates(0, 0, 3000, -3000, spec)) == coords
+    coords = ((0, 0), (0, -3000), (3000, 0), (3000, -3000))
+    assert coords == mc.coordinates(0, 0, 3000, -3000, spec)
 
 
 def test_numpy():
@@ -46,9 +46,9 @@ def test_numpy():
 
 def test_locations():
     spec = {'data_shape': (2, 2), 'pixel_x': 30, 'pixel_y': -30}
-    locs = {(30, -30), (0, 0), (0, -30), (30, 0)}
-    assert locs == set(map(tuple, mc.locations(0, 0, spec).reshape(4, 2)))
-
+    locs = np.array([[[0, 0], [0, -30]], [[30, 0], [30, -30]]])
+    assert np.array_equal(locs, mc.locations(0, 0, spec))
+    
 
 def test_dates():
     inputs = list()
