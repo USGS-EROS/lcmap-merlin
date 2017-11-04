@@ -123,7 +123,6 @@ def test_compare_timeseries_to_chip():
             
         return ar
        
-        
     observations = list(map(observation, time_series))
     xset = sorted(list(set(map(lambda a: a['x'], observations))))
     yset = sorted(list(set(map(lambda a: a['y'], observations))), reverse=True)
@@ -131,5 +130,4 @@ def test_compare_timeseries_to_chip():
                                x_lookups=lookups(xset),
                                y_lookups=lookups(yset))
 
-    assert np.array_equal(suspect_data, chip_data) 
-                                
+    assert np.array_equal(suspect_data, chip_data)
