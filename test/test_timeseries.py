@@ -119,7 +119,7 @@ def test_compare_timeseries_to_chip():
         for o in obs:
             x = x_lookups.get(o['x'])
             y = y_lookups.get(o['y'])
-            ar.itemset((x, y), o.get('v'))
+            ar.itemset((y, x), o.get('v'))
             
         return ar
        
