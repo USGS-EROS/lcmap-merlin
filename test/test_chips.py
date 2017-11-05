@@ -46,7 +46,7 @@ def test_numpy():
 
 def test_locations():
     spec = {'data_shape': (2, 2), 'pixel_x': 30, 'pixel_y': -30}
-    locs = np.array([[[0, 0], [0, -30]], [[30, 0], [30, -30]]])
+    locs = np.array([[[0, 0], [30, 0]], [[0, -30], [30, -30]]])
     assert np.array_equal(locs, mc.locations(0, 0, spec))
     
 
