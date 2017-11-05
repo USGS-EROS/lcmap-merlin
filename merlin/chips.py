@@ -234,9 +234,14 @@ def locations(startx, starty, chip_spec):
     endx = startx + cw * pw
     endy = starty + ch * ph
 
+    # ERROR: Transposed 90 degrees
+    # x, y = np.mgrid[startx:endx:pw, starty:endy:ph]
+    
     # build arrays of end - start / step shape
     # flatten into 1d, concatenate and reshape to fit chip
-    x, y = np.mgrid[startx:endx:pw, starty:endy:ph]
+    # In order to generate the proper row major matrix
+    # the order y and x are created inside mgrid matters
+    y, x = np.mgrid[starty:endy:ph, startx:endx:pw]
     matrix = np.c_[x.ravel(), y.ravel()]
     return np.reshape(matrix, (cw, ch, 2))
 
