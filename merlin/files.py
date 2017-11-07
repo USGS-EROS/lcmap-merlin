@@ -15,7 +15,7 @@ def read(path):
         str: File text
     """
 
-    with open(path, 'r+') as handle:
+    with open(path, 'r') as handle:
         return handle.read()
 
 
@@ -29,7 +29,7 @@ def readb(path):
         File bytes
     """
 
-    with open(path, 'rb+') as handle:
+    with open(path, 'rb') as handle:
         return handle.read()
 
 
@@ -43,7 +43,7 @@ def readlines(path):
         list: File text
     """
 
-    with open(path, 'r+') as handle:
+    with open(path, 'r') as handle:
         return handle.readlines()
 
 
@@ -57,7 +57,7 @@ def readlinesb(path):
         list: File bytes
     """
 
-    with open(path, 'rb+') as handle:
+    with open(path, 'rb') as handle:
         return handle.readlines()
 
 
@@ -72,7 +72,7 @@ def write(path, data):
         int: Number of characters written
     """
 
-    with open(path, 'w+') as handle:
+    with open(path, 'w') as handle:
         return handle.write(data)
 
 
@@ -87,7 +87,7 @@ def writeb(path, data):
         int: Number of bytes written
     """
 
-    with open(path, 'wb+') as handle:
+    with open(path, 'wb') as handle:
         return handle.write(data)
 
 
@@ -102,7 +102,7 @@ def append(path, data):
         int: Number of characters appended
     """
 
-    with open(path, 'a+') as handle:
+    with open(path, 'a') as handle:
         return handle.write(data)
 
 
@@ -117,7 +117,7 @@ def appendb(path, data):
         int: Number of bytes appended
     """
 
-    with open(path, 'ab+') as handle:
+    with open(path, 'ab') as handle:
         return handle.write(data)
 
 
