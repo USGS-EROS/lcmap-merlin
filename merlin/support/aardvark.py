@@ -35,3 +35,18 @@ def chip_specs(url):
 
     spectra = set(data.spectra_from_queryid(data.spec_query_id(url)))
     return tuple(f.flatten([data.chip_specs(s) for s in spectra]))
+
+
+def multi_chip_specs(keyed_specs):
+    '''Return dictionary of chip specs given a dictionary of chip 
+       spec queries.
+
+    Args:
+        keyed_specs (dict): {'key1': [url1, url2], 'key2': [url3, url4]}
+
+    Returns:
+        dict: dictionary of {'key1': [spec1a, spec1b, spec2a, spec2b],
+                             'key2': [spec3a, spec3b, spec4a, spec4b]}    
+    '''
+
+    return {k: chip_specs(v) for k, v in keyed_specs.items()}
