@@ -1,32 +1,24 @@
 from cytoolz import first
+from cytoolz import partial
 from cytoolz import second
 from merlin import chips
 from merlin import chip_specs
 
 
-def chips_and_specs(point, specs_fn, chips_url, chips_fn, acquired, query):
-    """Returns chips and specs for a given chip spec query
-
+def chips_and_specs(point, acquired, keyed_specs, chips_fn):
+    """Returns chips and specs for a dict of specs
+    
     Args:
-        point (tuple): (x, y) which is within the extents of a chip
-        specs_fn (function):  Function that accepts a url query and returns
-                              chip specs
-        chips_url (str): URL to the chips host:port/context
-        chips_fn (function):  Function that accepts x, y, acquired, url,
-                               ubids and returns chips.
-        acquired (str): ISO8601 date range
-        query (str): URL query to retrieve chip specs
-    Returns:
-        tuple: [chips], [specs]
-    """
+        point: (tuple): (x, y) which is within the extents of a chip
+        acquired: (str): ISO8601 date range
+        keyed_specs: (dict): {key: [spec1, spec2,], key2: [spec3, spec4]}
+        chips_fn (function): Accepts x, y, acquired, ubids.  Returns chips.
 
-    specs = specs_fn(query)
-    chips = chips_fn(x=first(point),
-                     y=second(point),
-                     acquired=acquired,
-                     url=chips_url,
-                     ubids=chip_specs.ubids(specs))
-    return (chips, specs)
+    Returns:
+        dict: {key: (chips, specs), key2: (chips, specs), ...}
+    """
+    chips = partial(chips_fn, x=first(point), y=second(point), acquired=acquired)
+    return {k: (chips(ubids=chip_specs.ubids(v)), v) for k, v in keyed_specs.items()}
 
 
 def locate(point, spec):
