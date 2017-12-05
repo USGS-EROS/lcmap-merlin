@@ -35,11 +35,10 @@ def test_create():
     with pytest.raises(Exception):
         data = timeseries.create(
                    point=(-182000, 300400),
-                   specs_fn=ma.chip_specs,
+                   keyed_specs=ma.multi_chip_specs(test.chip_spec_queries('http://localhost')),
                    chips_url='http://localhost',
-                   chips_fn=ma.chips,
-                   acquired='1980-01-01/2015-12-31',
-                   queries=test.chip_spec_queries('http://localhost'))
+                   chips_fn=partial(ma.chips, url='http://localhost'),
+                   acquired='1980-01-01/2015-12-31')
 
 
     # test with chexists to handle quality assymetry
@@ -48,11 +47,9 @@ def test_create():
                     dates_fn=partial(f.chexists,
                                      check_fn=timeseries.symmetric_dates,
                                      keys=['quality']),
-                    specs_fn=ma.chip_specs,
-                    chips_url='http://localhost',
-                    chips_fn=ma.chips,
-                    acquired='1980-01-01/2015-12-31',
-                    queries=test.chip_spec_queries('http://localhost'))
+                    keyed_specs=ma.multi_chip_specs(test.chip_spec_queries('http://localhost')),
+                    chips_fn=partial(ma.chips, url='http://localhost'),
+                    acquired='1980-01-01/2015-12-31')
 
     # make sure we have 10000 results
     assert len(data) == 10000
@@ -88,11 +85,9 @@ def test_compare_timeseries_to_chip():
     most_recent_chip = first(chips.to_numpy([most_recent_chip], byubid))
 
     time_series = timeseries.create(point=(x, y),
-                                    chips_url="http://localhost",
                                     acquired=acquired,
-                                    queries=queries,
-                                    chips_fn=ma.chips,
-                                    specs_fn=ma.chip_specs)
+                                    chips_fn=partial(ma.chips, url='http://localhost'),
+                                    keyed_specs=ma.multi_chip_specs(queries))
 
     # this is a 2d 100x100 array of values arranged spatially
     chip_data = most_recent_chip['data']

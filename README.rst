@@ -24,6 +24,9 @@ Example
 -------
 .. code-block:: python3
 
+    from functools import partial
+    from merlin import chips
+    from merlin import chip_specs
     import merlin
 
     queries = {
@@ -31,10 +34,14 @@ Example
         'green': 'http://host/v1/landsat/chip-specs?q=tags:green AND sr',
         'blue':  'http://host/v1/landsat/chip-specs?q=tags:blue AND sr'}
 
+    specs = chip_specs.getmulti(queries)
+
+    chips_fn = partial(chips.get, url='http://host/v1/landsat/chips')
+    
     timeseries = merlin.create(point=(123, 456),
                                acquired='1980-01-01/2017-01-01',
-                               queries=queries,
-                               chips_url='http://host/v1/landsat/chips')
+                               keyed_specs=specs,
+                               chips_fn=chips)
 
     print(timeseries)
 

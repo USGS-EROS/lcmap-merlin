@@ -6,6 +6,8 @@ Create Timeseries
 
 .. code-block:: python3
 
+    from merlin import chips
+    from merlin import chip_specs
     import merlin
 
     queries = {
@@ -15,8 +17,8 @@ Create Timeseries
 
     timeseries = merlin.create(point=(123, 456),
                                acquired='1980-01-01/2017-01-01',
-                               queries=queries,
-                               chips_url='http://host/v1/landsat/chips')
+                               keyed_specs=chip_specs.getmulti(queries),
+                               chips_fn=partial(chips.get, url='http://host/v1/landsat/chips'))
 
     print(timeseries)
 
@@ -35,6 +37,7 @@ Create Timeseries From Assymetric Data
 
     from functools import partial
     from merlin import chips
+    from merlin import chip_specs
     from merlin import functions
     from merlin import timeseries
     import merlin
@@ -47,12 +50,12 @@ Create Timeseries From Assymetric Data
 
     data = timeseries.create(
                       point=(123, 456),
+                      acquired='1980-01-01/2015-12-31',
                       dates_fn=partial(functions.chexists,
                                        check_fn=timeseries.symmetric_dates,
                                        keys=['quality',]),
-                      chips_url='http://localhost',
-                      acquired='1980-01-01/2015-12-31',
-                      queries=queries)
+                      keyed_specs=chip_specs.getmulti(queries),
+                      chips_fn=partial(chips.get, url='http://host/v1/landsat/chips'))
 
 Retrieve Chips & Specs
 ----------------------
@@ -60,7 +63,7 @@ Retrieve Chips & Specs
 .. code-block:: python3
 
     from merlin.chips      import get as chips_fn
-    from merlin.chip_specs import get as specs_fn
+    from merlin.chip_specs import getmulti as specs_fn
     from merlin.composite  import chips_and_specs
 
     queries = {
@@ -68,9 +71,9 @@ Retrieve Chips & Specs
         'green': 'http://host/v1/landsat/chip-specs?q=tags:green AND sr',
         'blue':  'http://host/v1/landsat/chip-specs?q=tags:blue AND sr'}
 
-    chips, specs = chips_and_specs(point=(123, 456),
-                                   acquired='1980-01-01/2017-08-22',
-                                   queries=queries,
-                                   chips_fn=chips_fn,
-                                   specs_fn=specs_fn,
-                                   chips_url='http://host/v1/landsat/chips')
+    cas = chips_and_specs(point=(123, 456),
+                          acquired='1980-01-01/2017-08-22',
+                          keyed_specs=specs_fn(queries),
+                          chips_fn=partial(chips_fn, url='http://host/v1/landsat/chips'))
+
+    

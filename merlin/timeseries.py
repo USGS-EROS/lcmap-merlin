@@ -208,56 +208,38 @@ def errorhandler(msg='', raises=False):
     return handler
 
 
-def create(point,  chips_url, acquired, queries, chips_fn=chips.get,
-           dates_fn=symmetric_dates, format_fn=pyccd_format,
-           specs_fn=specs.get):
+def create(point, acquired, keyed_specs, chips_fn=chips.get, dates_fn=symmetric_dates,
+           format_fn=pyccd_format):
     """Queries data, performs date filtering/checking and formats the results.
 
     Args:
-        point:     Tuple of (x, y) which is within the extents of a chip
-        chips_url: URL to the chips host:port/context
-        acquired:  Date range string as start/end, ISO 8601 date format
-        queries:   dict of URL queries to retrieve chip specs keyed by
-                   spectra
-        chips_fn:  Function that accepts x, y, acquired, url, ubids and
-                   returns chips.
-        dates_fn:  Function that accepts dict of {spectra: [specs],[chips]}
-                   and returns a sequence of dates that should be included
-                   in the time series.
-                   May raise an Exception to halt time series construction.
-        format_fn: Function that accepts chip_x, chip_y, chip_locations,
-                   chips_and_specs, dates and returns it's representation
-                   of a time series.
-        specs_fn:  Function that accepts a url query and returns chip specs
+        point:       Tuple of (x, y) which is within the extents of a chip
+        acquired:    Date range string as start/end, ISO 8601 date format
+        keyed_specs: Dict of {'key': [spec1, spec2,], 'key2': [spec3, spec4]}
+        chips_fn:    Function that accepts x, y, acquired, ubids and
+                     returns chips.
+        dates_fn:    Function that accepts dict of {spectra: [specs],[chips]}
+                     and returns a sequence of dates that should be included
+                     in the time series.
+                     May raise an Exception to halt time series construction.
+        format_fn:   Function that accepts chip_x, chip_y, chip_locations,
+                     chips_and_specs, dates and returns it's representation
+                     of a time series.
 
     Returns:
         Return value from format_fn
     """
 
-    cas_fn = partial(chips_and_specs,
-                     point=point,
-                     specs_fn=specs_fn,
-                     chips_url=chips_url,
-                     chips_fn=chips_fn,
-                     acquired=acquired)
+    msg = ('point:{} acquired:{} specs:{} chips_fn:{} '
+           'dates_fn:{} format_fn:{}').format(point,
+                                              acquired,
+                                              keyed_specs,
+                                              chips_fn,
+                                              dates_fn,
+                                              format_fn)
 
-    msg = ('point:{} specs_fn:{} '
-           'chips_url:{} acquired:{} '
-           'queries:{} dates_fn:{} '
-           'format_fn:{}').format(point, specs_fn, chips_url,
-                                  acquired, queries,
-                                  dates_fn, format_fn)
-
-    timed_cas_fn  = timed(excepts(Exception,
-                                  cas_fn,
-                                  errorhandler(msg, raises=True)))
-
-    safe_dates_fn = excepts(Exception,
-                            dates_fn,
-                            errorhandler(msg, raises=True))
-
-    cas = {k: timed_cas_fn(query=v) for k, v in queries.items()}
-
+    cas = chips_and_specs(point, acquired, keyed_specs, chips_fn)
+    
     return format_fn(*locate(point, refspec(cas)),
                      cas,
-                     safe_dates_fn(mdates.from_cas(cas)))
+                     dates_fn(mdates.from_cas(cas)))

@@ -10,11 +10,26 @@ def get(query):
         tuple: sequence of chip specs
 
     Example:
-        >>> chip_specs('http://host/v1/landsat/chip-specs?q=red AND sr')
+        >>> chip_specs.get('http://host/v1/landsat/chip-specs?q=red AND sr')
         ('chip_spec_1', 'chip_spec_2', ...)
     """
 
     return tuple(requests.get(query).json())
+
+
+def getmulti(queries):
+    """Queries urls and returns chip_specs organized by key
+
+    Args:
+        queries (dict): {'key1': 'url', 'key2': 'url2}
+
+    Example:
+        >>> chip_specs.getmulti({'red':  'http://host/v1/landsat/chip-specs?q=red AND sr',
+                                 'blue': 'http://host/v1/landsat/chip-specs?q=blue AND sr'})
+        {'red': (red_spec_1, red_spec_2, ...), 'blue': (blue_spec_1, blue_spec_2)}
+    """
+
+    return {k: get(v) for k, v in queries.items()}
 
 
 def byubid(chip_specs):
