@@ -40,7 +40,7 @@ setup(name='lcmap-merlin',
           'doc': ['sphinx',
                   'sphinx-autobuild',
                   'sphinx_rtd_theme'],
-          'dev': ['jupyter'],
+          'dev': ['jupyter', 'readline'],
       },
       # entry_points={
           #'console_scripts': [''],
