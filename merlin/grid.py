@@ -31,7 +31,7 @@ def basis(host, resource='/grid'):
                     "ty": 3314805}]
     '''
 
-    return requests.get('{}/{}'.format(host, resource))
+    return requests.get(url='{}/{}'.format(host, resource))
 
 
 @memoize
@@ -49,7 +49,8 @@ def find(point, host, resource='/grid/find'):
                  "chip": {"proj-pt": [1832415,2036805], "grid-pt": [1466,426]}}
     '''
 
-    return requests.get('{}/{}'.format(host, resource), {'x': first(point), 'y': second(point)})
+    return requests.get(url='{}/{}'.format(host, resource),
+                        params={'x': first(point), 'y': second(point)})
 
    
 @memoize
@@ -86,4 +87,5 @@ def near(point, host, resource='/grid/near'):
                 {"proj-pt": [1835415,2039805], "grid-pt": [1467,425]}]} 
     '''
 
-    return request.get(url, {'x': first(point), 'y': second(point)})
+    return request.get(url='{}/{}'.format(host, resource),
+                       params={'x': first(point), 'y': second(point)})
