@@ -18,7 +18,7 @@ Create Timeseries
     timeseries = merlin.create(point=(123, 456),
                                acquired='1980-01-01/2017-01-01',
                                keyed_specs=chip_specs.getmulti(queries),
-                               chips_fn=partial(chips.get, url='http://host/v1/landsat/chips'))
+                               chips_fn=partial(chips.from_chipmunk, url='http://host/v1/landsat/chips'))
 
     print(timeseries)
 
@@ -55,14 +55,14 @@ Create Timeseries From Assymetric Data
                                        check_fn=timeseries.symmetric_dates,
                                        keys=['quality',]),
                       keyed_specs=chip_specs.getmulti(queries),
-                      chips_fn=partial(chips.get, url='http://host/v1/landsat/chips'))
+                      chips_fn=partial(chips.from_chipmunk, url='http://host/v1/landsat/chips'))
 
 Retrieve Chips & Specs
 ----------------------
 
 .. code-block:: python3
 
-    from merlin.chips      import get as chips_fn
+    from merlin.chips      import from_chipmunk as chips_fn
     from merlin.chip_specs import getmulti as specs_fn
     from merlin.composite  import chips_and_specs
 

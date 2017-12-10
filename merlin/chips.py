@@ -1,8 +1,11 @@
 from base64 import b64decode
 from cytoolz import drop
 from cytoolz import first
+from cytoolz import reduce
 from cytoolz import unique
+from functools import singledispatch
 from merlin import functions as f
+from operator import add
 import logging
 import math
 import numpy as np
@@ -10,8 +13,9 @@ import requests
 
 logger = logging.getLogger(__name__)
 
-def get(url, x, y, acquired, ubids):
-    """Returns aardvark chips for given x, y, date range and ubid sequence
+
+def from_aardvark(url, x, y, acquired, ubids):
+    """Returns chips from an aardvark instance given x, y, date range and ubid sequence
 
     Args:
         url: full url to aardvark endpoint
@@ -27,17 +31,50 @@ def get(url, x, y, acquired, ubids):
         tuple: chips
 
     Example:
-        >>> chips(url='http://host:port/landsat/chips',
-                  x=123456,
-                  y=789456,
-                  acquired='2012-01-01/2014-01-03',
-                  ubids=['LANDSAT_7/ETM/sr_band1', 'LANDSAT_5/TM/sr_band1'])
+        >>> from_aardvark(url='http://host:port/landsat/chips',
+                          x=123456,
+                          y=789456,
+                          acquired='2012-01-01/2014-01-03',
+                          ubids=['LANDSAT_7/ETM/sr_band1', 'LANDSAT_5/TM/sr_band1'])
     """
 
     return tuple(requests.get(url, params={'x': x,
                                            'y': y,
                                            'acquired': acquired,
                                            'ubid': ubids}).json())
+
+
+def from_chipmunk(url, x, y, acquired, ubids):
+    """Returns chips from a Chipmunk instance given x, y, date range and ubid sequence
+
+    Args:
+        url: full url to Chipmunk endpoint
+        x: longitude
+        y: latitude
+        acquired: ISO8601 daterange '2012-01-01/2014-01-03'
+        ubids: sequence of ubid strings
+        url: string
+        x: number
+        y: number
+
+    Returns:
+        tuple: chips
+
+    Example:
+        >>> from_chipmunk(url='http://host:port/landsat/chips',
+                          x=123456,
+                          y=789456,
+                          acquired='2012-01-01/2014-01-03',
+                          ubids=['LANDSAT_7/ETM/sr_band1', 'LANDSAT_5/TM/sr_band1'])
+    """
+    
+    params = [{'x': x, 'y': y, 'acquired': acquired, 'ubid': u } for u in ubids]
+    responses = [requests.get(url=url, params=p).json() for p in params]
+    return tuple(reduce(add, responses))
+    
+    
+def local(path, x, y, acquired, ubids):
+    pass
 
 
 def difference(point, interval):

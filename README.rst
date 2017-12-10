@@ -36,7 +36,7 @@ Example
 
     specs = chip_specs.getmulti(queries)
 
-    chips_fn = partial(chips.get, url='http://host/v1/landsat/chips')
+    chips_fn = partial(chips.from_chipmunk, url='http://host/v1/landsat/chips')
     
     timeseries = merlin.create(point=(123, 456),
                                acquired='1980-01-01/2017-01-01',

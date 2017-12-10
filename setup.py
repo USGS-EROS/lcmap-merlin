@@ -8,8 +8,8 @@ def readme():
 
 
 setup(name='lcmap-merlin',
-      version='1.1',
-      description='Python client library for LCMAP-Aardvark',
+      version='1.2',
+      description='Python client library for LCMAP rasters',
       long_description=readme(),
       classifiers=[
         'Development Status :: 4 - Beta',
@@ -40,7 +40,7 @@ setup(name='lcmap-merlin',
           'doc': ['sphinx',
                   'sphinx-autobuild',
                   'sphinx_rtd_theme'],
-          'dev': ['jupyter'],
+          'dev': ['jupyter', 'readline'],
       },
       # entry_points={
           #'console_scripts': [''],
