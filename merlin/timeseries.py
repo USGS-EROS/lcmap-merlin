@@ -208,7 +208,7 @@ def errorhandler(msg='', raises=False):
     return handler
 
 
-def create(point, acquired, keyed_specs, chips_fn=chips.get, dates_fn=symmetric_dates,
+def create(point, acquired, keyed_specs, chips_fn=chips.from_chipmunk, dates_fn=symmetric_dates,
            format_fn=pyccd_format):
     """Queries data, performs date filtering/checking and formats the results.
 
