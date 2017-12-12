@@ -35,7 +35,7 @@ setup(name='lcmap-merlin',
       extras_require={
           'test': ['pytest',
                    'hypothesis',
-                   'mock',
+                   'vcrpy',
                   ],
           'doc': ['sphinx',
                   'sphinx-autobuild',
