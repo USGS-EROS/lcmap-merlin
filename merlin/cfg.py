@@ -11,7 +11,7 @@ import specs
 def profiles(env, profile=None):
     __profiles = {
         'chipmunk-0.1-pyccd-ard' : {
-            'dates_fn': '',
+            'dates_fn': dates.symmetric_dates,
             'chips_fn': partial(chipmunk.chips,
                                 host=env.get('CHIPMUNK_URL', None),
                                 resource=env.get('CHIPMUNK_CHIPS_RESOURCE', '/chips')),
@@ -24,7 +24,7 @@ def profiles(env, profile=None):
                                        'swir2':   ['LC08_SRB7',    'LE07_SRB7',    'LT05_SRB7',    'LT04_SRB7'],
                                        'thermal': ['LC08_BTB10',   'LE07_BTB6',    'LT05_BTB6',    'LT04_BTB6'],
                                        'quality': ['LC08_PIXELQA', 'LE07_PIXELQA', 'LT05_PIXELQA', 'LT04_PIXELQA']}),
-            'fmttr_fn': '',
+            'fmttr_fn': formats.pyccd,
             'registry_fn': partial(chipmunk.registry,
                                    url=env.get('CHIPMUNK_URL', None),
                                    resource=env.get('CHIPMUNK_REGISTRY_PATH', '/registry')),

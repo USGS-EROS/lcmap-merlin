@@ -58,14 +58,14 @@ def is_acquired(acquired):
     return bool(re.match(regex, acquired))
 
 
-def from_cas(cas):
-    """Transform a dict of chips and specs into a dict of datestrings
+def mapped(chipmap):
+    """Transform a dict of chips into a dict of datestrings
 
     Args:
-        cas: chips and specs {k: [chips],[specs]}
+        chipmap (dict): {k: [chips]}
 
     Returns:
         dict:  {k: [datestring2, datestring1, datestring3]}
     """
 
-    return {k: chips.dates(first(v)) for k, v in cas.items()}
+    return {k: chips.dates(v) for k, v in cas.items()}

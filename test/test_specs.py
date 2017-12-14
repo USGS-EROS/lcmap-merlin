@@ -71,3 +71,10 @@ def test_ubids():
 
 def test_ubids_from_chip_specs():
     assert len(specs.ubids(d.chip_specs('blue'))) == 4
+
+
+def test_refspec():
+    specmap = {'red':  [{'key': 1, 'ubid': 'a'}, {'key': 2, 'ubid': 'b'}],
+               'blue': [{'key': 3, 'ubid': 'c'}, {'key': 4, 'ubid': 'd'}]}
+
+    assert type(specs.refspec(specmap)) is dict

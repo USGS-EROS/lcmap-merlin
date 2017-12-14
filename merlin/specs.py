@@ -1,3 +1,4 @@
+from cytoolz import first
 import cytoolz
 import requests
 
@@ -70,3 +71,16 @@ def ubids(specs):
     """
 
     return tuple(s['ubid'] for s in specs if 'ubid' in s)
+
+
+def refspec(specmap):
+    """Returns the first chip spec from the first key to use as a reference.
+
+    Args:
+        specmap: {key: [specs]}
+
+    Returns:
+        dict: spec
+    """
+
+    return first(specmap[first(specmap)])

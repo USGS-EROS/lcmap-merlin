@@ -370,3 +370,21 @@ def deduplicate(chips):
     """
 
     return tuple(unique(chips, key=identity))
+
+
+def mapped(x, y, acquired, specmap, chips_fn):
+    """Maps chips_fn results to keys from specmap.
+
+    Args:
+        x (int):
+        y (int):
+        acquired (str): 
+        specmap (dict):
+        chips_fn (fn): 
+
+    Returns:
+        dict: {k: chips_fn()}
+
+    """
+    
+    return {k: chips_fn(x=x, y=y, acquired=acquired, ubids=v) for k, v in specmap.items()}
