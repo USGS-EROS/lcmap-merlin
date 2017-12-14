@@ -10,13 +10,13 @@ import os
 
 def profiles(env, profile=None):
     __profiles = {
-        'chipmunk-0.1-conus-ard' : {
+        'chipmunk-0.1-ard' : {
             'dates_fn': '',
             'chips_fn': partial(chipmunk.chips,
-                                host=env.get('CHIPMUNK_CONUS_ARD_URL', None),
+                                host=env.get('CHIPMUNK_URL', None),
                                 resource=env.get('CHIPMUNK_CHIPS_RESOURCE', '/chips')),
             'specs_fn': partial(chipmunk.specs,
-                                host=env.get('CHIPMUNK_CONUS_ARD_URL', None),
+                                host=env.get('CHIPMUNK_URL', None),
                                 resource=env.get('CHIPMUNK_REGISTRY_RESOURCE', '/registry'),
                                 ubids={'red':     ['LC08_SRB4',    'LE07_SRB3',    'LT05_SRB3',    'LT04_SRB3'],
                                        'green':   ['LC08_SRB3',    'LE07_SRB2',    'LT05_SRB2',    'LT04_SRB2'],
@@ -28,12 +28,12 @@ def profiles(env, profile=None):
                                        'quality': ['LC08_PIXELQA', 'LE07_PIXELQA', 'LT05_PIXELQA', 'LT04_PIXELQA']}),
             'fmttr_fn': '',
             'registry_fn': partial(chipmunk.registry,
-                                   url=env.get('CHIPMUNK_CONUS_ARD_URL', None),
+                                   url=env.get('CHIPMUNK_URL', None),
                                    resource=env.get('CHIPMUNK_REGISTRY_PATH', '/registry')),
             'snap_fn': partial(chipmunk.snap,
-                               host=env.get('CHIPMUNK_CONUS_ARD_URL', None),
+                               host=env.get('CHIPMUNK_URL', None),
                                resource=env.get('CHIPMUNK_SNAP_RESOURCE', '/grid/snap'))},
-        'chipmunk-0.1-conus-aux' : {
+        'chipmunk-0.1-aux' : {
             'dates_fn': '',
             'chips_fn': '',
             'specs_fn': '',
