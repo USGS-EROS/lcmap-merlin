@@ -2,22 +2,20 @@ from cytoolz import assoc
 from cytoolz import merge
 from functools import partial
 import chips
-import chip_specs
 import dates
-# import formats
+import formats
 import os
+import specs
 
 
 def profiles(env, profile=None):
     __profiles = {
-        'chipmunk-0.1-ard' : {
+        'chipmunk-0.1-pyccd-ard' : {
             'dates_fn': '',
             'chips_fn': partial(chipmunk.chips,
                                 host=env.get('CHIPMUNK_URL', None),
                                 resource=env.get('CHIPMUNK_CHIPS_RESOURCE', '/chips')),
-            'specs_fn': partial(chipmunk.specs,
-                                host=env.get('CHIPMUNK_URL', None),
-                                resource=env.get('CHIPMUNK_REGISTRY_RESOURCE', '/registry'),
+            'specs_fn': partial(specs.mapped,
                                 ubids={'red':     ['LC08_SRB4',    'LE07_SRB3',    'LT05_SRB3',    'LT04_SRB3'],
                                        'green':   ['LC08_SRB3',    'LE07_SRB2',    'LT05_SRB2',    'LT04_SRB2'],
                                        'blue':    ['LC08_SRB2',    'LE07_SRB1',    'LT05_SRB1',    'LT04_SRB1'],
