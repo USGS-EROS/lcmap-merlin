@@ -11,7 +11,7 @@ in merlin/support/__init__.py
 """
 
 from merlin import chips as mc
-from merlin import chip_specs as mcs
+from merlin import specs as mcs
 from merlin import functions as f
 from merlin import files
 from merlin import support

@@ -5,7 +5,7 @@ from cytoolz import partial
 from cytoolz import reduce
 from cytoolz import sliding_window
 from merlin import chips
-from merlin import chip_specs
+from merlin import specs
 from merlin import functions as f
 from merlin import timeseries
 from merlin.support import aardvark as ma
@@ -73,21 +73,21 @@ def test_create():
 
 
 def test_compare_timeseries_to_chip():
-    x = -182000
-    y = 300400
-    queries = {'red': 'http://localhost/v1/landsat/chip-specs?q=tags:red AND sr'}
-    acquired = '1980-01-01/2015-12-31'
-    specs = ma.chip_specs(queries['red'])
-    ubids = chip_specs.ubids(specs)
-    byubid = chip_specs.byubid(specs)
+    _x = -182000
+    _y = 300400
+    _queries = {'red': 'http://localhost/v1/landsat/chip-specs?q=tags:red AND sr'}
+    _acquired = '1980-01-01/2015-12-31'
+    _specs = ma.chip_specs(_queries['red'])
+    _ubids = specs.ubids(_specs)
+    _byubid = specs.byubid(_specs)
      
-    most_recent_chip = last(sorted(ma.chips(x, y, acquired, 'http://localhost', ubids), key=lambda d: d['acquired']))
-    most_recent_chip = first(chips.to_numpy([most_recent_chip], byubid))
+    most_recent_chip = last(sorted(ma.chips(_x, _y, _acquired, 'http://localhost', _ubids), key=lambda d: d['acquired']))
+    most_recent_chip = first(chips.to_numpy([most_recent_chip], _byubid))
 
-    time_series = timeseries.create(point=(x, y),
-                                    acquired=acquired,
+    time_series = timeseries.create(point=(_x, _y),
+                                    acquired=_acquired,
                                     chips_fn=partial(ma.chips, url='http://localhost'),
-                                    keyed_specs=ma.multi_chip_specs(queries))
+                                    keyed_specs=ma.multi_chip_specs(_queries))
 
     # this is a 2d 100x100 array of values arranged spatially
     chip_data = most_recent_chip['data']

@@ -1,7 +1,7 @@
 from base64 import b64encode
 from cytoolz import drop
 from merlin import chips as mc
-from merlin import chip_specs as mcs
+from merlin import specs as mcs
 from functools import partial
 from functools import reduce
 from itertools import product

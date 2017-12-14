@@ -10,14 +10,14 @@ import os
 
 def profiles(env, profile=None):
     __profiles = {
-        'chipmunk-0.1-ard' : {
+        'chipmunk-0.1-conus-ard' : {
             'dates_fn': '',
             'chips_fn': partial(chipmunk.chips,
-                                host=env.get('CHIPMUNK_HOST', None),
+                                host=env.get('CHIPMUNK_CONUS_ARD_URL', None),
                                 resource=env.get('CHIPMUNK_CHIPS_RESOURCE', '/chips')),
             'specs_fn': partial(chipmunk.specs,
-                                host=env.get('CHIPMUNK_HOST', None),
-                                resource=env.get('CHIPMUNK_SPECS_RESOURCE', '/chip-specs'),
+                                host=env.get('CHIPMUNK_CONUS_ARD_URL', None),
+                                resource=env.get('CHIPMUNK_REGISTRY_RESOURCE', '/registry'),
                                 ubids={'red':     ['LC08_SRB4',    'LE07_SRB3',    'LT05_SRB3',    'LT04_SRB3'],
                                        'green':   ['LC08_SRB3',    'LE07_SRB2',    'LT05_SRB2',    'LT04_SRB2'],
                                        'blue':    ['LC08_SRB2',    'LE07_SRB1',    'LT05_SRB1',    'LT04_SRB1'],
@@ -27,16 +27,19 @@ def profiles(env, profile=None):
                                        'thermal': ['LC08_BTB10',   'LE07_BTB6',    'LT05_BTB6',    'LT04_BTB6'],
                                        'quality': ['LC08_PIXELQA', 'LE07_PIXELQA', 'LT05_PIXELQA', 'LT04_PIXELQA']}),
             'fmttr_fn': '',
-            'snapr_fn': partial(chipmunk.snap,
-                                host=env.get('CHIPMUNK_HOST', None),
-                                resource=env.get('CHIPMUNK_SNAP_RESOURCE', '/grid/snap'))},
-        'chipmunk-0.1-aux' : {
+            'registry_fn': partial(chipmunk.registry,
+                                   url=env.get('CHIPMUNK_CONUS_ARD_URL', None),
+                                   resource=env.get('CHIPMUNK_REGISTRY_PATH', '/registry')),
+            'snap_fn': partial(chipmunk.snap,
+                               host=env.get('CHIPMUNK_CONUS_ARD_URL', None),
+                               resource=env.get('CHIPMUNK_SNAP_RESOURCE', '/grid/snap'))},
+        'chipmunk-0.1-conus-aux' : {
             'dates_fn': '',
             'chips_fn': '',
             'specs_fn': '',
             'fmttr_fn': '',
             'snapr_fn': '',
-            'spec_queries': {'red': '?q=tags:red & SR'}},
+            'spec_queries': {''}},
         'local-ard': {
             'dates_fn': '',
             'chips_fn': '',

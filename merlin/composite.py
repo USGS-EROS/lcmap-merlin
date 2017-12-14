@@ -2,7 +2,7 @@ from cytoolz import first
 from cytoolz import partial
 from cytoolz import second
 from merlin import chips
-from merlin import chip_specs
+from merlin import specs
 
 
 def chips_and_specs(point, acquired, keyed_specs, chips_fn):
@@ -17,8 +17,9 @@ def chips_and_specs(point, acquired, keyed_specs, chips_fn):
     Returns:
         dict: {key: (chips, specs), key2: (chips, specs), ...}
     """
+    
     chips = partial(chips_fn, x=first(point), y=second(point), acquired=acquired)
-    return {k: (chips(ubids=chip_specs.ubids(v)), v) for k, v in keyed_specs.items()}
+    return {k: (chips(ubids=specs.ubids(v)), v) for k, v in keyed_specs.items()}
 
 
 def locate(point, spec):
@@ -32,6 +33,7 @@ def locate(point, spec):
         tuple: (chip_x, chip_y, chip_locations), where chip_locations is a
         two dimensional chip-shaped numpy array of (x,y)
     """
+    
     chip_x, chip_y = chips.snap(*point, chip_spec=spec)
     chip_locations = chips.locations(chip_x, chip_y, spec)
     return (chip_x, chip_y, chip_locations)

@@ -11,7 +11,7 @@ from cytoolz import second
 from cytoolz import thread_first
 from datetime import datetime
 from merlin import chips
-from merlin import chip_specs as specs
+from merlin import specs
 from merlin import dates as mdates
 from merlin import functions as f
 from merlin import rods as mrods
