@@ -1,5 +1,8 @@
+from cytoolz import cons
+from cytoolz import merge
 from merlin import specs
 from merlin.support import data as d
+
 
 def test_only():
     registry = [{'key': 1, 'ubid': 'a'}, {'key': 2, 'ubid': 'b'},
@@ -43,20 +46,26 @@ def test_exist():
 
     
 def test_byubid():
-    inputs = list()
-    inputs.append({'ubid': 'a', 'data': None})
-    inputs.append({'ubid': 'b', 'data': None})
-    inputs.append({'ubid': 'c', 'data': None})
-    results = specs.byubid(inputs)
+    registry = [{'key': 1, 'ubid': 'a'}, {'key': 2, 'ubid': 'b'},
+                {'key': 3, 'ubid': 'c'}, {'key': 4, 'ubid': 'd'}]
+    
+    results = specs.byubid(registry)
+
     # check that dicts were rekeyed into a new dict
-    assert all(map(lambda r: r in results, ['a', 'b', 'c']))
+    assert all(map(lambda r: r in results, ['a', 'b', 'c', 'd']))
+
     # check structure of new dict values
-    assert all(map(lambda r: 'ubid' in r and 'data' in r, results.values()))
+    assert all(map(lambda r: 'ubid' in r and 'key' in r, results.values()))
 
 
 def test_ubids():
-    data = ({'ubid': 'a/b/c'}, {'ubid': 'd/e/f'}, {'ubid': 'g'}, {'nope': 'z'})
+    registry = [{'key': 1, 'ubid': 'a'}, {'key': 2, 'ubid': 'b'},
+                {'key': 3, 'ubid': 'c'}, {'key': 4, 'ubid': 'd'}]
+
+    data = list(cons({'nope': 'z'}, registry))
+
     good = filter(lambda f: 'ubid' in f, data)
+    
     assert set(map(lambda u: u['ubid'], good)) == set(specs.ubids(data))
 
 
