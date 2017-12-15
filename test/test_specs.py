@@ -1,7 +1,6 @@
 from cytoolz import cons
 from cytoolz import merge
 from merlin import specs
-from merlin.support import data as d
 
 
 def test_only():
@@ -45,11 +44,11 @@ def test_exist():
     assert False==specs.exist(ubids=ubids, specs=registry)
 
     
-def test_byubid():
+def test_index():
     registry = [{'key': 1, 'ubid': 'a'}, {'key': 2, 'ubid': 'b'},
                 {'key': 3, 'ubid': 'c'}, {'key': 4, 'ubid': 'd'}]
     
-    results = specs.byubid(registry)
+    results = specs.index(registry)
 
     # check that dicts were rekeyed into a new dict
     assert all(map(lambda r: r in results, ['a', 'b', 'c', 'd']))
@@ -69,8 +68,9 @@ def test_ubids():
     assert set(map(lambda u: u['ubid'], good)) == set(specs.ubids(data))
 
 
-def test_ubids_from_chip_specs():
-    assert len(specs.ubids(d.chip_specs('blue'))) == 4
+def test_ubids():
+    ubids = [{'ubid': 1}, {'ubid': 2}, {'ubid': 3}, {'ubid': 4}]
+    assert len(specs.ubids(ubids)) == 4
 
 
 def test_refspec():

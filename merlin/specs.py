@@ -47,7 +47,7 @@ def exist(ubids, specs):
     return set(ubids).issubset(set(map(lambda x: x['ubid'], specs)))
     
 
-def byubid(specs):
+def index(specs):
     """Organizes specs by ubid
 
     Args:

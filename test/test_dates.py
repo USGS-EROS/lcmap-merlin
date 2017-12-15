@@ -1,19 +1,24 @@
-from merlin import dates as d
+from merlin import dates
 
 
 def test_to_ordinal():
-    assert d.to_ordinal('1999-01-01') == 729755
-    assert d.to_ordinal('1999/11/01') == 730059
+    assert dates.to_ordinal('1999-01-01') == 729755
+    assert dates.to_ordinal('1999/11/01') == 730059
 
 
 def test_startdate():
-    assert d.startdate('1980-01-01/1982-01-01') == '1980-01-01'
+    assert dates.startdate('1980-01-01/1982-01-01') == '1980-01-01'
 
 
 def test_enddate():
-    assert d.enddate('1980-01-01/1982-01-01') == '1982-01-01'
+    assert dates.enddate('1980-01-01/1982-01-01') == '1982-01-01'
 
 
 def test_is_acquired():
-    assert d.is_acquired('1980-01-01/1982-01-01') is True
-    assert d.is_acquired('1980-01-011982-01-01') is False
+    assert dates.is_acquired('1980-01-01/1982-01-01') is True
+    assert dates.is_acquired('1980-01-011982-01-01') is False
+
+
+def test_symmetric():
+    # fail until tested
+    assert 1 < 0

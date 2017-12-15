@@ -1,7 +1,7 @@
 from base64 import b64encode
 from cytoolz import drop
-from merlin import chips as mc
-from merlin import specs as mcs
+from merlin import chips
+from merlin import specs
 from functools import partial
 from functools import reduce
 from itertools import product
@@ -10,44 +10,53 @@ import numpy as np
 
 
 def test_difference():
-    assert mc.difference(3456, 3000) == 456
-    assert mc.difference(3456, 5000) == 3456
+    assert chips.difference(3456, 3000) == 456
+    assert chips.difference(3456, 5000) == 3456
 
 
 def test_near():
-    assert mc.near(2999, 3000, 0) == 0
-    assert mc.near(3000, 3000, 0) == 3000
-    assert mc.near(-2999, -3000, 0) == 0
-    assert mc.near(-3000, -3000, 0) == -3000
+    assert chips.near(2999, 3000, 0) == 0
+    assert chips.near(3000, 3000, 0) == 3000
+    assert chips.near(-2999, -3000, 0) == 0
+    assert chips.near(-3000, -3000, 0) == -3000
 
 
 def test_point_to_chip():
-    assert mc.point_to_chip(2999, -2999, 3000, -3000, 0, 0) == (0, 0)
-    assert mc.point_to_chip(3000, -3000, 3000, -3000, 0, 0) == (3000, -3000)
+    assert chips.point_to_chip(2999, -2999, 3000, -3000, 0, 0) == (0, 0)
+    assert chips.point_to_chip(3000, -3000, 3000, -3000, 0, 0) == (3000, -3000)
 
 
 def test_snap():
     spec = {'chip_x': 3000, 'chip_y': -3000, 'shift_x': 0, 'shift_y': 0}
-    assert (0, 0) == mc.snap(2999, -2999, spec)
-    assert (3000, 0) == mc.snap(3000, -2999, spec)
-    assert (0, -3000) == mc.snap(2999, -3000, spec)
-    assert (3000, -3000) == mc.snap(3000, -3000, spec)
+    assert (0, 0) == chips.snap(2999, -2999, spec)
+    assert (3000, 0) == chips.snap(3000, -2999, spec)
+    assert (0, -3000) == chips.snap(2999, -3000, spec)
+    assert (3000, -3000) == chips.snap(3000, -3000, spec)
 
 
 def test_coordinates():
     spec   = {'chip_x': 3000, 'chip_y': -3000, 'shift_x': 0, 'shift_y': 0}
     coords = ((0, 0), (0, -3000), (3000, 0), (3000, -3000))
-    assert coords == mc.coordinates(0, 0, 3000, -3000, spec)
+    assert coords == chips.coordinates(0, 0, 3000, -3000, spec)
 
 
-def test_numpy():
-    assert len("This is tested in test_aardvark:test_to_numpy()") > 0
+def bounds_to_coordinates():
+    # fail until implemented
+    assert 1 < 0
 
 
 def test_locations():
-    spec = {'data_shape': (2, 2), 'pixel_x': 30, 'pixel_y': -30}
+    params = {'startx': 0,
+              'starty': 0,
+              'cw': 2,
+              'ch': 2,
+              'rx': 1,
+              'ry': -1,
+              'sx': 60,
+              'sy': 60}
+
     locs = np.array([[[0, 0], [30, 0]], [[0, -30], [30, -30]]])
-    assert np.array_equal(locs, mc.locations(0, 0, spec))
+    assert np.array_equal(locs, chips.locations(**params))
     
 
 def test_dates():
@@ -56,7 +65,7 @@ def test_dates():
     inputs.append({'acquired': '2017-04-01'})
     inputs.append({'acquired': '2017-01-01'})
     inputs.append({'acquired': '2016-04-01'})
-    assert set(mc.dates(inputs)) == set(map(lambda d: d['acquired'], inputs))
+    assert set(chips.dates(inputs)) == set(map(lambda d: d['acquired'], inputs))
 
 
 def test_trim():
@@ -65,11 +74,16 @@ def test_trim():
     inputs.append({'include': True, 'acquired': '2017-04-01'})
     inputs.append({'include': False, 'acquired': '2017-01-01'})
     inputs.append({'include': True, 'acquired': '2016-04-01'})
-    included = mc.dates(filter(lambda d: d['include'] is True, inputs))
-    trimmed = mc.trim(inputs, included)
+    included = chips.dates(filter(lambda d: d['include'] is True, inputs))
+    trimmed = chips.trim(dates=included, chips=inputs)
     assert len(list(trimmed)) == len(included)
     assert set(included) == set(map(lambda x: x['acquired'], trimmed))
 
+
+def test_chip_to_numpy():
+    # fail until implemented
+    assert 1 < 0
+    
 
 def test_to_numpy():
     """ Builds combos of shapes and numpy data types and tests
@@ -87,8 +101,8 @@ def test_to_numpy():
     def _spec(dtype, shape, ubid):
         return {'ubid': ubid, 'data_shape': shape, 'data_type': dtype.upper()}
 
-    def _check(npchip, specs_byubid):
-        spec = specs_byubid[npchip['ubid']]
+    def _check(spec_index, npchip):
+        spec = spec_index[npchip['ubid']]
         assert npchip['data'].dtype.name == spec['data_type'].lower()
         assert npchip['data'].shape == spec['data_shape']
         return True
@@ -98,19 +112,19 @@ def test_to_numpy():
                            ((3, 3), (1, 1), (100, 100))))
 
     # generate the chip_specs and chips
-    chips = [_chip(*c, _ubid(*c)) for c in combos]
-    specs = [_spec(*c, _ubid(*c)) for c in combos]
-    specs_byubid = mcs.byubid(specs)
+    _chips = [_chip(*c, _ubid(*c)) for c in combos]
+    _specs = [_spec(*c, _ubid(*c)) for c in combos]
+    _spec_index = specs.index(_specs)
 
     # run assertions
-    checker = partial(_check, specs_byubid=specs_byubid)
-    all(map(checker, mc.to_numpy(chips, specs_byubid)))
+    checker = partial(_check, spec_index=_spec_index)
+    all(map(checker, chips.to_numpy(spec_index=_spec_index, chips=_chips)))
 
 
 def test_identity():
     chip = {'x': 1, 'y': 2, 'acquired': '1980-01-01', 'ubid': 'a/b/c/d'}
-    assert mc.identity(chip) == tuple([chip['x'], chip['y'],
-                                       chip['ubid'], chip['acquired']])
+    assert chips.identity(chip) == tuple([chip['x'], chip['y'],
+                                          chip['ubid'], chip['acquired']])
 
 
 def test_deduplicate():
@@ -121,4 +135,9 @@ def test_deduplicate():
               {'x': 1, 'y': 2, 'acquired': '1980-01-02', 'ubid': 'a/b/c/d'},
               {'x': 1, 'y': 2, 'acquired': '1980-01-01', 'ubid': 'a/b/c'}]
 
-    assert mc.deduplicate(inputs) == tuple(drop(1, inputs))
+    assert chips.deduplicate(inputs) == tuple(drop(1, inputs))
+
+
+def test_mapped():
+    # fail until filled out
+    assert 1 < 0

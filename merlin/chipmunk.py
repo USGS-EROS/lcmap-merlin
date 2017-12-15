@@ -1,4 +1,6 @@
+from cytoolz import reduce
 from functools import partial
+from operator import add
 import requests
 
 
@@ -61,7 +63,37 @@ def registry(url, resource='/registry'):
     """
 
     return requests.get(url="{}{}".format(url, resource)).json()
+
+
+def grid(url, resource='/grid'):
+    """Determine the chip and tile coordinates for a point.
+  
+    Args:
+        url (str): protocol://host:port/path
+        resource (str): /grid/snap/resource (default: /grid/snap)
+ 
+    Returns:
+        dict: [{"name":"tile",
+                "proj":null,
+                "rx":1.0,
+                "ry":-1.0,
+                "sx":150000.0,
+                "sy":150000.0,
+                "tx":2565585.0,
+                "ty":3314805.0},
+               {"name":"chip",
+                "proj":null,
+                "rx":1.0,
+                "ry":-1.0,
+                "sx":3000.0,
+                "sy":3000.0,
+                "tx":2565585.0,
+                "ty":3314805.0}]
+    """
     
+    url = '{}{}'.format(url, resource)
+    return requests.get(url=url).json()
+
 
 def snap(x, y, url, resource='/grid/snap'):
     """Determine the chip and tile coordinates for a point.

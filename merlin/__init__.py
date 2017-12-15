@@ -1,23 +1,43 @@
+from cytoolz import filter
+from cytoolz import first
 from cytoolz import get_in
 from cytoolz import partial
-from specs import refspec
-import chips
+from merlin import chips
+from merlin.specs import refspec
 
 
 def create(x, y, acquired, cfg):
-
-    # snap requested point to a chip
+    
     x, y = get_in(['chip', 'proj-pt'], cfg['snap_fn'](x=x, y=y))
 
     # get specs
-    specmap = cfg['specs_fn'](registry=cfg['registry_fn']())
+    specmap = cfg['specs_fn'](specs=cfg['registry_fn']())
 
     # get function that will return chipmap.
     # Don't create state with a realized variable to preserve memory
-    chipmap = partial(chips.mapped, x=x, y=y, acquired=acquired, specmap=specmap, chips_fn=chips_fn)
+    chipmap = partial(chips.mapped,
+                      x=x,
+                      y=y,
+                      acquired=acquired,
+                      specmap=specmap,
+                      chips_fn=cfg['chips_fn'])
 
-    # calculate locations chip
-    locations = chips.locations(x, y, refspec(specmap))
+    # calculate locations chip.  There's another function
+    # here to be split out and organized.
+    
+    grid = first(filter(lambda x: x['name'] == 'chip',
+                        cfg['grid_fn']()))
+
+    cw, ch = refspec(specmap).get('data_shape')
+    
+    locations = chips.locations(startx=x,
+                                starty=y,
+                                cw=cw,
+                                ch=ch,
+                                rx=grid.get('rx'),
+                                ry=grid.get('ry'),
+                                sx=grid.get('sx'),
+                                sy=grid.get('sy'))
     
     return cfg['format_fn'](x=x,
                             y=y,

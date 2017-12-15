@@ -1,19 +1,23 @@
 from cytoolz import assoc
 from cytoolz import merge
 from functools import partial
-import chips
-import dates
-import formats
+from . import chipmunk
+from . import chips
+from . import dates
+from . import formats
+from . import specs
 import os
-import specs
 
 
 def profiles(env, profile=None):
     __profiles = {
         'chipmunk-0.1-pyccd-ard' : {
-            'dates_fn': dates.symmetric_dates,
+            'grid_fn': partial(chipmunk.grid,
+                               url=env.get('CHIPMUNK_URL', None),
+                               resource=env.get('CHIPMUNK_GRID_RESOURCE', '/grid')),
+            'dates_fn': dates.symmetric,
             'chips_fn': partial(chipmunk.chips,
-                                host=env.get('CHIPMUNK_URL', None),
+                                url=env.get('CHIPMUNK_URL', None),
                                 resource=env.get('CHIPMUNK_CHIPS_RESOURCE', '/chips')),
             'specs_fn': partial(specs.mapped,
                                 ubids={'red':     ['LC08_SRB4',    'LE07_SRB3',    'LT05_SRB3',    'LT04_SRB3'],
@@ -24,12 +28,12 @@ def profiles(env, profile=None):
                                        'swir2':   ['LC08_SRB7',    'LE07_SRB7',    'LT05_SRB7',    'LT04_SRB7'],
                                        'thermal': ['LC08_BTB10',   'LE07_BTB6',    'LT05_BTB6',    'LT04_BTB6'],
                                        'quality': ['LC08_PIXELQA', 'LE07_PIXELQA', 'LT05_PIXELQA', 'LT04_PIXELQA']}),
-            'fmttr_fn': formats.pyccd,
+            'format_fn': formats.pyccd,
             'registry_fn': partial(chipmunk.registry,
                                    url=env.get('CHIPMUNK_URL', None),
                                    resource=env.get('CHIPMUNK_REGISTRY_PATH', '/registry')),
             'snap_fn': partial(chipmunk.snap,
-                               host=env.get('CHIPMUNK_URL', None),
+                               url=env.get('CHIPMUNK_URL', None),
                                resource=env.get('CHIPMUNK_SNAP_RESOURCE', '/grid/snap'))},
         'chipmunk-0.1-aux' : {
             'dates_fn': '',

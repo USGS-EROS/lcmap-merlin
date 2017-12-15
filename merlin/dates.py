@@ -1,6 +1,8 @@
 from cytoolz import first
+from cytoolz import second
 from dateutil import parser
 from merlin import chips
+from merlin.functions import seqeq
 import re
 
 
@@ -69,3 +71,48 @@ def mapped(chipmap):
     """
 
     return {k: chips.dates(v) for k, v in cas.items()}
+
+
+def symmetric(datemap):
+    """Returns a sequence of dates that are common to all map values if 
+       all datemap values are represented, else Exception.
+    
+    Args:
+        datemap: {key: [datestrings,]}
+
+    Returns:
+        Sequence of date strings or Exception
+
+    Example:
+
+        >>> common({"red":  [ds3, ds1, ds2],
+                    "blue": [ds2, ds3, ds1]})
+        [2, 3, 1]
+        >>>
+        >>> common({"red":  [ds3, ds1],
+                    "blue": [ds2, ds3, ds1]})
+        Exception: red:[3, 1] does not match blue:[2, 3, 1]
+    """
+
+    def check(a, b):
+        """Reducer for efficiently comparing two unordered sequences.
+        Executes in linear(On) time.
+
+        Args:
+            a: {k:[datestring1, datestring2...]}
+            b: {k:[datestring2, datestring1...]}
+
+        Returns:
+            b if a == b, else Exception with details
+        """
+
+        if functions.seqeq(second(a), second(b)):
+            return b
+        else:
+            msg = ('assymetric dates detected - {} != {}'
+                   .format(first(a), first(b)))
+            msga = '{}{}'.format(first(a), second(a))
+            msgb = '{}{}'.format(first(b), second(b))
+            raise Exception('\n\n'.join([msg, msga, msgb]))
+
+    return second(reduce(check, datemap.items()))

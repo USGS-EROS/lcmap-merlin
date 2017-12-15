@@ -109,3 +109,30 @@ def locate(locations, rods):
     flat_locs = locations.reshape(locations.shape[0] * locations.shape[1], -1)
     flat_rods = rods.reshape(rods.shape[0] * rods.shape[1], -1)
     return {tuple(k): v for k, v in zip(flat_locs, flat_rods)}
+
+
+def create(x, y, chipseq, dateseq, locations, spec_index):
+    """Transforms a sequence of chips into a sequence of rods
+       filtered by date, deduplicated, sorted, located and identified.
+
+       Args:
+           x (int): x projection coordinate of chip
+           y (int): y projection coordinate of chip
+           chipseq (seq): sequence of chips
+           dates (seq): sequence of dates that should be included in the rods
+           locations (numpy.Array): 2d numpy array of pixel coordinates
+           spec_index (dict): specs indexed by ubid
+
+       Returns:
+           dict: {(chip_x, chip_y, x, y): {'k1': [], 'k2': [], 'k3': [], ...}}
+    """
+        
+    return thread_last(chipseq,
+                       chips.trim(dates=dateseq),
+                       chips.deduplicate(),
+                       sort,
+                       chips.to_numpy(spec_index=spec_index),
+                       from_chips(),
+                       locate(locations),
+                       identify(x, y))
+

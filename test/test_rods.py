@@ -60,3 +60,8 @@ def test_locate():
     flatlocs = locs.reshape(9, 2)
     tseries = fr.locate(locs, rods)
     assert all([tseries[tuple(loc)].sum() == loc.sum() + 2 for loc in flatlocs])
+
+
+def test_create():
+    # fail until implemented
+    assert 1 < 0

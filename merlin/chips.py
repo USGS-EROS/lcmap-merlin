@@ -14,69 +14,6 @@ import requests
 logger = logging.getLogger(__name__)
 
 
-def from_aardvark(url, x, y, acquired, ubids):
-    """Returns chips from an aardvark instance given x, y, date range and ubid sequence
-
-    Args:
-        url: full url to aardvark endpoint
-        x: longitude
-        y: latitude
-        acquired: ISO8601 daterange '2012-01-01/2014-01-03'
-        ubids: sequence of ubid strings
-        url: string
-        x: number
-        y: number
-
-    Returns:
-        tuple: chips
-
-    Example:
-        >>> from_aardvark(url='http://host:port/landsat/chips',
-                          x=123456,
-                          y=789456,
-                          acquired='2012-01-01/2014-01-03',
-                          ubids=['LANDSAT_7/ETM/sr_band1', 'LANDSAT_5/TM/sr_band1'])
-    """
-
-    return tuple(requests.get(url, params={'x': x,
-                                           'y': y,
-                                           'acquired': acquired,
-                                           'ubid': ubids}).json())
-
-
-def from_chipmunk(url, x, y, acquired, ubids):
-    """Returns chips from a Chipmunk instance given x, y, date range and ubid sequence
-
-    Args:
-        url: full url to Chipmunk endpoint
-        x: longitude
-        y: latitude
-        acquired: ISO8601 daterange '2012-01-01/2014-01-03'
-        ubids: sequence of ubid strings
-        url: string
-        x: number
-        y: number
-
-    Returns:
-        tuple: chips
-
-    Example:
-        >>> from_chipmunk(url='http://host:port/landsat/chips',
-                          x=123456,
-                          y=789456,
-                          acquired='2012-01-01/2014-01-03',
-                          ubids=['LANDSAT_7/ETM/sr_band1', 'LANDSAT_5/TM/sr_band1'])
-    """
-    
-    params = [{'x': x, 'y': y, 'acquired': acquired, 'ubid': u } for u in ubids]
-    responses = [requests.get(url=url, params=p).json() for p in params]
-    return tuple(reduce(add, responses))
-    
-    
-def local(path, x, y, acquired, ubids):
-    pass
-
-
 def difference(point, interval):
     """Calculate difference between a point and 'prior' point on an interval.
 
@@ -247,37 +184,43 @@ def bounds_to_coordinates(bounds, spec):
                        chip_spec=spec)
 
 
-def locations(startx, starty, chip_spec):
+def locations(startx, starty, cw, ch, rx, ry, sx, sy):
     """Computes locations for array elements that fall within the shape
     specified by chip_spec['data_shape'] using the startx and starty as
     the origin.  locations() does not snap() the startx and starty... this
     should be done prior to calling locations() if needed.
 
     Args:
-        startx: x coordinate (longitude) of upper left pixel of chip
-        starty: y coordinate (latitude) of upper left pixel of chip
-
+        startx: x projection coordinate of upper left pixel of chip
+        starty: y projection coordinate of upper left pixel of chip
+        cw: chip width in pixels (e.g. 100 pixels)
+        ch: chip height in pixels (e.g. 100 pixels)
+        rx: x reflection (e.g. 1)
+        ry: y reflection (e.g. -1)
+        sx: x scale (e.g. 3000 meters)
+        sy: y scale (e.g. 3000 meters)
     Returns:
         a two (three) dimensional numpy array of [x, y] coordinates
     """
 
-    cw = chip_spec['data_shape'][0]  # 100
-    ch = chip_spec['data_shape'][1]  # 100
-
-    pw = chip_spec['pixel_x']  # 30 meters
-    ph = chip_spec['pixel_y']  # -30 meters
-
+    pw = (sx * rx) / cw # e.g. 30 meters
+    ph = (sy * ry) / ch # e.g. -30 meters
+    
     # determine ends
     endx = startx + cw * pw
     endy = starty + ch * ph
 
-    # ERROR: Transposed 90 degrees
+    #################################################
+    # WARNING: The following line would transpose the
+    # resulting matrix by 90 degrees.  In order to
+    # generate the proper row major matrix the order
+    # y and x are created inside mgrid matters
+    #
     # x, y = np.mgrid[startx:endx:pw, starty:endy:ph]
+    #################################################
     
     # build arrays of end - start / step shape
     # flatten into 1d, concatenate and reshape to fit chip
-    # In order to generate the proper row major matrix
-    # the order y and x are created inside mgrid matters
     y, x = np.mgrid[starty:endy:ph, startx:endx:pw]
     matrix = np.c_[x.ravel(), y.ravel()]
     return np.reshape(matrix, (cw, ch, 2))
@@ -296,7 +239,7 @@ def dates(chips):
     return tuple([c['acquired'] for c in chips])
 
 
-def trim(chips, dates):
+def trim(dates, chips):
     """Eliminates chips that are not from the specified dates
 
     Args:
@@ -329,18 +272,18 @@ def chip_to_numpy(chip, chip_spec):
     return chip
 
 
-def to_numpy(chips, chip_specs_byubid):
+def to_numpy(spec_index, chips):
     """Converts the data for a sequence of chips to numpy arrays
 
     Args:
+        spec_index (dict): chip_specs keyed by ubid
         chips (sequence): a sequence of chips
-        chip_specs_byubid (dict): chip_specs keyed by ubid
-
+        
     Returns:
         sequence: chips with data as numpy arrays
     """
 
-    return map(lambda c: chip_to_numpy(c, chip_specs_byubid[c['ubid']]), chips)
+    return map(lambda c: chip_to_numpy(c, spec_index[c['ubid']]), chips)
 
 
 def identity(chip):
