@@ -1,3 +1,5 @@
+from cytoolz import thread_last
+from merlin import chips
 import numpy as np
 
 def from_chips(chips):
@@ -126,7 +128,9 @@ def create(x, y, chipseq, dateseq, locations, spec_index):
        Returns:
            dict: {(chip_x, chip_y, x, y): {'k1': [], 'k2': [], 'k3': [], ...}}
     """
-        
+
+    print("CHIPSEQ:{}".format(len(chipseq)))
+    
     return thread_last(chipseq,
                        chips.trim(dates=dateseq),
                        chips.deduplicate(),

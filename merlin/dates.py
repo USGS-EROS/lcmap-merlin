@@ -1,4 +1,5 @@
 from cytoolz import first
+from cytoolz import reduce
 from cytoolz import second
 from dateutil import parser
 from merlin import chips
@@ -70,7 +71,7 @@ def mapped(chipmap):
         dict:  {k: [datestring2, datestring1, datestring3]}
     """
 
-    return {k: chips.dates(v) for k, v in cas.items()}
+    return {k: chips.dates(v) for k, v in chipmap.items()}
 
 
 def symmetric(datemap):
@@ -106,7 +107,7 @@ def symmetric(datemap):
             b if a == b, else Exception with details
         """
 
-        if functions.seqeq(second(a), second(b)):
+        if seqeq(second(a), second(b)):
             return b
         else:
             msg = ('assymetric dates detected - {} != {}'

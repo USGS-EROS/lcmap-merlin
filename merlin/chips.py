@@ -5,6 +5,7 @@ from cytoolz import reduce
 from cytoolz import unique
 from functools import singledispatch
 from merlin import functions as f
+from merlin import specs
 from operator import add
 import logging
 import math
@@ -330,4 +331,4 @@ def mapped(x, y, acquired, specmap, chips_fn):
 
     """
     
-    return {k: chips_fn(x=x, y=y, acquired=acquired, ubids=v) for k, v in specmap.items()}
+    return {k: chips_fn(x=x, y=y, acquired=acquired, ubids=specs.ubids(v)) for k, v in specmap.items()}

@@ -1,3 +1,4 @@
+from cytoolz import merge
 from cytoolz import partial
 from merlin import chips
 from merlin import dates
@@ -39,10 +40,17 @@ def pyccd(x, y, locations, dates_fn, specmap, chipmap):
         ...
     """
 
-    _index   = specs.byubid(merge(specmap.values()))
-    _dates   = dates_fn()
-    _creator = partial(rods.create, x=x, y=y, dateseq=_dates, locations=locations, ubid_index=_index)
-    _flipped = partial(f.flip_keys, {k: _creator(chipseq=v) for k, v in chipmap.items()})
+    print("FORMAT CHIPMAP:{}".format(len(chipmap)))
+    from cytoolz import first
+    print("FORMAT RED CHIP COUNT:{}".format(len(chipmap.get('red'))))
+    print("FORMAT GREEN CHIP COUNT:{}".format(len(chipmap.get('green'))))
+    print("FORMAT BLUE CHIP COUNT:{}".format(len(chipmap.get('blue'))))
+    print("FORMAT CHIP KEYS:{}".format(chipmap.keys()))
+    
+    _index   = specs.index(list(functions.flatten(specmap.values())))
+    _dates   = dates_fn(datemap=dates.mapped(chipmap))
+    _creator = partial(rods.create, x=x, y=y, dateseq=_dates, locations=locations, spec_index=_index)
+    _flipped = partial(functions.flip_keys, {k: _creator(chipseq=v) for k, v in chipmap.items()})
     return add_dates(dates=list(map(dates.to_ordinal, sort(dates, key=None))),
                      dods=flipped())
     
