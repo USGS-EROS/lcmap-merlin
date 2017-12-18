@@ -143,3 +143,8 @@ def test_chexists():
     with pytest.raises(Exception):
         d = {'a': [1, 2, 3], 'b': [1, 2, 3], 'c': [1, 2, 4, 5]}
         assert f.chexists(d, ['c'], check_fn) == d['a']
+
+
+def test_insert_into_every():
+    # fail until tested
+    assert 1 < 0

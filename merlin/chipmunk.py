@@ -28,6 +28,8 @@ def chips(x, y, acquired, ubids, url, resource='/chips'):
     """
     url = '{}{}'.format(url, resource)
     params = [{'x': x, 'y': y, 'acquired': acquired, 'ubid': u } for u in ubids]
+
+    # check to see if there were results.  If yes return .json() else [{}]
     responses = [requests.get(url=url, params=p).json() for p in params]
     return tuple(reduce(add, responses))
 

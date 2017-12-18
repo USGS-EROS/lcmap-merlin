@@ -141,3 +141,8 @@ def test_deduplicate():
 def test_mapped():
     # fail until filled out
     assert 1 < 0
+
+
+def test_rsort():
+    # fail until tested
+    assert 1 < 0

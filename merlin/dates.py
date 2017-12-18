@@ -3,7 +3,7 @@ from cytoolz import reduce
 from cytoolz import second
 from dateutil import parser
 from merlin import chips
-from merlin.functions import seqeq
+from merlin import functions as f
 import re
 
 
@@ -107,7 +107,7 @@ def symmetric(datemap):
             b if a == b, else Exception with details
         """
 
-        if seqeq(second(a), second(b)):
+        if f.seqeq(second(a), second(b)):
             return b
         else:
             msg = ('assymetric dates detected - {} != {}'
@@ -117,3 +117,16 @@ def symmetric(datemap):
             raise Exception('\n\n'.join([msg, msga, msgb]))
 
     return second(reduce(check, datemap.items()))
+
+
+def rsort(dateseq):
+    """ Reverse sorts a sequence of dates.
+
+    Args:
+        dateseq: sequence of dates
+
+    Returns:
+        sequence: reverse sorted sequence of dates
+    """
+    
+    return f.rsort(dateseq)

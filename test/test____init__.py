@@ -28,6 +28,12 @@ def test_csort():
     assert(results[0]['acquired'] > results[1]['acquired'] >
            results[2]['acquired'] > results[3]['acquired'])
 
+    
+def test_create_nodata():
+    x = test.x_nodata
+    y = test.y_nodata
+    
+    
 
 def test_create():
     # data should be shaped: ( ((chip_x, chip_y, x1, y1),{}),
@@ -38,11 +44,11 @@ def test_create():
     
     # This should fail because the test data contains additional qa chips
     with pytest.raises(Exception):
-        data = create(x=-182000, y=300400, acquired='1980-01-01/2015-12-31', cfg=profile)
+        data = create(x=test.x, y=test.y, acquired=test.acquired, cfg=profile)
                       
 
     # test with chexists to handle quality assymetry
-    data = create(x=-182000, y=300400, acquired='1980-01-01/2015-12-31', cfg=profile)
+    data = create(x=test.x, y=test.y, acquired=test.acquired, cfg=profile)
 
     # make sure we have 10000 results
     assert len(data) == 10000

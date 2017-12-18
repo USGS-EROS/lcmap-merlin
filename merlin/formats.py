@@ -7,6 +7,8 @@ from merlin import rods
 from merlin import specs
 
 
+
+
 def pyccd(x, y, locations, dates_fn, specmap, chipmap):
     """Builds inputs for the pyccd algorithm.
 
@@ -39,20 +41,17 @@ def pyccd(x, y, locations, dates_fn, specmap, chipmap):
                                      "quality": []}))
         ...
     """
-
-    print("FORMAT CHIPMAP:{}".format(len(chipmap)))
-    from cytoolz import first
-    print("FORMAT RED CHIP COUNT:{}".format(len(chipmap.get('red'))))
-    print("FORMAT GREEN CHIP COUNT:{}".format(len(chipmap.get('green'))))
-    print("FORMAT BLUE CHIP COUNT:{}".format(len(chipmap.get('blue'))))
-    print("FORMAT CHIP KEYS:{}".format(chipmap.keys()))
     
     _index   = specs.index(list(functions.flatten(specmap.values())))
     _dates   = dates_fn(datemap=dates.mapped(chipmap))
     _creator = partial(rods.create, x=x, y=y, dateseq=_dates, locations=locations, spec_index=_index)
     _flipped = partial(functions.flip_keys, {k: _creator(chipseq=v) for k, v in chipmap.items()})
-    return add_dates(dates=list(map(dates.to_ordinal, sort(dates, key=None))),
-                     dods=flipped())
+    #return add_dates(dates=list(map(dates.to_ordinal, dates.rsort(dates))),
+    #                 dods=flipped())
+    return functions.insert_into_every(key='dates',
+                                       values=list(map(dates.to_ordinal, dates.rsort(_dates))),
+                                       dods=_flipped())
+                             
     
 #    return tuple((k, v) for k, v in rods.items())
 

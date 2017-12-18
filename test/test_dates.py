@@ -22,3 +22,8 @@ def test_is_acquired():
 def test_symmetric():
     # fail until tested
     assert 1 < 0
+
+
+def test_rsort():
+    # fail until tested
+    assert 1 < 0

@@ -240,7 +240,7 @@ def dates(chips):
     return tuple([c['acquired'] for c in chips])
 
 
-def trim(dates, chips):
+def trim(chips, dates):
     """Eliminates chips that are not from the specified dates
 
     Args:
@@ -264,7 +264,7 @@ def chip_to_numpy(chip, chip_spec):
     Returns:
         a decoded chip with data as a shaped numpy array
     """
-
+    
     shape = chip_spec['data_shape']
     dtype = chip_spec['data_type'].lower()
     cdata = b64decode(chip['data'])
@@ -273,13 +273,13 @@ def chip_to_numpy(chip, chip_spec):
     return chip
 
 
-def to_numpy(spec_index, chips):
+def to_numpy(chips, spec_index):
     """Converts the data for a sequence of chips to numpy arrays
 
     Args:
-        spec_index (dict): chip_specs keyed by ubid
         chips (sequence): a sequence of chips
-        
+        spec_index (dict): chip_specs keyed by ubid
+
     Returns:
         sequence: chips with data as numpy arrays
     """
@@ -332,3 +332,16 @@ def mapped(x, y, acquired, specmap, chips_fn):
     """
     
     return {k: chips_fn(x=x, y=y, acquired=acquired, ubids=specs.ubids(v)) for k, v in specmap.items()}
+
+
+def rsort(chips, key=lambda c: c['acquired']):
+    """Reverse sorts a sequence of chips by date.
+
+    Args:
+        chips: sequence of chips
+
+    Returns:
+        sorted sequence of chips
+    """
+
+    return tuple(f.rsort(chips, key=key))

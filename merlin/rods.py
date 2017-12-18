@@ -1,3 +1,4 @@
+from functools import partial
 from cytoolz import thread_last
 from merlin import chips
 import numpy as np
@@ -43,12 +44,12 @@ def from_chips(chips):
     return np.hstack(master.T).reshape(*master[0].shape, -1)
 
 
-def locate(locations, rods):
+def locate(rods, locations):
     """Combines location information with pixel rods.
 
     Args:
-        locations:  Chip shaped numpy array of locations
         rods: Chip shaped numpy array of rods
+        locations:  Chip shaped numpy array of locations
 
     Returns:
         dict: (location):rod for each location and rod in the arrays.
@@ -113,6 +114,21 @@ def locate(locations, rods):
     return {tuple(k): v for k, v in zip(flat_locs, flat_rods)}
 
 
+def identify(rod, x, y):
+    """Adds chip ids (chip_x, chip_y) to the key for a rod
+
+    Args:
+        rod: dict of (x, y): [values]
+        x: x coordinate that identifies the source chip
+        y: y coordinate that identifies the source chip
+        
+    Returns:
+        dict: {(chip_x, chip_y, x, y): [values]}
+    """
+
+    return {(x, y, k[0], k[1]): v for k, v in rod.items()}
+
+
 def create(x, y, chipseq, dateseq, locations, spec_index):
     """Transforms a sequence of chips into a sequence of rods
        filtered by date, deduplicated, sorted, located and identified.
@@ -128,15 +144,13 @@ def create(x, y, chipseq, dateseq, locations, spec_index):
        Returns:
            dict: {(chip_x, chip_y, x, y): {'k1': [], 'k2': [], 'k3': [], ...}}
     """
-
-    print("CHIPSEQ:{}".format(len(chipseq)))
     
     return thread_last(chipseq,
-                       chips.trim(dates=dateseq),
-                       chips.deduplicate(),
-                       sort,
-                       chips.to_numpy(spec_index=spec_index),
-                       from_chips(),
-                       locate(locations),
-                       identify(x, y))
+                       partial(chips.trim, dates=dateseq),
+                       chips.deduplicate,
+                       chips.rsort,
+                       partial(chips.to_numpy, spec_index=spec_index),
+                       from_chips,
+                       partial(locate, locations=locations),
+                       partial(identify, x=x, y=y))
 
