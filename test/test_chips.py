@@ -101,7 +101,7 @@ def test_to_numpy():
     def _spec(dtype, shape, ubid):
         return {'ubid': ubid, 'data_shape': shape, 'data_type': dtype.upper()}
 
-    def _check(spec_index, npchip):
+    def _check(npchip, spec_index):
         spec = spec_index[npchip['ubid']]
         assert npchip['data'].dtype.name == spec['data_type'].lower()
         assert npchip['data'].shape == spec['data_shape']

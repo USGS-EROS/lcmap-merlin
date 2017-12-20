@@ -13,8 +13,8 @@ import test
 
     
 def test_create_nodata():
-    profile = cfg.get(profile=test.profile, env=test.env)
-    data = create(x=test.x_nodata, y=test.y_nodata, acquired=test.acquired, cfg=profile)
+    _cfg = cfg.get(profile=test.profile, env=test.env)
+    data = create(x=test.x_nodata, y=test.y_nodata, acquired=test.acquired, cfg=_cfg)
     assert len(data) == 0
     assert type(data) is tuple
     
@@ -23,7 +23,6 @@ def test_create():
     # data should be shaped: ( ((chip_x, chip_y, x1, y1),{}),
     #                          ((chip_x, chip_y, x1, y2),{}), )
 
-    # get the test profile
     _cfg = cfg.get(profile=test.profile, env=test.env)    
     data = create(x=test.x, y=test.y, acquired=test.acquired, cfg=_cfg)
 
@@ -50,7 +49,7 @@ def test_compare_timeseries_to_chip():
     # Make sure the timeseries values match the most recent chip for a spectra.
     # This will validate the chip was not transposed during timeseries creation.
     
-    _cfg = cfg.get(profile=test.profile, env=test.env)
+    _cfg =   cfg.get(profile=test.profile, env=test.env)
     _ubids = cfg.ubids.get(test.profile).get('red')
     _chips = _cfg.get('chips_fn')(x=test.x, y=test.y, acquired=test.acquired, ubids=_ubids)
     _index = specs.index(_cfg.get('registry_fn')())
