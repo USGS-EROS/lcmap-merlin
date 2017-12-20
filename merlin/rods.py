@@ -1,4 +1,5 @@
 from functools import partial
+from cytoolz import excepts
 from cytoolz import thread_last
 from merlin import chips
 import numpy as np
@@ -39,7 +40,7 @@ def from_chips(chips):
                [[ 14, 24, 34], [ 15, 25, 35], [ 16, 26, 36]],
                [[ 17, 27, 37], [ 18, 28, 38], [ 19, 29, 39]]])
     """
-
+    
     master = np.conj([c['data'] for c in chips])
     return np.hstack(master.T).reshape(*master[0].shape, -1)
 
@@ -150,7 +151,7 @@ def create(x, y, chipseq, dateseq, locations, spec_index):
                        chips.deduplicate,
                        chips.rsort,
                        partial(chips.to_numpy, spec_index=spec_index),
-                       from_chips,
-                       partial(locate, locations=locations),
+                       excepts(ValueError, from_chips, lambda _: []),
+                       excepts(AttributeError, partial(locate, locations=locations), lambda _: {}),
                        partial(identify, x=x, y=y))
 
