@@ -144,5 +144,5 @@ def test_mapped():
 
 
 def test_rsort():
-    # fail until tested
-    assert 1 < 0
+    chipseq = [{'acquired': 3}, {'acquired': 1}, {'acquired': 2}]
+    assert [3, 2, 1] == list(map(lambda x: x['acquired'], chips.rsort(chipseq)))

@@ -25,5 +25,5 @@ def test_symmetric():
 
 
 def test_rsort():
-    # fail until tested
-    assert 1 < 0
+    assert [3, 2, 1] == dates.rsort([3, 1, 2])
+ 
