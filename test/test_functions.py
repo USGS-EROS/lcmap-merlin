@@ -151,5 +151,6 @@ def test_insert_into_every():
 
     result = f.insert_into_every(dod, key='newkey', value='newval')
 
-    assert all(['newkey' in dod.get(key) for key in dod.keys()])
+    #assert all(['newkey' in dod.get(key) for key in dod.keys()])
+    assert all([dod.get(key).get('newkey') is 'newval' for key in dod.keys()])
            
