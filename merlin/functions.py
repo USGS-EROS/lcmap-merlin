@@ -352,13 +352,13 @@ def chexists(dictionary, keys, check_fn):
     return checked
 
 
-def insert_into_every(dods, key, values):
+def insert_into_every(dods, key, value):
     """Insert key:values into every subdictionary of dods.
 
     Args:
         dods: dictionary of dictionaries
         key: key to hold values in subdictionaires
-        values: sequence of values
+        value: value to associate with key
 
     Returns:
         dict: dictionary of dictionaries with key:values inserted into each
@@ -368,4 +368,4 @@ def insert_into_every(dods, key, values):
         d.update({key: v})
         return d
 
-    return {k: update(v, values) for k, v in dods.items()}
+    return {k: update(v, value) for k, v in dods.items()}

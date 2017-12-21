@@ -48,7 +48,7 @@ def pyccd(x, y, locations, dates_fn, specmap, chipmap):
     _flipped = partial(functions.flip_keys, {k: _creator(chipseq=v) for k, v in chipmap.items()})
     
     _rods = functions.insert_into_every(key='dates',
-                                        values=list(map(dates.to_ordinal, dates.rsort(_dates))),
+                                        value=list(map(dates.to_ordinal, dates.rsort(_dates))),
                                         dods=_flipped())
                                  
     return tuple((k, v) for k, v in _rods.items())

@@ -146,5 +146,10 @@ def test_chexists():
 
 
 def test_insert_into_every():
-    # fail until tested
-    assert 1 < 0
+    dod = {1: {1: 'one'},
+           2: {1: 'one'}}
+
+    result = f.insert_into_every(dod, key='newkey', value='newval')
+
+    assert all(['newkey' in dod.get(key) for key in dod.keys()])
+           
