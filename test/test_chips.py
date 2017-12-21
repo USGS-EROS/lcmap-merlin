@@ -1,5 +1,7 @@
 from base64 import b64encode
 from cytoolz import drop
+from cytoolz import concat
+from merlin import cfg
 from merlin import chips
 from merlin import specs
 from functools import partial
@@ -7,6 +9,7 @@ from functools import reduce
 from itertools import product
 from numpy.random import randint
 import numpy as np
+import test
 
 
 def test_difference():
@@ -139,8 +142,18 @@ def test_deduplicate():
 
 
 def test_mapped():
-    # fail until filled out
-    assert 1 < 0
+    _cfg = cfg.get('chipmunk-ard', env=test.env)
+    
+    chipmap = chips.mapped(x=test.x,
+                           y=test.y,
+                           acquired=test.acquired,
+                           specmap=specs.mapped(ubids=cfg.ubids.get('chipmunk-ard'),
+                                                specs=_cfg.get('registry_fn')()),
+                           chips_fn=_cfg.get('chips_fn'))
+
+    assert len(chipmap) > 0
+    assert all(map(lambda x: type(x) is dict, concat(chipmap.values())))
+    assert len(list(concat(chipmap.values()))) > 0
 
 
 def test_rsort():
