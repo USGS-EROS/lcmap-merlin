@@ -5,6 +5,7 @@ from merlin import cfg
 from merlin import chipmunk
 import test
 
+@test.vcr.use_cassette(test.cassette)
 def test_chips():
     red_chips = chipmunk.chips(x=test.x,
                                y=test.y,
@@ -15,6 +16,7 @@ def test_chips():
     assert type(red_chips) is tuple
     
 
+@test.vcr.use_cassette(test.cassette)
 def test_registry():
 
     registry = chipmunk.registry(url=test.env.get('CHIPMUNK_URL'))
@@ -27,7 +29,8 @@ def test_registry():
     keys = ['ubid', 'info', 'tags', 'data_type', 'data_fill', 'data_shape']
     assert all([key in entry for entry in registry for key in keys])
     
-    
+
+@test.vcr.use_cassette(test.cassette)
 def test_grid():
     grid = chipmunk.grid(url=test.env.get('CHIPMUNK_URL'))
     assert len(grid) == 2
@@ -37,7 +40,8 @@ def test_grid():
     keys = ['proj', 'rx', 'ry', 'sx', 'sy', 'tx', 'ty']
     assert all([key in g for g in grid for key in keys])
     
-    
+
+@test.vcr.use_cassette(test.cassette)
 def test_snap():
     snapped = chipmunk.snap(x=test.x,
                             y=test.y,
@@ -52,7 +56,8 @@ def test_snap():
     subkeys = ['grid-pt', 'proj-pt']
     assert all([subkey in v for k, v in snapped.items() for subkey in subkeys])
 
-    
+
+@test.vcr.use_cassette(test.cassette)
 def test_near():
     near = chipmunk.near(x=test.x,
                          y=test.y,

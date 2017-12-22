@@ -70,6 +70,7 @@ def test_locate():
     assert all([tseries[tuple(loc)].sum() == loc.sum() + 2 for loc in flatlocs])
 
 
+@test.vcr.use_cassette(test.cassette)
 def test_create():
  
     c = cfg.get('chipmunk-ard', env=test.env)

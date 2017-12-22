@@ -7,8 +7,6 @@ from merlin import rods
 from merlin import specs
 
 
-
-
 def pyccd(x, y, locations, dates_fn, specmap, chipmap):
     """Builds inputs for the pyccd algorithm.
 

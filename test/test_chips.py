@@ -152,6 +152,7 @@ def test_deduplicate():
     assert chips.deduplicate(inputs) == tuple(drop(1, inputs))
 
 
+@test.vcr.use_cassette(test.cassette)
 def test_mapped():
     _cfg = cfg.get('chipmunk-ard', env=test.env)
     
