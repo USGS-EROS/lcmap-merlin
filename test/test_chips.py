@@ -1,3 +1,4 @@
+from base64 import b64decode
 from base64 import b64encode
 from cytoolz import drop
 from cytoolz import concat
@@ -84,9 +85,19 @@ def test_trim():
 
 
 def test_chip_to_numpy():
-    # fail until implemented
-    assert 1 < 0
+    data_type = 'int16'
+    data_shape = [2, 2]
+
+    input_data = np.array([1, 2, 3, 4], dtype=data_type).reshape(data_shape)
+    input_chip = {'data': b64encode(input_data)}
     
+    output_chip = chips.chip_to_numpy(chip=input_chip,
+                                      chip_spec={'data_shape': data_shape,
+                                                 'data_type': data_type})
+    output_data = output_chip.get('data')
+    
+    assert np.array_equal(input_data, output_data)
+   
 
 def test_to_numpy():
     """ Builds combos of shapes and numpy data types and tests
