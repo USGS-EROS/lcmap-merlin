@@ -1,3 +1,16 @@
+"""Chipmunk.py is the interface module to Chipmunk for Merlin.
+
+Any functions chipmunk exposes are represented here as defined.
+
+New abstractions or higher level abstractions should be created
+in modules that import chipmunk.py.  For maximum flexibility do not
+import chipmunk.py directly... inject it via a kernel or DI construct.  
+
+Multi-version support: 
+To support multiple versions of Chipmunk create new modules that correspond to
+the appropriate version number.
+"""
+
 from cytoolz import reduce
 from functools import partial
 from operator import add

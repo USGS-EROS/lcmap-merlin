@@ -7,6 +7,17 @@ from merlin.specs import refspec
 
 
 def create(x, y, acquired, cfg):
+    """Create a timeseries.
+
+    Args:
+        x (int) - x coordinate
+        y (int) - y coordinate
+        acquired (string) - iso8601 date range
+        cfg (dict) - A Merlin configuration
+
+    Returns:
+        tuple - Results of format_fn applied to results of chips_fn
+    """
     
     x, y = get_in(['chip', 'proj-pt'], cfg['snap_fn'](x=x, y=y))
 
