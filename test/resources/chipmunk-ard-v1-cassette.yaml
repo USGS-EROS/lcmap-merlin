@@ -2037,4 +2037,21 @@ interactions:
       Date: ['Thu, 28 Dec 2017 19:47:55 GMT']
       Server: [http-kit]
     status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.18.1]
+    method: GET
+    uri: http://localhost:5656/grid/snap?x=-590&y=2806
+  response:
+    body: {string: '{"tile":{"proj-pt":[-15585.0,14805.0],"grid-pt":[17.0,22.0]},"chip":{"proj-pt":[-3585.0,5805.0],"grid-pt":[854.0,1103.0]}}'}
+    headers:
+      Content-Length: ['122']
+      Content-Type: [application/json; charset=utf-8]
+      Date: ['Thu, 28 Dec 2017 22:11:02 GMT']
+      Server: [http-kit]
+    status: {code: 200, message: OK}
 version: 1
