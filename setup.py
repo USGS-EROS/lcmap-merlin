@@ -8,11 +8,11 @@ def readme():
 
 
 setup(name='lcmap-merlin',
-      version='1.2',
+      version='2.0',
       description='Python client library for LCMAP rasters',
       long_description=readme(),
       classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'License :: Public Domain',
         'Programming Language :: Python :: 3.6',
       ],
@@ -34,8 +34,9 @@ setup(name='lcmap-merlin',
       # $ pip install -e .[test]
       extras_require={
           'test': ['pytest',
+                   'pytest-cov',
                    'hypothesis',
-                   'mock',
+                   'vcrpy',
                   ],
           'doc': ['sphinx',
                   'sphinx-autobuild',
