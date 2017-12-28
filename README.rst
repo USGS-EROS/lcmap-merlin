@@ -5,8 +5,9 @@
     :target: http://lcmap-merlin.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-    
+--------------------------------------------------------------------------------------
 **This documentation is for Merlin 1.x.x.  Merlin 2.0 documentation is currently WIP**
+--------------------------------------------------------------------------------------
 
 Merlin
 ======
