@@ -35,8 +35,8 @@ def test_pyccd():
 
     cw, ch = specs.refspec(specmap).get('data_shape')
     
-    locations = chips.locations(startx=x,
-                                starty=y,
+    locations = chips.locations(x=x,
+                                y=y,
                                 cw=cw,
                                 ch=ch,
                                 rx=grid.get('rx'),

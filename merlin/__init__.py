@@ -41,8 +41,8 @@ def create(x, y, acquired, cfg):
 
     cw, ch = refspec(specmap).get('data_shape')
     
-    locations = chips.locations(startx=x,
-                                starty=y,
+    locations = chips.locations(x=x,
+                                y=y,
                                 cw=cw,
                                 ch=ch,
                                 rx=grid.get('rx'),

@@ -13,35 +13,18 @@ import numpy as np
 import test
 
 
-def test_difference():
-    assert chips.difference(3456, 3000) == 456
-    assert chips.difference(3456, 5000) == 3456
-
-
-def test_near():
-    assert chips.near(2999, 3000, 0) == 0
-    assert chips.near(3000, 3000, 0) == 3000
-    assert chips.near(-2999, -3000, 0) == 0
-    assert chips.near(-3000, -3000, 0) == -3000
-
-
-def test_point_to_chip():
-    assert chips.point_to_chip(2999, -2999, 3000, -3000, 0, 0) == (0, 0)
-    assert chips.point_to_chip(3000, -3000, 3000, -3000, 0, 0) == (3000, -3000)
-
-
-def test_snap():
-    spec = {'chip_x': 3000, 'chip_y': -3000, 'shift_x': 0, 'shift_y': 0}
-    assert (0, 0) == chips.snap(2999, -2999, spec)
-    assert (3000, 0) == chips.snap(3000, -2999, spec)
-    assert (0, -3000) == chips.snap(2999, -3000, spec)
-    assert (3000, -3000) == chips.snap(3000, -3000, spec)
-
-
+@test.vcr.use_cassette(test.cassette)
 def test_coordinates():
-    spec   = {'chip_x': 3000, 'chip_y': -3000, 'shift_x': 0, 'shift_y': 0}
-    coords = ((0, 0), (0, -3000), (3000, 0), (3000, -3000))
-    assert coords == chips.coordinates(0, 0, 3000, -3000, spec)
+
+    _cfg = cfg.get('chipmunk-ard', env=test.env)
+
+    grid   = {'sx': 3000, 'sy': 3000, 'rx': 1, 'ry': -1}
+
+    coords = ((-585.0, 2805.0), (-585.0, -195.0), (2415.0, 2805.0), (2415.0, -195.0))
+
+    result = chips.coordinates(ulx=0, uly=0, lrx=3000, lry=-3000, grid=grid, cfg=_cfg)
+    
+    assert coords == result
 
 
 def bounds_to_coordinates():
@@ -50,8 +33,8 @@ def bounds_to_coordinates():
 
 
 def test_locations():
-    params = {'startx': 0,
-              'starty': 0,
+    params = {'x': 0,
+              'y': 0,
               'cw': 2,
               'ch': 2,
               'rx': 1,

@@ -93,8 +93,8 @@ def test_create():
 
     grid = {x['name']: x for x in c.get('grid_fn')()}.get('chip')
  
-    locations = chips.locations(startx=x,
-                                starty=y,
+    locations = chips.locations(x=x,
+                                y=y,
                                 cw=first(refspec.get('data_shape')),
                                 ch=second(refspec.get('data_shape')),
                                 rx=grid.get('rx'),
