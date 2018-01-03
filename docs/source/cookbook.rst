@@ -19,7 +19,8 @@ Merlin is configurable via the shell environment and by Python dict.  Parameter 
 
     import merlin
 
-    merlin.cfg.get(profile='chipmunk-ard', env={'CHIPMUNK_URL': 'http://localhost:5656/plus/path'})
+    merlin.cfg.get(profile='chipmunk-ard',
+                   env={'CHIPMUNK_URL': 'http://localhost:5656/plus/path'})
 
 
 View All Configuration Profiles
