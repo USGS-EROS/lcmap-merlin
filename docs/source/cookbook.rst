@@ -3,7 +3,7 @@ Cookbook
 
 Configure Merlin For Chipmunk
 -----------------------------
-Merlin is configurable via the shell environment and by Python dict.  Parameter values take precedence over parent shell environment variables.
+Merlin is configurable via the shell environment and by Python dict.  Parameter values take precedence over environment variables.
 
 .. code-block:: python3
 
