@@ -1,24 +1,53 @@
 Cookbook
 ========
 
+Configure Merlin For Chipmunk
+-----------------------------
+Merlin is configurable via the shell environment and by Python dict.
+
+Parameter values take precedence over parent shell environment variables.
+
+.. code-block:: python3
+
+    import merlin
+    import os
+
+    # alternative: set shell variables
+    # export CHIPMUNK_URL=http://localhost:5656/plus/path
+    os.environ['CHIPMUNK_URL'] = 'http://localhost:5656/plus/path'
+
+    merlin.cfg.get(profile='chipmunk-ard')
+
+.. code-block:: python3
+
+    import merlin
+
+    # anything passed into the env parameter overrides the shell environment
+    merlin.cfg.get(profile='chipmunk-ard',
+                   env={'CHIPMUNK_URL': 'http://localhost:5656/plus/path'})
+
+
+View All Configuration Profiles
+-------------------------------
+Merlin configurations are organized into profiles, which group function implementations by use.
+All profiles may be viewed by calling ```merlin.cfg.profiles``` with a ```None``` parameter.
+
+.. code-block:: python3
+    import merlin
+    merlin.cfg.profiles(None)
+
+
 Create Timeseries
 -------------------
 
 .. code-block:: python3
 
-    from merlin import chips
-    from merlin import chip_specs
     import merlin
 
-    queries = {
-        'red':   'http://host/v1/landsat/chip-specs?q=tags:red AND sr',
-        'green': 'http://host/v1/landsat/chip-specs?q=tags:green AND sr',
-        'blue':  'http://host/v1/landsat/chip-specs?q=tags:blue AND sr'}
-
-    timeseries = merlin.create(point=(123, 456),
+    timeseries = merlin.create(x=123,
+                               y=456, 
                                acquired='1980-01-01/2017-01-01',
-                               keyed_specs=chip_specs.getmulti(queries),
-                               chips_fn=partial(chips.from_chipmunk, url='http://host/v1/landsat/chips'))
+                               cfg=merlin.cfg.get('chipmunk-ard'))
 
     print(timeseries)
 
@@ -31,49 +60,50 @@ Create Timeseries
                              'blue' : [1, 11, ...],
                              'dates': ['2017-01-01', '2016-12-31', ...]}),)
 
-Create Timeseries From Assymetric Data
---------------------------------------
+
+Retrieve Chips
+--------------
+
 .. code-block:: python3
 
-    from functools import partial
-    from merlin import chips
-    from merlin import chip_specs
-    from merlin import functions
-    from merlin import timeseries
+    import merlin
+    
+    cfg = merlin.cfg.get('chipmunk-ard')
+    cfn = cfg.get('chips_fn')
+    
+    cfn(x=123, y=456, acquired='1980/2017', ubids=['LC08_SRB4', 'LE07_SRB3', ...])
+
+
+Retrieve All Specs
+------------------
+
+.. code-block:: python3
+
     import merlin
 
-    queries = {
-        'red':     'http://host/v1/landsat/chip-specs?q=tags:red AND sr',
-        'green':   'http://host/v1/landsat/chip-specs?q=tags:green AND sr',
-        'blue':    'http://host/v1/landsat/chip-specs?q=tags:blue AND sr',
-        'quality': 'http://host/v1/landsat/chip-specs?q=tags:pixelqa'}
+    cfg = merlin.cfg.get('chipmunk-ard')
+    rfn = cfg.get('registry_fn')
 
-    data = timeseries.create(
-                      point=(123, 456),
-                      acquired='1980-01-01/2015-12-31',
-                      dates_fn=partial(functions.chexists,
-                                       check_fn=timeseries.symmetric_dates,
-                                       keys=['quality',]),
-                      keyed_specs=chip_specs.getmulti(queries),
-                      chips_fn=partial(chips.from_chipmunk, url='http://host/v1/landsat/chips'))
+    rfn()
+    
 
-Retrieve Chips & Specs
-----------------------
+Retrieve Specs Mapped To UBIDS
+------------------------------
 
 .. code-block:: python3
 
-    from merlin.chips      import from_chipmunk as chips_fn
-    from merlin.chip_specs import getmulti as specs_fn
-    from merlin.composite  import chips_and_specs
+    import merlin
 
-    queries = {
-        'red':   'http://host/v1/landsat/chip-specs?q=tags:red AND sr',
-        'green': 'http://host/v1/landsat/chip-specs?q=tags:green AND sr',
-        'blue':  'http://host/v1/landsat/chip-specs?q=tags:blue AND sr'}
+    merlin.specs.mapped(ubids=merlin.cfg.ubids['chipmunk-ard'])
 
-    cas = chips_and_specs(point=(123, 456),
-                          acquired='1980-01-01/2017-08-22',
-                          keyed_specs=specs_fn(queries),
-                          chips_fn=partial(chips_fn, url='http://host/v1/landsat/chips'))
 
+Snap A Point To A Grid
+----------------------
+.. code-block:: python3
+                
+    import merlin
     
+    cfg = merlin.cfg.get('chipmunk-ard')
+    fn = cfg.get('snap_fn')
+
+    sfn(x=123, y=456)
