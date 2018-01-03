@@ -41,6 +41,7 @@ def coordinates(ulx, uly, lrx, lry, grid, cfg):
 
         ((-1000, 500), (-500, 500), (-1000, -500), (-500, -500))
     """
+    
     # get the snap_fn from Merlin config
     snap_fn = cfg.get('snap_fn')
 

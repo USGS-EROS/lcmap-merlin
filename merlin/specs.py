@@ -26,8 +26,11 @@ def mapped(ubids, specs):
         specs (seq):  [{spec1}, {spec2}, {spec3}, {spec4}]
 
     Returns:
-        dict: {'red':   [spec1, spec2],
-               'green': [spec3, spec4]}
+        dict
+
+    Example:
+        >>> {'red':   [spec1, spec2], 
+             'green': [spec3, spec4]}
     """
     
     return {k: only(v, specs) for k, v in ubids.items()}

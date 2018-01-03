@@ -316,7 +316,7 @@ def difference(a, b):
         a: sequence a
         b: sequence b
 
-    Returns;
+    Returns:
         set: items that exist in a but not b
     """
 

@@ -19,6 +19,7 @@ def from_chips(chips):
         another numpy array of chip time series values
 
     Description:
+
         1. For each chip add data to master numpy array.
         2. Transpose the master array
         3. Horizontally stack the transposed master array elements
@@ -56,6 +57,7 @@ def locate(rods, locations):
         dict: (location):rod for each location and rod in the arrays.
 
     Description:
+
         Incoming locations as 3d array:
 
         >>> array([[[0,0], [0,1], [0,2]],

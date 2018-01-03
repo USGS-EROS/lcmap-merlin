@@ -32,12 +32,12 @@ sys.path.insert(0, os.path.abspath('../merlin'))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.autodoc',
-    'sphinx.ext.todo',
-    'sphinx.ext.coverage',
-    'sphinx.ext.imgmath',
-    'sphinx.ext.viewcode',
-    'sphinx.ext.githubpages',
-    'sphinx.ext.napoleon']
+              'sphinx.ext.todo',
+              'sphinx.ext.coverage',
+              'sphinx.ext.imgmath',
+              'sphinx.ext.viewcode',
+              'sphinx.ext.githubpages',
+              'sphinx.ext.napoleon']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -62,6 +62,7 @@ author = 'USGS EROS LCMAP'
 #
 # The short X.Y version.
 version = '2.0'
+
 # The full version, including alpha/beta/rc tags.
 release = '2.0'
 
@@ -151,7 +152,6 @@ texinfo_documents = [
      author, 'lcmap-merlin', 'One line description of project.',
      'Miscellaneous'),
 ]
-
 
 
 # -- Options for Epub output ----------------------------------------------

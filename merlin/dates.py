@@ -52,7 +52,7 @@ def is_acquired(acquired):
     Args:
         acquired: A date string
 
-    Returns;
+    Returns:
         bool: True or False
     """
 
@@ -75,8 +75,8 @@ def mapped(chipmap):
 
 
 def symmetric(datemap):
-    """Returns a sequence of dates that are common to all map values if 
-       all datemap values are represented, else Exception.
+    """Returns a sequence of dates that are common to all map values if
+    all datemap values are represented, else Exception.
     
     Args:
         datemap: {key: [datestrings,]}
