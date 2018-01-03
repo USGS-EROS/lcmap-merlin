@@ -30,7 +30,7 @@ Example
     import merlin
 
     timeseries = merlin.create(x=123,
-                               y=456),
+                               y=456,
                                acquired='1980-01-01/2017-01-01',
                                cfg=merlin.cfg.get(profile='chipmunk-ard',
                                                   env={'CHIPMUNK_URL': 'http://localhost:5656'}))
