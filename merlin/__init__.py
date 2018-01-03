@@ -2,8 +2,15 @@ from cytoolz import filter
 from cytoolz import first
 from cytoolz import get_in
 from cytoolz import partial
+from merlin import cfg
+from merlin import chipmunk
 from merlin import chips
-from merlin.specs import refspec
+from merlin import dates
+from merlin import files
+from merlin import formats
+from merlin import functions
+from merlin import rods
+from merlin import specs
 
 
 def create(x, y, acquired, cfg):
@@ -39,7 +46,7 @@ def create(x, y, acquired, cfg):
     grid = first(filter(lambda x: x['name'] == 'chip',
                         cfg['grid_fn']()))
 
-    cw, ch = refspec(specmap).get('data_shape')
+    cw, ch = specs.refspec(specmap).get('data_shape')
     
     locations = chips.locations(x=x,
                                 y=y,
