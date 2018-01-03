@@ -94,7 +94,7 @@ Retrieve Specs Mapped To UBIDS
 
     import merlin
 
-    merlin.specs.mapped(ubids=merlin.cfg.ubids['chipmunk-ard'])
+    merlin.specs.mapped(ubids=merlin.cfg.ubids.get('chipmunk-ard'))
 
 
 Snap A Point To A Grid
