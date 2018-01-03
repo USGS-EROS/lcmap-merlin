@@ -54,25 +54,22 @@ def profiles(env, profile=None):
             'snap_fn':     partial(chipmunk.snap,
                                    url=env.get('CHIPMUNK_URL', None),
                                    resource=env.get('CHIPMUNK_SNAP_RESOURCE', '/grid/snap'))},
-        'chipmunk-0.1-aux' : {
-            'dates_fn': '',
-            'chips_fn': '',
-            'specs_fn': '',
-            'fmttr_fn': '',
-            'snapr_fn': '',
-            'spec_queries': {''}},
-        'local-ard': {
-            'dates_fn': '',
-            'chips_fn': '',
-            'specs_fn': '',
-            'fmttr_fn': '',
-            'snapr_fn': ''},
-        'local-aux': {
-            'dates_fn': '',
-            'chips_fn': '',
-            'specs_fn': '',
-            'fmttr_fn': '',
-            'snapr_fn': ''}
+        'chipmunk-aux' : {
+            'grid_fn':     partial(chipmunk.grid,
+                                   url=env.get('CHIPMUNK_URL', None),
+                                   resource=env.get('CHIPMUNK_GRID_RESOURCE', '/grid')),
+            'dates_fn':    dates.symmetric,
+            'chips_fn':    partial(chipmunk.chips,
+                                   url=env.get('CHIPMUNK_URL', None),
+                                   resource=env.get('CHIPMUNK_CHIPS_RESOURCE', '/chips')),
+            'specs_fn':    partial(specs.mapped, ubids=ubids['chipmunk-aux']),
+            'format_fn':   formats.pyccd,
+            'registry_fn': partial(chipmunk.registry,
+                                   url=env.get('CHIPMUNK_URL', None),
+                                   resource=env.get('CHIPMUNK_REGISTRY_PATH', '/registry')),
+            'snap_fn':     partial(chipmunk.snap,
+                                   url=env.get('CHIPMUNK_URL', None),
+                                   resource=env.get('CHIPMUNK_SNAP_RESOURCE', '/grid/snap'))},
         }
     
     return __profiles.get(profile, None) if profile else __profiles
