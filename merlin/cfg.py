@@ -1,11 +1,11 @@
 from cytoolz import assoc
 from cytoolz import merge
 from functools import partial
-from . import chipmunk
-from . import chips
-from . import dates
-from . import formats
-from . import specs
+from merlin import chipmunk
+from merlin import chips
+from merlin import dates
+from merlin import formats
+from merlin import specs
 import os
 
 
