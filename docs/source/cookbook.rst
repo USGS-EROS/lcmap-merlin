@@ -30,6 +30,7 @@ All profiles may be viewed by calling ```merlin.cfg.profiles``` with a ```None``
 .. code-block:: python3
                 
     import merlin
+
     merlin.cfg.profiles(None)
 
 
@@ -65,6 +66,7 @@ Retrieve Chips
     import merlin
     
     cfg = merlin.cfg.get('chipmunk-ard')
+
     cfn = cfg.get('chips_fn')
     
     cfn(x=123, y=456, acquired='1980/2017', ubids=['LC08_SRB4', 'LE07_SRB3', ...])
@@ -78,6 +80,7 @@ Retrieve All Specs
     import merlin
 
     cfg = merlin.cfg.get('chipmunk-ard')
+
     rfn = cfg.get('registry_fn')
 
     rfn()
@@ -100,6 +103,7 @@ Snap A Point To A Grid
     import merlin
     
     cfg = merlin.cfg.get('chipmunk-ard')
+    
     fn = cfg.get('snap_fn')
 
     sfn(x=123, y=456)
