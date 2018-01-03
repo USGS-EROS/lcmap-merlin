@@ -48,18 +48,19 @@ def create(x, y, acquired, cfg):
 
     cw, ch = specs.refspec(specmap).get('data_shape')
     
-    locations = chips.locations(x=x,
-                                y=y,
-                                cw=cw,
-                                ch=ch,
-                                rx=grid.get('rx'),
-                                ry=grid.get('ry'),
-                                sx=grid.get('sx'),
-                                sy=grid.get('sy'))
+    locations = partial(chips.locations,
+                        x=x,
+                        y=y,
+                        cw=cw,
+                        ch=ch,
+                        rx=grid.get('rx'),
+                        ry=grid.get('ry'),
+                        sx=grid.get('sx'),
+                        sy=grid.get('sy'))
     
     return cfg['format_fn'](x=x,
                             y=y,
-                            locations=locations,
+                            locations=locations(),
                             dates_fn=cfg['dates_fn'],
                             specmap=specmap,
                             chipmap=chipmap()) 
