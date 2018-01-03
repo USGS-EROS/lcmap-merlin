@@ -73,7 +73,7 @@ Retrieve Chips
     fn(x=123, y=456, acquired='1980/2017', ubids=['LC08_SRB4', 'LE07_SRB3', ...])
 
 
-Retrieve All Specs
+Retrieve Specs
 ------------------
 
 .. code-block:: python3
