@@ -3,16 +3,13 @@ Cookbook
 
 Configure Merlin For Chipmunk
 -----------------------------
-Merlin is configurable via the shell environment and by Python dict.
-
-Parameter values take precedence over parent shell environment variables.
+Merlin is configurable via the shell environment and by Python dict.  Parameter values take precedence over parent shell environment variables.
 
 .. code-block:: python3
 
     import merlin
     import os
 
-    # alternative: set shell variables
     # export CHIPMUNK_URL=http://localhost:5656/plus/path
     os.environ['CHIPMUNK_URL'] = 'http://localhost:5656/plus/path'
 
@@ -22,9 +19,7 @@ Parameter values take precedence over parent shell environment variables.
 
     import merlin
 
-    # anything passed into the env parameter overrides the shell environment
-    merlin.cfg.get(profile='chipmunk-ard',
-                   env={'CHIPMUNK_URL': 'http://localhost:5656/plus/path'})
+    merlin.cfg.get(profile='chipmunk-ard', env={'CHIPMUNK_URL': 'http://localhost:5656/plus/path'})
 
 
 View All Configuration Profiles
@@ -33,6 +28,7 @@ Merlin configurations are organized into profiles, which group function implemen
 All profiles may be viewed by calling ```merlin.cfg.profiles``` with a ```None``` parameter.
 
 .. code-block:: python3
+                
     import merlin
     merlin.cfg.profiles(None)
 
