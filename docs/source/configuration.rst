@@ -1,5 +1,5 @@
-Merlin Configuration
-====================
+Configuration
+=============
 
 ==========================  ==========
 Environment Variables
