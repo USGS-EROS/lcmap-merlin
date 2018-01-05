@@ -66,9 +66,7 @@ Retrieve Chips
 
     import merlin
     
-    cfg = merlin.cfg.get('chipmunk-ard')
-
-    fn = cfg.get('chips_fn')
+    fn = merlin.cfg.get('chipmunk-ard').get('chips_fn')
     
     fn(x=123, y=456, acquired='1980/2017', ubids=['LC08_SRB4', 'LE07_SRB3', ...])
 
@@ -80,9 +78,7 @@ Retrieve Specs
 
     import merlin
 
-    cfg = merlin.cfg.get('chipmunk-ard')
-
-    fn = cfg.get('registry_fn')
+    fn = merlin.cfg.get('chipmunk-ard').get('registry_fn')
 
     fn()
     
@@ -94,7 +90,10 @@ Retrieve Specs Mapped To UBIDS
 
     import merlin
 
-    merlin.specs.mapped(ubids=merlin.cfg.ubids.get('chipmunk-ard'))
+    registry = merlin.cfg.get('chipmunk-ard').get('registry_fn')
+    
+    merlin.specs.mapped(specs=registry(),
+                        ubids=merlin.cfg.ubids.get('chipmunk-ard'))
 
 
 Snap A Point To A Grid
@@ -103,8 +102,6 @@ Snap A Point To A Grid
                 
     import merlin
     
-    cfg = merlin.cfg.get('chipmunk-ard')
+    fn = merlin.cfg.get('chipmunk-ard').get('snap_fn')
     
-    fn = cfg.get('snap_fn')
-
     fn(x=123, y=456)

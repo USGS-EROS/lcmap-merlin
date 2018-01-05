@@ -21,12 +21,11 @@ def pyccd(x, y, locations, dates_fn, specmap, chipmap):
     Returns:
         A tuple of tuples.
 
-    Description:
-        The pyccd format requires a key of (chip_x, chip_y, x, y) with a
-        dictionary of sorted numpy arrays representing each spectra plus an
-        additional sorted dates array.
+    The pyccd format key is ```(chip_x, chip_y, x, y)``` with a
+    dictionary of sorted numpy arrays representing each spectra plus an
+    additional sorted dates array.
 
-        >>> pyccd_format(*args)
+    >>> pyccd_format(*args)
         (((chip_x, chip_y, x1, y1), {"dates": [],  "reds": [],
                                      "greens": [], "blues": [],
                                      "nirs1": [],  "swir1s": [],

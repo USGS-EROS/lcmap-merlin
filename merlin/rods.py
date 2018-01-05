@@ -18,28 +18,26 @@ def from_chips(chips):
         input chip shape with the chip value replaced by
         another numpy array of chip time series values
 
-    Description:
+    1. For each chip add data to master numpy array.
+    2. Transpose the master array
+    3. Horizontally stack the transposed master array elements
+    4. Reshape the master array to match incoming chip dimensions
+    5. Pixel rods are now organized for timeseries access by x, y, t
 
-        1. For each chip add data to master numpy array.
-        2. Transpose the master array
-        3. Horizontally stack the transposed master array elements
-        4. Reshape the master array to match incoming chip dimensions
-        5. Pixel rods are now organized for timeseries access by x, y, t
-
-        >>> chip_one   = np.int_([[11, 12, 13],
-                                  [14, 15, 16],
-                                  [17, 18, 19]])
-        >>> chip_two   = np.int_([[21, 22, 23],
-                                  [24, 25, 26],
-                                  [27, 28, 29]])
-        >>> chip_three  = np.int_([[31, 32, 33],
-                                   [34, 35, 36],
-                                   [37, 38, 39]])
-        >>> master = np.conj([chip_one, chip_two, chip_three])
-        >>> np.hstack(master.T).reshape(3, 3, -1)
-        array([[[ 11, 21, 31], [ 12, 22, 32], [ 13, 23, 33]],
-               [[ 14, 24, 34], [ 15, 25, 35], [ 16, 26, 36]],
-               [[ 17, 27, 37], [ 18, 28, 38], [ 19, 29, 39]]])
+    >>> chip_one   = np.int_([[11, 12, 13],
+                              [14, 15, 16],
+                              [17, 18, 19]])
+    >>> chip_two   = np.int_([[21, 22, 23],
+                              [24, 25, 26],
+                              [27, 28, 29]])
+    >>> chip_three  = np.int_([[31, 32, 33],
+                               [34, 35, 36],
+                               [37, 38, 39]])
+    >>> master = np.conj([chip_one, chip_two, chip_three])
+    >>> np.hstack(master.T).reshape(3, 3, -1)
+    array([[[ 11, 21, 31], [ 12, 22, 32], [ 13, 23, 33]],
+           [[ 14, 24, 34], [ 15, 25, 35], [ 16, 26, 36]],
+           [[ 17, 27, 37], [ 18, 28, 38], [ 19, 29, 39]]])
     """
     
     master = np.conj([c['data'] for c in chips])
@@ -56,60 +54,58 @@ def locate(rods, locations):
     Returns:
         dict: (location):rod for each location and rod in the arrays.
 
-    Description:
+    Incoming locations as 3d array:
 
-        Incoming locations as 3d array:
+    >>> array([[[0,0], [0,1], [0,2]],
+               [[1,0], [1,1], [1,2]],
+               [[2,0], [2,1], [2,2]]])
 
-        >>> array([[[0,0], [0,1], [0,2]],
-                   [[1,0], [1,1], [1,2]],
-                   [[2,0], [2,1], [2,2]]])
+    Incoming rods also as 3d array:
 
-        Incoming rods also as 3d array:
+    >>> array([[[110,110,234,664], [23,887,110,111], [110,464,223,112]],
+               [[111,887,1,110],   [33,111,12,111],  [0,111,66,112]],
+               [[12,99,112,110],   [112,87,231,111], [112,45,47,112]]])
 
-        >>> array([[[110,110,234,664], [23,887,110,111], [110,464,223,112]],
-                   [[111,887,1,110],   [33,111,12,111],  [0,111,66,112]],
-                   [[12,99,112,110],   [112,87,231,111], [112,45,47,112]]])
+    locrods converts locations to:
 
-        locrods converts locations to:
+    >>> locations.reshape(locations.shape[0] * locations.shape[1], -1)
+    array([[0, 0],
+           [0, 1],
+           [0, 2],
+           [1, 0],
+           [1, 1],
+           [1, 2],
+           [2, 0],
+           [2, 1],
+           [2, 2]])
 
-        >>> locations.reshape(locations.shape[0] * locations.shape[1], -1)
-        array([[0, 0],
-               [0, 1],
-               [0, 2],
-               [1, 0],
-               [1, 1],
-               [1, 2],
-               [2, 0],
-               [2, 1],
-               [2, 2]])
+    And rods to:
 
-        And rods to:
+    >>> rods.reshape(rods.shape[0] * rods.shape[1], -1)
+    array([[110, 110, 234, 664],
+           [23,  887, 110, 111],
+           [110, 464, 223, 112],
+           [111, 887, 1,   110],
+           [33,  111, 12,  111],
+           [0,   111, 66,  112],
+           [12,  99,  112, 110],
+           [112, 87,  231, 111],
+           [112, 45,  47,  112]])
 
-        >>> rods.reshape(rods.shape[0] * rods.shape[1], -1)
-        array([[110, 110, 234, 664],
-               [23,  887, 110, 111],
-               [110, 464, 223, 112],
-               [111, 887, 1,   110],
-               [33,  111, 12,  111],
-               [0,   111, 66,  112],
-               [12,  99,  112, 110],
-               [112, 87,  231, 111],
-               [112, 45,  47,  112]])
+    Then the locations and rods are zipped together via a dictionary
+    comprehension and returned.
 
-        Then the locations and rods are zipped together via a dictionary
-        comprehension and returned.
-
-        >>> {
-             (0,0): [110, 110, 234, 664],
-             (0,1): [23,  887, 110, 111],
-             (0,2): [110, 464, 223, 112],
-             (1,0): [111, 887, 1,   110],
-             (1,1): [33,  111, 12,  111],
-             (1,2): [0,   111, 66,  112],
-             (2,0): [12,  99,  112, 110],
-             (2,1): [112, 87,  231, 111],
-             (2,2): [112, 45,  47,  112]
-            }
+    >>> {
+         (0,0): [110, 110, 234, 664],
+         (0,1): [23,  887, 110, 111],
+         (0,2): [110, 464, 223, 112],
+         (1,0): [111, 887, 1,   110],
+         (1,1): [33,  111, 12,  111],
+         (1,2): [0,   111, 66,  112],
+         (2,0): [12,  99,  112, 110],
+         (2,1): [112, 87,  231, 111],
+         (2,2): [112, 45,  47,  112]
+        }
     """
 
     flat_locs = locations.reshape(locations.shape[0] * locations.shape[1], -1)
