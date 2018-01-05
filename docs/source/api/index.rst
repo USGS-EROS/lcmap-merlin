@@ -3,12 +3,14 @@ API Reference
 .. toctree::
   :maxdepth: 2
 
-  chip_specs.rst
+  cfg.rst
+  chipmunk.rst
   chips.rst
-  composite.rst
   dates.rst
   files.rst
+  formats.rst
   functions.rst
+  merlin.rst
   rods.rst
-  timeseries.rst
-  support.rst
+  specs.rst
+

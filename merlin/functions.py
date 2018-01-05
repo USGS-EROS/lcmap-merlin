@@ -129,25 +129,6 @@ def md5(string):
     return hashlib.md5(string.encode('UTF-8')).hexdigest()
 
 
-def simplify_objects(obj):
-    if isinstance(obj, np.bool_):
-        return bool(obj)
-    elif isinstance(obj, np.int64):
-        return int(obj)
-    elif isinstance(obj, tuple) and ('_asdict' in dir(obj)):
-        # looks like a namedtuple
-        _out = {}
-        objdict = obj._asdict()
-        for key in objdict.keys():
-            _out[key] = simplify_objects(objdict[key])
-        return _out
-    elif isinstance(obj, (list, np.ndarray, tuple)):
-        return [simplify_objects(i) for i in obj]
-    else:
-        # should be a serializable type
-        return obj
-
-
 def sort(iterable, key=None):
     """Sorts an iterable"""
 
@@ -335,7 +316,7 @@ def difference(a, b):
         a: sequence a
         b: sequence b
 
-    Returns;
+    Returns:
         set: items that exist in a but not b
     """
 
@@ -369,3 +350,22 @@ def chexists(dictionary, keys, check_fn):
     checked = check_fn({k: dictionary[k] for k in difference(dictionary, keys)})
     all(map(partial(exists_in, subset=checked), popped.items()))
     return checked
+
+
+def insert_into_every(dods, key, value):
+    """Insert key:values into every subdictionary of dods.
+
+    Args:
+        dods: dictionary of dictionaries
+        key: key to hold values in subdictionaires
+        value: value to associate with key
+
+    Returns:
+        dict: dictionary of dictionaries with key:values inserted into each
+    """
+
+    def update(d, v):
+        d.update({key: v})
+        return d
+
+    return {k: update(v, value) for k, v in dods.items()}

@@ -1,8 +1,16 @@
+from cytoolz import first
+from cytoolz import second
+from merlin import cfg
+from merlin import chips
+from merlin import dates
 from merlin import functions as f
-from merlin import rods as fr
+from merlin import specs
+from merlin import rods
 from functools import reduce
 import numpy as np
-
+import test
+ 
+ 
 def test_from_chips():
     chips = list()
     chips.append({'data': np.int_([[11, 12, 13],
@@ -14,7 +22,7 @@ def test_from_chips():
     chips.append({'data': np.int_([[31, 32, 33],
                                    [34, 35, 36],
                                    [37, 38, 39]])})
-    pillar = fr.from_chips(chips)
+    pillar = rods.from_chips(chips)
     assert pillar.shape[0] == chips[0]['data'].shape[0]
     assert pillar.shape[1] == chips[0]['data'].shape[1]
     assert pillar.shape[2] == len(chips)
@@ -43,20 +51,63 @@ def test_from_chips():
 def test_locate():
     # test data.  sum(locs) + 2 should equal sum(rods) per inner array
     # value of sum of every inner array element should be unique.
-    locs = np.int_([[[0, 0], [0, 1], [0, 2]],
-                    [[1, 3], [1, 4], [1, 5]],
-                    [[2, 6], [2, 7], [2, 8]]])
+    _locs = np.int_([[[0, 0], [0, 1], [0, 2]],
+                     [[1, 3], [1, 4], [1, 5]],
+                     [[2, 6], [2, 7], [2, 8]]])
 
-    rods = np.int_([[[0, 0, 2], [0, 0, 3], [0, 0, 4]],
-                    [[1, 0, 5], [1, 0, 6], [1, 0, 7]],
-                    [[2, 0, 8], [2, 0, 9], [2, 0, 10]]])
+    _rods = np.int_([[[0, 0, 2], [0, 0, 3], [0, 0, 4]],
+                     [[1, 0, 5], [1, 0, 6], [1, 0, 7]],
+                     [[2, 0, 8], [2, 0, 9], [2, 0, 10]]])
 
     # sanity check
-    locs_total = locs.reshape(9, 2).sum(axis=1) + 2
-    rods_total = rods.reshape(9, 3).sum(axis=1)
+    locs_total = _locs.reshape(9, 2).sum(axis=1) + 2
+    rods_total = _rods.reshape(9, 3).sum(axis=1)
     assert np.array_equal(locs_total, rods_total)
 
     # make sure we located all the rods correctly.
-    flatlocs = locs.reshape(9, 2)
-    tseries = fr.locate(locs, rods)
+    flatlocs = _locs.reshape(9, 2)
+    tseries = rods.locate(locations=_locs, rods=_rods)
     assert all([tseries[tuple(loc)].sum() == loc.sum() + 2 for loc in flatlocs])
+
+
+@test.vcr.use_cassette(test.cassette)
+def test_create():
+ 
+    c = cfg.get('chipmunk-ard', env=test.env)
+ 
+    x, y = c.get('snap_fn')(x=test.x, y=test.y).get('chip').get('proj-pt')
+
+    ubids = cfg.ubids.get('chipmunk-ard').get('red')
+
+    registry = c.get('registry_fn')()
+    
+    refspec = specs.refspec(specs.mapped(specs=registry, ubids={'red': ubids}))
+    print("REFSPEC:{}".format(refspec))
+ 
+    chipseq = c.get('chips_fn')(x=x,
+                                y=y,
+                                acquired=test.acquired,
+                                ubids=ubids)
+
+    dateseq = dates.mapped(chipmap=dict(red=chipseq)).get('red')
+
+    grid = {x['name']: x for x in c.get('grid_fn')()}.get('chip')
+ 
+    locations = chips.locations(x=x,
+                                y=y,
+                                cw=first(refspec.get('data_shape')),
+                                ch=second(refspec.get('data_shape')),
+                                rx=grid.get('rx'),
+                                ry=grid.get('ry'),
+                                sx=grid.get('sx'),
+                                sy=grid.get('sy'))
+
+    _rods = rods.create(x=x,
+                        y=y,
+                        chipseq=chipseq,
+                        dateseq=dateseq,
+                        locations=locations,
+                        spec_index=specs.index(registry))
+
+    assert len(_rods) == 10000
+    assert type(_rods) is dict

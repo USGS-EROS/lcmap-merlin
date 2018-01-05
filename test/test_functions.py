@@ -143,3 +143,14 @@ def test_chexists():
     with pytest.raises(Exception):
         d = {'a': [1, 2, 3], 'b': [1, 2, 3], 'c': [1, 2, 4, 5]}
         assert f.chexists(d, ['c'], check_fn) == d['a']
+
+
+def test_insert_into_every():
+    dod = {1: {1: 'one'},
+           2: {1: 'one'}}
+
+    result = f.insert_into_every(dod, key='newkey', value='newval')
+
+    #assert all(['newkey' in dod.get(key) for key in dod.keys()])
+    assert all([dod.get(key).get('newkey') is 'newval' for key in dod.keys()])
+           

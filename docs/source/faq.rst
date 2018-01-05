@@ -1,6 +1,5 @@
 FAQ
 ===
 
-I received `ValueError: need at least one array to concatenate`.
- No data was received from the source.  Adjust x, y, acquired or queries
- for an area, time and set of ubids that have data.
+I received an empty result from Merlin.
+ No data was received from the source.  Adjust x, y, and acquired parameters and verify the Chipmunk instance located at CHIPMUNK_URL has data.

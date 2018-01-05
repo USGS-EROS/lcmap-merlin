@@ -24,24 +24,13 @@ Example
 -------
 .. code-block:: python3
 
-    from functools import partial
-    from merlin import chips
-    from merlin import chip_specs
     import merlin
 
-    queries = {
-        'red':   'http://host/v1/landsat/chip-specs?q=tags:red AND sr',
-        'green': 'http://host/v1/landsat/chip-specs?q=tags:green AND sr',
-        'blue':  'http://host/v1/landsat/chip-specs?q=tags:blue AND sr'}
-
-    specs = chip_specs.getmulti(queries)
-
-    chips_fn = partial(chips.get, url='http://host/v1/landsat/chips')
-    
-    timeseries = merlin.create(point=(123, 456),
+    timeseries = merlin.create(x=123,
+                               y=456,
                                acquired='1980-01-01/2017-01-01',
-                               keyed_specs=specs,
-                               chips_fn=chips)
+                               cfg=merlin.cfg.get(profile='chipmunk-ard',
+                                                  env={'CHIPMUNK_URL': 'http://localhost:5656'}))
 
     print(timeseries)
 

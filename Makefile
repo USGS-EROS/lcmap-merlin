@@ -1,2 +1,2 @@
 autobuild:
-	sphinx-autobuild docs/source docs/build
+	sphinx-autobuild -z merlin docs/source docs/build
