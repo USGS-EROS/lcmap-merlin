@@ -5,6 +5,9 @@
     :target: http://lcmap-merlin.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
+.. image:: https://img.shields.io/pypi/v/lcmap-merlin.svg
+    :target: https://pypi.python.org/pypi/lcmap-merlin/
+
 
 Merlin
 ======
