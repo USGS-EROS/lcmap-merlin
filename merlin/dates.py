@@ -86,13 +86,13 @@ def symmetric(datemap):
 
     Example:
 
-        >>> common({"red":  [ds3, ds1, ds2],
-                    "blue": [ds2, ds3, ds1]})
+        >>> common({"reds":  [ds3, ds1, ds2],
+                    "blues": [ds2, ds3, ds1]})
         [2, 3, 1]
         >>>
-        >>> common({"red":  [ds3, ds1],
-                    "blue": [ds2, ds3, ds1]})
-        Exception: red:[3, 1] does not match blue:[2, 3, 1]
+        >>> common({"reds":  [ds3, ds1],
+                    "blues": [ds2, ds3, ds1]})
+        Exception: reds:[3, 1] does not match blues:[2, 3, 1]
     """
 
     def check(a, b):

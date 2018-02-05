@@ -220,11 +220,11 @@ def mapped(x, y, acquired, specmap, chips_fn):
     """Maps chips_fn results to keys from specmap.
 
     Args:
-        x (int):
-        y (int):
-        acquired (str): 
-        specmap (dict):
-        chips_fn (fn): 
+        x (int): x coordinate
+        y (int): y coordinate
+        acquired (str): iso8601 date range 
+        specmap (dict): map of specs
+        chips_fn (fn): function to return chips
 
     Returns:
         dict: {k: chips_fn()}

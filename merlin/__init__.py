@@ -17,10 +17,10 @@ def create(x, y, acquired, cfg):
     """Create a timeseries.
 
     Args:
-        x (int) - x coordinate
-        y (int) - y coordinate
-        acquired (string) - iso8601 date range
-        cfg (dict) - A Merlin configuration
+        x (int): x coordinate
+        y (int): y coordinate
+        acquired (string): iso8601 date range
+        cfg (dict): A Merlin configuration
 
     Returns:
         tuple - Results of format_fn applied to results of chips_fn

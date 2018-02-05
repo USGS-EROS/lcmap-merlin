@@ -10,7 +10,7 @@ def test_chips():
     red_chips = chipmunk.chips(x=test.x,
                                y=test.y,
                                acquired=test.acquired,
-                               ubids=cfg.ubids.get('chipmunk-ard').get('red'),
+                               ubids=cfg.ubids.get('chipmunk-ard').get('reds'),
                                url=test.env.get('CHIPMUNK_URL'))
     assert len(red_chips) > 0
     assert type(red_chips) is tuple

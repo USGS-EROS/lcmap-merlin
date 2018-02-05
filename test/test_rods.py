@@ -77,19 +77,19 @@ def test_create():
  
     x, y = c.get('snap_fn')(x=test.x, y=test.y).get('chip').get('proj-pt')
 
-    ubids = cfg.ubids.get('chipmunk-ard').get('red')
+    ubids = cfg.ubids.get('chipmunk-ard').get('reds')
 
     registry = c.get('registry_fn')()
     
-    refspec = specs.refspec(specs.mapped(specs=registry, ubids={'red': ubids}))
-    print("REFSPEC:{}".format(refspec))
+    refspec = specs.refspec(specs.mapped(specs=registry, ubids={'reds': ubids}))
+    # print("REFSPEC:{}".format(refspec))
  
     chipseq = c.get('chips_fn')(x=x,
                                 y=y,
                                 acquired=test.acquired,
                                 ubids=ubids)
 
-    dateseq = dates.mapped(chipmap=dict(red=chipseq)).get('red')
+    dateseq = dates.mapped(chipmap=dict(reds=chipseq)).get('reds')
 
     grid = {x['name']: x for x in c.get('grid_fn')()}.get('chip')
  

@@ -21,16 +21,16 @@ def mapped(ubids, specs):
     """Organizes specs by key.
 
     Args:
-        ubids (dict): {'red':   ['ubid1', 'ubid2'], 
-                       'green': ['ubid3', 'ubid4']}
+        ubids (dict): {'reds':   ['ubid1', 'ubid2'], 
+                       'greens': ['ubid3', 'ubid4']}
         specs (seq):  [{spec1}, {spec2}, {spec3}, {spec4}]
 
     Returns:
         dict
 
     Example:
-        >>> {'red':   [spec1, spec2], 
-             'green': [spec3, spec4]}
+        >>> {'reds':   [spec1, spec2], 
+             'greens': [spec3, spec4]}
     """
     
     return {k: only(v, specs) for k, v in ubids.items()}

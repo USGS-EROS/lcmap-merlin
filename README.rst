@@ -5,6 +5,9 @@
     :target: http://lcmap-merlin.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
+.. image:: https://img.shields.io/pypi/v/lcmap-merlin.svg
+    :target: https://pypi.python.org/pypi/lcmap-merlin/
+
 
 Merlin
 ======
@@ -34,14 +37,14 @@ Example
 
     print(timeseries)
 
-    (((123, 456, 123, 456), {'red'  : [9, 8, ...],
-                             'green': [99, 88, ...]},
-                             'blue' : [12, 22, ...],
-                             'dates': ['2017-01-01', '2016-12-31', ...]}),
-     ((123, 456, 124, 456), {'red'  : [4, 3, ...],
-                             'green': [19, 8, ...]},
-                             'blue' : [1, 11, ...],
-                             'dates': ['2017-01-01', '2016-12-31', ...]}),)
+    (((123, 456, 123, 456), {'reds'  : [9, 8, ...],
+                             'greens': [99, 88, ...]},
+                             'blues' : [12, 22, ...],
+                             'dates':  ['2017-01-01', '2016-12-31', ...]}),
+     ((123, 456, 124, 456), {'reds'  : [4, 3, ...],
+                             'greens': [19, 8, ...]},
+                             'blues' : [1, 11, ...],
+                             'dates':  ['2017-01-01', '2016-12-31', ...]}),)
 
 
 Documentation
