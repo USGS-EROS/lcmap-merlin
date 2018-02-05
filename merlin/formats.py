@@ -30,12 +30,12 @@ def pyccd(x, y, locations, dates_fn, specmap, chipmap):
                                      "greens": [], "blues": [],
                                      "nirs1": [],  "swir1s": [],
                                      "swir2s": [], "thermals": [],
-                                     "quality": []}),
+                                     "qas":    []}),
          ((chip_x, chip_y, x1, y2), {"dates": [],  "reds": [],
                                      "greens": [], "blues": [],
                                      "nirs1": [],  "swir1s": [],
                                      "swir2s": [], "thermals": [],
-                                     "quality": []}))
+                                     "qas":    []}))
         ...
     """
     

@@ -9,14 +9,14 @@ from merlin import specs
 import os
 
 
-ubids = {'chipmunk-ard': {'red':     ['LC08_SRB4',    'LE07_SRB3',    'LT05_SRB3',    'LT04_SRB3'],
-                          'green':   ['LC08_SRB3',    'LE07_SRB2',    'LT05_SRB2',    'LT04_SRB2'],
-                          'blue':    ['LC08_SRB2',    'LE07_SRB1',    'LT05_SRB1',    'LT04_SRB1'],
-                          'nir':     ['LC08_SRB5',    'LE07_SRB4',    'LT05_SRB4',    'LT04_SRB4'],
-                          'swir1':   ['LC08_SRB6',    'LE07_SRB5',    'LT05_SRB5',    'LT04_SRB5'],
-                          'swir2':   ['LC08_SRB7',    'LE07_SRB7',    'LT05_SRB7',    'LT04_SRB7'],
-                          'thermal': ['LC08_BTB10',   'LE07_BTB6',    'LT05_BTB6',    'LT04_BTB6'],
-                          'quality': ['LC08_PIXELQA', 'LE07_PIXELQA', 'LT05_PIXELQA', 'LT04_PIXELQA']},
+ubids = {'chipmunk-ard': {'reds':     ['LC08_SRB4',    'LE07_SRB3',    'LT05_SRB3',    'LT04_SRB3'],
+                          'greens':   ['LC08_SRB3',    'LE07_SRB2',    'LT05_SRB2',    'LT04_SRB2'],
+                          'blues':    ['LC08_SRB2',    'LE07_SRB1',    'LT05_SRB1',    'LT04_SRB1'],
+                          'nirs':     ['LC08_SRB5',    'LE07_SRB4',    'LT05_SRB4',    'LT04_SRB4'],
+                          'swir1s':   ['LC08_SRB6',    'LE07_SRB5',    'LT05_SRB5',    'LT04_SRB5'],
+                          'swir2s':   ['LC08_SRB7',    'LE07_SRB7',    'LT05_SRB7',    'LT04_SRB7'],
+                          'thermals': ['LC08_BTB10',   'LE07_BTB6',    'LT05_BTB6',    'LT04_BTB6'],
+                          'qas':      ['LC08_PIXELQA', 'LE07_PIXELQA', 'LT05_PIXELQA', 'LT04_PIXELQA']},
          'chipmunk-aux': {'trends':  ['AUX_TRENDS'],
                           'posidex': ['AUX_POSIDEX'],
                           'mpw':     ['AUX_MPW'],
@@ -29,12 +29,12 @@ def profiles(env, profile=None):
     """Retrieve a configuration profile with env applied.
 
     Args:
-        env (dict) - Environment variables
-        profile (str) - Name of profile to load.  If no profile is supplied all profiles
+        env (dict): Environment variables
+        profile (str): Name of profile to load.  If no profile is supplied all profiles
                         are returned.
 
     Returns:
-        dict - Profile or profiles with env substitutions.
+        dict: Profile or profiles with env substitutions.
     """
     
     __profiles = {
@@ -79,10 +79,10 @@ def get(profile='chipmunk-ard', env=None):
     """Return a configuration profile.
 
     Args:
-        profile (str) - Name of profile.
-        env (dict) - Environment variables to override os.environ
+        profile (str): Name of profile.
+        env (dict): Environment variables to override os.environ
     Returns:
-        dict - A Merlin configuration
+        dict: A Merlin configuration
     """
     
     p = profiles(env=merge(os.environ, env if env else {}),

@@ -52,7 +52,7 @@ def test_compare_timeseries_to_chip():
     # This will validate the chip was not transposed during timeseries creation.
     
     _cfg =   cfg.get(profile=test.profile, env=test.env)
-    _ubids = cfg.ubids.get(test.profile).get('red')
+    _ubids = cfg.ubids.get(test.profile).get('reds')
     _chips = _cfg.get('chips_fn')(x=test.x, y=test.y, acquired=test.acquired, ubids=_ubids)
     _index = specs.index(_cfg.get('registry_fn')())
      
@@ -69,7 +69,7 @@ def test_compare_timeseries_to_chip():
     #.reshape(100, 100)
     def observation(record):
         # return x, y, value for the most recent observation in the time series
-        return {'x': record[0][2], 'y': record[0][3], 'v': record[1]['red'][0]}
+        return {'x': record[0][2], 'y': record[0][3], 'v': record[1]['reds'][0]}
         
     def lookups(values):
         # need to know the array position of each value, be able to look them up
