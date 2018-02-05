@@ -82,7 +82,7 @@ def test_create():
     registry = c.get('registry_fn')()
     
     refspec = specs.refspec(specs.mapped(specs=registry, ubids={'reds': ubids}))
-    print("REFSPEC:{}".format(refspec))
+    # print("REFSPEC:{}".format(refspec))
  
     chipseq = c.get('chips_fn')(x=x,
                                 y=y,

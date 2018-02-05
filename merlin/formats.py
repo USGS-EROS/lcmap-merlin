@@ -26,15 +26,15 @@ def pyccd(x, y, locations, dates_fn, specmap, chipmap):
     additional sorted dates array.
 
     >>> pyccd_format(*args)
-        (((chip_x, chip_y, x1, y1), {"dates": [],  "reds": [],
-                                     "greens": [], "blues": [],
-                                     "nirs1": [],  "swir1s": [],
-                                     "swir2s": [], "thermals": [],
+        (((chip_x, chip_y, x1, y1), {"dates":  [],  "reds": [],
+                                     "greens": [],  "blues": [],
+                                     "nirs1":  [],  "swir1s": [],
+                                     "swir2s": [],  "thermals": [],
                                      "qas":    []}),
-         ((chip_x, chip_y, x1, y2), {"dates": [],  "reds": [],
-                                     "greens": [], "blues": [],
-                                     "nirs1": [],  "swir1s": [],
-                                     "swir2s": [], "thermals": [],
+         ((chip_x, chip_y, x1, y2), {"dates":  [],  "reds": [],
+                                     "greens": [],  "blues": [],
+                                     "nirs1":  [],  "swir1s": [],
+                                     "swir2s": [],  "thermals": [],
                                      "qas":    []}))
         ...
     """
