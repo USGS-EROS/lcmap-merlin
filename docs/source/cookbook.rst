@@ -58,7 +58,6 @@ Create Timeseries
                              'blues' : [1, 11, ...],
                              'dates':  ['2017-01-01', '2016-12-31', ...]}),)
 
-
 Retrieve Chips
 --------------
 
