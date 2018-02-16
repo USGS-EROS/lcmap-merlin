@@ -1,7 +1,9 @@
 from cytoolz import first
 from cytoolz import second
+from merlin import cfg
 from merlin import functions as f
 import pytest
+import test
 
 
 def test_extract():
@@ -153,4 +155,36 @@ def test_insert_into_every():
 
     #assert all(['newkey' in dod.get(key) for key in dod.keys()])
     assert all([dod.get(key).get('newkey') is 'newval' for key in dod.keys()])
-           
+
+    
+def chip_grid(config):
+    return first(filter(lambda x: x['name'] == 'chip', config.get('grid_fn')()))
+
+
+def tile_grid(config):
+    return first(filter(lambda x: x['name'] == 'tile', config.get('grid_fn')()))
+
+
+@test.vcr.use_cassette(test.cassette)
+def test_coordinates():
+    _cfg     = cfg.get('chipmunk-ard', env=test.env)
+    grid     = chip_grid(_cfg)
+    expected = ((-585.0, 2805.0), (-585.0, -195.0), (2415.0, 2805.0), (2415.0, -195.0))
+    result   = f.coordinates(ulx=0, uly=0, lrx=3000, lry=-3000, grid=grid, cfg=_cfg)
+    assert expected == result
+
+    grid     = tile_grid(_cfg)
+    expected = ((-15585.0, 14805.0),)
+    result = f.coordinates(ulx=0, uly=0, lrx=3000, lry=-3000, grid=grid, cfg=_cfg)
+    assert expected == result
+
+
+@test.vcr.use_cassette(test.cassette)
+def test_bounds_to_coordinates():
+    _cfg     = cfg.get('chipmunk-ard', env=test.env)
+    grid     = chip_grid(_cfg)
+    expected = ((-3585.0, 5805.0), (-3585.0, 2805.0), (-585.0, 5805.0), (-585.0, 2805.0))
+    result   = f.bounds_to_coordinates(bounds=((0, 0), (-590, 0), (0, 2806)),
+                                           grid=grid,
+                                           cfg=_cfg)
+    assert expected == result
