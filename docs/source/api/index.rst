@@ -10,6 +10,7 @@ API Reference
   files.rst
   formats.rst
   functions.rst
+  geometry.rst
   merlin.rst
   rods.rst
   specs.rst

@@ -86,11 +86,11 @@ def registry(url, resource='/registry'):
 
 
 def grid(url, resource='/grid'):
-    """Determine the chip and tile coordinates for a point.
+    """Return grid definitions.
   
     Args:
         url (str): protocol://host:port/path
-        resource (str): /grid/snap/resource (default: /grid/snap)
+        resource (str): /the/grid/resource (default: /grid)
  
     Returns:
         dict
