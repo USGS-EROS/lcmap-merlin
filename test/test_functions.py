@@ -26,23 +26,6 @@ def test_intersection():
     assert f.intersection(items) == {3}
 
 
-def test_minbox():
-    one = {'ulx': 0, 'uly': 0, 'lrx': 0, 'lry': 0}
-    assert f.minbox(((0,0),)) == one
-
-    two = {'ulx': 0, 'uly': 10, 'lrx': 10, 'lry': 0}
-    assert f.minbox(((0,0), (10, 10))) == two
-
-    three = {'ulx': -50, 'uly': 3, 'lrx': 10, 'lry': -8}
-    assert f.minbox(((-50,0), (10, 3), (5, -8))) == three
-
-    four = {'ulx': -5, 'uly': 33, 'lrx': 111, 'lry': -66}
-    assert f.minbox(((0, 11), (-5, -5), (3, 33), (111, -66))) == four
-
-    five = {'ulx': -5 , 'uly': 5 , 'lrx': 4 , 'lry': -4 }
-    assert f.minbox(((1, 1), (2, 2), (-3, -3), (4, -4), (-5, 5))) == five
-
-
 def test_sha256():
     assert type(f.sha256('kowalski')) is str
 
@@ -157,34 +140,4 @@ def test_insert_into_every():
     assert all([dod.get(key).get('newkey') is 'newval' for key in dod.keys()])
 
     
-def chip_grid(config):
-    return first(filter(lambda x: x['name'] == 'chip', config.get('grid_fn')()))
 
-
-def tile_grid(config):
-    return first(filter(lambda x: x['name'] == 'tile', config.get('grid_fn')()))
-
-
-@test.vcr.use_cassette(test.cassette)
-def test_coordinates():
-    _cfg     = cfg.get('chipmunk-ard', env=test.env)
-    grid     = chip_grid(_cfg)
-    expected = ((-585.0, 2805.0), (-585.0, -195.0), (2415.0, 2805.0), (2415.0, -195.0))
-    result   = f.coordinates(ulx=0, uly=0, lrx=3000, lry=-3000, grid=grid, cfg=_cfg)
-    assert expected == result
-
-    grid     = tile_grid(_cfg)
-    expected = ((-15585.0, 14805.0),)
-    result = f.coordinates(ulx=0, uly=0, lrx=3000, lry=-3000, grid=grid, cfg=_cfg)
-    assert expected == result
-
-
-@test.vcr.use_cassette(test.cassette)
-def test_bounds_to_coordinates():
-    _cfg     = cfg.get('chipmunk-ard', env=test.env)
-    grid     = chip_grid(_cfg)
-    expected = ((-3585.0, 5805.0), (-3585.0, 2805.0), (-585.0, 5805.0), (-585.0, 2805.0))
-    result   = f.bounds_to_coordinates(bounds=((0, 0), (-590, 0), (0, 2806)),
-                                           grid=grid,
-                                           cfg=_cfg)
-    assert expected == result

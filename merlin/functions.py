@@ -89,21 +89,6 @@ def intersection(items):
     return set.intersection(*(map(lambda x: set(x), items)))
 
 
-@functools.lru_cache(maxsize=128, typed=True)
-def minbox(points):
-    """Returns the minimal bounding box necessary to contain points
-
-    Args:
-        points (tuple): (x,y) points: ((0,0), (40, 55), (66, 22))
-
-    Returns:
-        dict: ulx, uly, lrx, lry
-    """
-
-    x, y = [point[0] for point in points], [point[1] for point in points]
-    return {'ulx': min(x), 'lrx': max(x), 'lry': min(y), 'uly': max(y)}
-
-
 def sha256(string):
     """Computes and returns a sha256 digest of the supplied string
 
@@ -372,72 +357,4 @@ def insert_into_every(dods, key, value):
     return {k: update(v, value) for k, v in dods.items()}
 
 
-def coordinates(ulx, uly, lrx, lry, grid, cfg):
-    """Returns all the coordinates that are needed to cover a supplied
-    bounding box.
-
-    Args:
-        ulx  (float)   : upper left x
-        uly  (float)   : upper left y
-        lrx  (float)   : lower right x
-        lry  (float)   : lower right y
-        grid (dict)    : {'name': 'chip', 'sx': 3000, 'sy': 3000, 'rx': 1, 'ry': -1}
-        cfg  (dict)    : A Merlin configuration
-
-    Returns:
-        tuple: tuple of tuples of chip coordinates ((x1,y1), (x2,y1) ...)
-
-    This example assumes chip sizes of 500 pixels.
-
-    Example:
-        >>> coordinates = coordinates(ulx=-1000, 
-                                      uly=1000, 
-                                      lrx=-500, 
-                                      lry=500,
-                                      grid={'name': 'chip', 'sx': 500, 'sy': 500, 'rx': 1, 'ry': -1}, 
-                                      cfg={'snap_fn': some_func})
-
-        ((-1000, 500), (-500, 500), (-1000, -500), (-500, -500))
-    """
-    
-    # get the snap_fn from Merlin config
-    snap_fn = cfg.get('snap_fn')
-
-    # snap start/end x & y
-    start_x, start_y = get_in([grid.get('name'), 'proj-pt'], snap_fn(x=ulx, y=uly))
-    end_x,   end_y   = get_in([grid.get('name'), 'proj-pt'], snap_fn(x=lrx, y=lry))
-
-    # get x and y scale factors multiplied by reflection
-    x_interval = grid.get('sx') * grid.get('rx')
-    y_interval = grid.get('sy') * grid.get('ry')
-    
-    return tuple((x, y) for x in np.arange(start_x, end_x + x_interval, x_interval)
-                        for y in np.arange(start_y, end_y + y_interval, y_interval))
-
-
-def bounds_to_coordinates(bounds, grid, cfg):
-    """Returns coordinates from a sequence of bounds.  Performs minbox
-    operation on bounds, thus irregular geometries may be supplied.
-
-    Args:
-        bounds: a sequence of bounds.
-        grid (dict): {'name': 'chip', 'sx': SCALE_FACTOR, 'sy': SCALE_FACTOR, 'rx': 1, 'ry': -1}
-        cfg (dict): {'snap_fn': some_func}
-
-    Returns:
-        tuple: chip coordinates
-
-    Example:
-        >>> xys = bounds_to_coordinates(
-                                    bounds=((112, 443), (112, 500), (100, 443)),
-                                    grid={'sx': 3000, 'sy': 3000}, 
-                                    cfg={'snap_fn': some_func})
-        >>> ((100, 500),)
-    """
-
-    return coordinates(ulx=minbox(bounds)['ulx'],
-                       uly=minbox(bounds)['uly'],
-                       lrx=minbox(bounds)['lrx'],
-                       lry=minbox(bounds)['lry'],
-                       grid=grid,
-                       cfg=cfg)
+ 
