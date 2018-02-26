@@ -357,4 +357,14 @@ def insert_into_every(dods, key, value):
     return {k: update(v, value) for k, v in dods.items()}
 
 
+def dictionary(**kwargs):
+    """Converts kwargs to a dictionary
  
+    Args:
+        kwargs (dict): key=values to add to the dictionary
+
+    Returns:
+        Python dict containing all key=values passed
+    """
+
+    return kwargs

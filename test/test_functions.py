@@ -139,5 +139,6 @@ def test_insert_into_every():
     #assert all(['newkey' in dod.get(key) for key in dod.keys()])
     assert all([dod.get(key).get('newkey') is 'newval' for key in dod.keys()])
 
-    
 
+def test_dictionary():
+    assert {'a': 1, 'b': 'two', 'c': True} == f.dictionary(a=1, b='two', c=True)
