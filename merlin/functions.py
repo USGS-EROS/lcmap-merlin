@@ -369,12 +369,14 @@ def denumpify(arg):
     numpy ndarrays are returned as list()    
 
     If there is no implemented converter, returns arg.
+
     Args:
         arg: A (possibly numpy) data structure
 
     Returns:
         A Python data structure
     """
+    
     return arg
 
 
