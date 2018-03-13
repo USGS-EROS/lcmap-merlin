@@ -381,6 +381,13 @@ def _(arg):
     return None
 
 
+@denumpify.register(np.bool_)
+@denumpify.register(np.bool8)
+def _(arg):
+    """Converts numpy bools to python bools"""
+    return bool(arg)
+
+
 @denumpify.register(np.float64)
 @denumpify.register(np.float32)
 @denumpify.register(np.float16)

@@ -142,6 +142,8 @@ def test_insert_into_every():
 
 
 def test_denumpify():
+    bools = [np.bool_, np.bool8]
+    
     ints = [np.intc, np.intp, np.int8, np.int16, np.int32, np.int64,
             np.uint8, np.uint16, np.uint32, np.uint64]
 
@@ -149,7 +151,7 @@ def test_denumpify():
 
     complexes = [np.complex_, np.complex64, np.complex128]
 
-    
+    assert all([type(f.denumpify(_b(10))) == bool for _b in bools])
     assert all([type(f.denumpify(_i(10))) == int for _i in ints])
     assert all([type(f.denumpify(_f(10))) == float for _f in floats])
     assert all([type(f.denumpify(_c(10))) == complex for _c in complexes])
