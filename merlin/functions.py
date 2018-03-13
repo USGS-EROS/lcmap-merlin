@@ -368,6 +368,9 @@ def denumpify(arg):
     None is returned as None
     numpy ndarrays are returned as list()    
 
+    Python lists, maps, sets and tuples are returned with all values converted
+    to Python types (recursively).
+
     If there is no implemented converter, returns arg.
 
     Args:
@@ -422,3 +425,29 @@ def _(arg):
 def _(arg):
     """Converts ndarray to listset to list"""
     return arg.tolist()
+
+
+@denumpify.register(list)
+def _(arg):
+    """Converts list values to Python types"""
+    return [denumpify(l) for l in arg]
+
+
+@denumpify.register(set)
+def _(arg):
+    """Converts set values to Python types"""
+    return set(denumpify(list(arg)))
+
+
+@denumpify.register(tuple)
+def _(arg):
+    """Converts tuple values to Python types"""
+    return tuple(denumpify(list(arg)))
+
+        
+@denumpify.register(dict)
+def _(arg):
+    """Converts dict values to Python types"""
+    print(arg)
+    return {k: denumpify(v) for k, v in arg.items()}
+

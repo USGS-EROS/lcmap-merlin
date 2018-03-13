@@ -162,3 +162,9 @@ def test_denumpify():
     assert type(f.denumpify([1, 2, 3])) == list
     assert type(f.denumpify(dict(a=1))) == dict
     assert type(f.denumpify(tuple([1, 2, 3]))) == tuple
+
+
+    # make sure it's converting subelement correctly
+    l = f.denumpify([np.int16(1), np.int16(20), np.int16(3)])
+    assert all([type(ll) == int for ll in l])
+                    
