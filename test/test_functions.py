@@ -162,5 +162,3 @@ def test_denumpify():
     assert type(f.denumpify([1, 2, 3])) == list
     assert type(f.denumpify(dict(a=1))) == dict
     assert type(f.denumpify(tuple([1, 2, 3]))) == tuple
-    
-    
