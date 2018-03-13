@@ -419,4 +419,4 @@ def _(arg):
 @denumpify.register(np.ndarray)
 def _(arg):
     """Converts ndarray to listset to list"""
-    return list(arg)
+    return arg.tolist()
