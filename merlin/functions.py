@@ -448,6 +448,5 @@ def _(arg):
 @denumpify.register(dict)
 def _(arg):
     """Converts dict values to Python types"""
-    print(arg)
     return {k: denumpify(v) for k, v in arg.items()}
 
