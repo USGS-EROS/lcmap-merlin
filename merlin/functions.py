@@ -449,4 +449,3 @@ def _(arg):
 def _(arg):
     """Converts dict values to Python types"""
     return {k: denumpify(v) for k, v in arg.items()}
-
