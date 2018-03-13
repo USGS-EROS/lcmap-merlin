@@ -426,6 +426,7 @@ def _(arg):
     """Converts ndarray to listset to list"""
     return arg.tolist()
 
+
 @denumpify.register(list)
 def _(arg):
     """Converts list values to Python types"""
@@ -447,5 +448,4 @@ def _(arg):
 @denumpify.register(dict)
 def _(arg):
     """Converts dict values to Python types"""
-    print(arg)
     return {k: denumpify(v) for k, v in arg.items()}
