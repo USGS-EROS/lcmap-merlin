@@ -142,18 +142,25 @@ def test_insert_into_every():
 
 
 def test_denumpify():
-    bools = [np.bool_, np.bool8]
+    bools = [np.bool_, np.bool8, bool]
     
     ints = [np.intc, np.intp, np.int8, np.int16, np.int32, np.int64,
-            np.uint8, np.uint16, np.uint32, np.uint64]
+            np.uint8, np.uint16, np.uint32, np.uint64, int]
 
-    floats = [np.float64, np.float32, np.float16]
+    floats = [np.float64, np.float32, np.float16, float]
 
-    complexes = [np.complex_, np.complex64, np.complex128]
+    complexes = [np.complex_, np.complex64, np.complex128, complex]
 
     assert all([type(f.denumpify(_b(10))) == bool for _b in bools])
     assert all([type(f.denumpify(_i(10))) == int for _i in ints])
     assert all([type(f.denumpify(_f(10))) == float for _f in floats])
     assert all([type(f.denumpify(_c(10))) == complex for _c in complexes])
     assert type(f.denumpify(np.ndarray([1, 2, 3])) == list)
+
+    assert f.denumpify(None) is None
+    assert type(f.denumpify(set([1, 2, 3]))) == set
+    assert type(f.denumpify([1, 2, 3])) == list
+    assert type(f.denumpify(dict(a=1))) == dict
+    assert type(f.denumpify(tuple([1, 2, 3]))) == tuple
+    
     

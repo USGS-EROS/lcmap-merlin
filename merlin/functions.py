@@ -368,18 +368,14 @@ def denumpify(arg):
     None is returned as None
     numpy ndarrays are returned as list()    
 
+    If there is no implemented converter, returns arg.
     Args:
         arg: A (possibly numpy) data structure
 
     Returns:
         A Python data structure
     """
-    raise NotImplemented("denumpify is not implemented for type:{}".format(type(arg)))
-
-
-@denumpify.register(None)
-def _(arg):
-    return None
+    return arg
 
 
 @denumpify.register(np.bool_)
