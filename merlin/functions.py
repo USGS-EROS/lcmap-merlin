@@ -357,14 +357,62 @@ def insert_into_every(dods, key, value):
     return {k: update(v, value) for k, v in dods.items()}
 
 
-def dictionary(**kwargs):
-    """Converts kwargs to a dictionary
- 
+@singledispatch
+def denumpify(arg):
+    """Converts numpy datatypes to python datatypes
+
+    float64, float32 and float16's are converted to Python float()
+    intc, intp, int8, int16, int32, int64, uint8, uint16, uint32 and uint64 are converted to Python int()
+    complex_, complex64 and complex128 are converted to Python complex()
+    None is returned as None
+    numpy ndarrays are returned as list()    
+
     Args:
-        kwargs (dict): key=values to add to the dictionary
+        arg: A (possibly numpy) data structure
 
     Returns:
-        Python dict containing all key=values passed
+        A Python data structure
     """
+    raise NotImplemented("denumpify is not implemented for type:{}".format(type(arg)))
 
-    return kwargs
+
+@denumpify.register(None)
+def _(arg):
+    return None
+
+
+@denumpify.register(np.float64)
+@denumpify.register(np.float32)
+@denumpify.register(np.float16)
+def _(arg):
+    """Converts numpy floats to python floats"""
+    return float(arg)
+
+
+@denumpify.register(np.intc)
+@denumpify.register(np.intp)
+@denumpify.register(np.int8)
+@denumpify.register(np.int16)
+@denumpify.register(np.int32)
+@denumpify.register(np.int64)
+@denumpify.register(np.uint8)
+@denumpify.register(np.uint16)
+@denumpify.register(np.uint32)
+@denumpify.register(np.uint64)
+def _(arg):
+    """Converts numpy ints to python ints"""
+    return int(arg)
+
+
+@denumpify.register(np.complex_)
+@denumpify.register(np.complex64)
+@denumpify.register(np.complex128)
+def _(arg):
+    """Converts numpy complex numbers to python complex"""
+    return complex(arg)
+
+
+@denumpify.register(np.ndarray)
+def _(arg):
+    """Converts ndarray to listset to list"""
+    return list(arg)

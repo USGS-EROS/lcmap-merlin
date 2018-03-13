@@ -2,6 +2,7 @@ from cytoolz import first
 from cytoolz import second
 from merlin import cfg
 from merlin import functions as f
+import numpy as np
 import pytest
 import test
 
@@ -140,5 +141,17 @@ def test_insert_into_every():
     assert all([dod.get(key).get('newkey') is 'newval' for key in dod.keys()])
 
 
-def test_dictionary():
-    assert {'a': 1, 'b': 'two', 'c': True} == f.dictionary(a=1, b='two', c=True)
+def test_denumpify():
+    ints = [np.intc, np.intp, np.int8, np.int16, np.int32, np.int64,
+            np.uint8, np.uint16, np.uint32, np.uint64]
+
+    floats = [np.float64, np.float32, np.float16]
+
+    complexes = [np.complex_, np.complex64, np.complex128]
+
+    
+    assert all([type(f.denumpify(_i(10))) == int for _i in ints])
+    assert all([type(f.denumpify(_f(10))) == float for _f in floats])
+    assert all([type(f.denumpify(_c(10))) == complex for _c in complexes])
+    assert type(f.denumpify(np.ndarray([1, 2, 3])) == list)
+    
