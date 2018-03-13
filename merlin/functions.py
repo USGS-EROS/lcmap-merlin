@@ -361,6 +361,7 @@ def insert_into_every(dods, key, value):
 def denumpify(arg):
     """Converts numpy datatypes to python datatypes
 
+    bool_ and bool8 are converted to Python bool
     float64, float32 and float16's are converted to Python float()
     intc, intp, int8, int16, int32, int64, uint8, uint16, uint32 and uint64 are converted to Python int()
     complex_, complex64 and complex128 are converted to Python complex()
