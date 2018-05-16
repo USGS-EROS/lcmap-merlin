@@ -54,7 +54,10 @@ def profiles(env, profile=None):
                                    resource=env.get('CHIPMUNK_REGISTRY_RESOURCE', '/registry')),
             'snap_fn':     partial(chipmunk.snap,
                                    url=env.get('CHIPMUNK_URL', None),
-                                   resource=env.get('CHIPMUNK_SNAP_RESOURCE', '/grid/snap'))},
+                                   resource=env.get('CHIPMUNK_SNAP_RESOURCE', '/grid/snap')),
+            'near_fn':     partial(chipmunk.near,
+                                   url=env.get('CHIPMUNK_URL', None),
+                                   resource=env.get('CHIPMUNK_NEAR_RESOURCE', '/grid/near'))},
         'chipmunk-aux' : {
             'grid_fn':     partial(chipmunk.grid,
                                    url=env.get('CHIPMUNK_URL', None),
@@ -70,7 +73,10 @@ def profiles(env, profile=None):
                                    resource=env.get('CHIPMUNK_REGISTRY_RESOURCE', '/registry')),
             'snap_fn':     partial(chipmunk.snap,
                                    url=env.get('CHIPMUNK_URL', None),
-                                   resource=env.get('CHIPMUNK_SNAP_RESOURCE', '/grid/snap'))},
+                                   resource=env.get('CHIPMUNK_SNAP_RESOURCE', '/grid/snap')),
+            'near_fn':     partial(chipmunk.near,
+                                   url=env.get('CHIPMUNK_URL', None),
+                                   resource=env.get('CHIPMUNK_NEAR_RESOURCE', '/grid/near'))},
         'chipmunk-trends' : {
             'grid_fn':     partial(chipmunk.grid,
                                    url=env.get('CHIPMUNK_URL', None),
@@ -86,7 +92,10 @@ def profiles(env, profile=None):
                                    resource=env.get('CHIPMUNK_REGISTRY_RESOURCE', '/registry')),
             'snap_fn':     partial(chipmunk.snap,
                                    url=env.get('CHIPMUNK_URL', None),
-                                   resource=env.get('CHIPMUNK_SNAP_RESOURCE', '/grid/snap'))},
+                                   resource=env.get('CHIPMUNK_SNAP_RESOURCE', '/grid/snap')),
+            'near_fn':     partial(chipmunk.near,
+                                   url=env.get('CHIPMUNK_URL', None),
+                                   resource=env.get('CHIPMUNK_NEAR_RESOURCE', '/grid/near'))},
         }
     
     return __profiles.get(profile, None) if profile else __profiles
