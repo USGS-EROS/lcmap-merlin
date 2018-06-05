@@ -35,10 +35,6 @@ def test_md5():
     assert type(f.md5('kowalski')) is str
 
 
-def test_simplify_objects():
-    assert 1 > 0
-
-
 def test_sort():
     assert f.sort([2, 1, 3]) == [1, 2, 3]
 
