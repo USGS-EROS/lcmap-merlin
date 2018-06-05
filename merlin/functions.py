@@ -89,21 +89,6 @@ def intersection(items):
     return set.intersection(*(map(lambda x: set(x), items)))
 
 
-@functools.lru_cache(maxsize=128, typed=True)
-def minbox(points):
-    """Returns the minimal bounding box necessary to contain points
-
-    Args:
-        points (tuple): (x,y) points: ((0,0), (40, 55), (66, 22))
-
-    Returns:
-        dict: ulx, uly, lrx, lry
-    """
-
-    x, y = [point[0] for point in points], [point[1] for point in points]
-    return {'ulx': min(x), 'lrx': max(x), 'lry': min(y), 'uly': max(y)}
-
-
 def sha256(string):
     """Computes and returns a sha256 digest of the supplied string
 
@@ -372,72 +357,95 @@ def insert_into_every(dods, key, value):
     return {k: update(v, value) for k, v in dods.items()}
 
 
-def coordinates(ulx, uly, lrx, lry, grid, cfg):
-    """Returns all the coordinates that are needed to cover a supplied
-    bounding box.
+@singledispatch
+def denumpify(arg):
+    """Converts numpy datatypes to python datatypes
+
+    bool_ and bool8 are converted to Python bool
+    float64, float32 and float16's are converted to Python float()
+    intc, intp, int8, int16, int32, int64, uint8, uint16, uint32 and uint64 are converted to Python int()
+    complex_, complex64 and complex128 are converted to Python complex()
+    None is returned as None
+    numpy ndarrays are returned as list()    
+
+    Python lists, maps, sets and tuples are returned with all values converted
+    to Python types (recursively).
+
+    If there is no implemented converter, returns arg.
 
     Args:
-        ulx  (float)   : upper left x
-        uly  (float)   : upper left y
-        lrx  (float)   : lower right x
-        lry  (float)   : lower right y
-        grid (dict)    : {'name': 'chip', 'sx': 3000, 'sy': 3000, 'rx': 1, 'ry': -1}
-        cfg  (dict)    : A Merlin configuration
+        arg: A (possibly numpy) data structure
 
     Returns:
-        tuple: tuple of tuples of chip coordinates ((x1,y1), (x2,y1) ...)
-
-    This example assumes chip sizes of 500 pixels.
-
-    Example:
-        >>> coordinates = coordinates(ulx=-1000, 
-                                      uly=1000, 
-                                      lrx=-500, 
-                                      lry=500,
-                                      grid={'name': 'chip', 'sx': 500, 'sy': 500, 'rx': 1, 'ry': -1}, 
-                                      cfg={'snap_fn': some_func})
-
-        ((-1000, 500), (-500, 500), (-1000, -500), (-500, -500))
+        A Python data structure
     """
     
-    # get the snap_fn from Merlin config
-    snap_fn = cfg.get('snap_fn')
-
-    # snap start/end x & y
-    start_x, start_y = get_in([grid.get('name'), 'proj-pt'], snap_fn(x=ulx, y=uly))
-    end_x,   end_y   = get_in([grid.get('name'), 'proj-pt'], snap_fn(x=lrx, y=lry))
-
-    # get x and y scale factors multiplied by reflection
-    x_interval = grid.get('sx') * grid.get('rx')
-    y_interval = grid.get('sy') * grid.get('ry')
-    
-    return tuple((x, y) for x in np.arange(start_x, end_x + x_interval, x_interval)
-                        for y in np.arange(start_y, end_y + y_interval, y_interval))
+    return arg
 
 
-def bounds_to_coordinates(bounds, grid, cfg):
-    """Returns coordinates from a sequence of bounds.  Performs minbox
-    operation on bounds, thus irregular geometries may be supplied.
+@denumpify.register(np.bool_)
+@denumpify.register(np.bool8)
+def _(arg):
+    """Converts numpy bools to python bools"""
+    return bool(arg)
 
-    Args:
-        bounds: a sequence of bounds.
-        grid (dict): {'name': 'chip', 'sx': SCALE_FACTOR, 'sy': SCALE_FACTOR, 'rx': 1, 'ry': -1}
-        cfg (dict): {'snap_fn': some_func}
 
-    Returns:
-        tuple: chip coordinates
+@denumpify.register(np.float64)
+@denumpify.register(np.float32)
+@denumpify.register(np.float16)
+def _(arg):
+    """Converts numpy floats to python floats"""
+    return float(arg)
 
-    Example:
-        >>> xys = bounds_to_coordinates(
-                                    bounds=((112, 443), (112, 500), (100, 443)),
-                                    grid={'sx': 3000, 'sy': 3000}, 
-                                    cfg={'snap_fn': some_func})
-        >>> ((100, 500),)
-    """
 
-    return coordinates(ulx=minbox(bounds)['ulx'],
-                       uly=minbox(bounds)['uly'],
-                       lrx=minbox(bounds)['lrx'],
-                       lry=minbox(bounds)['lry'],
-                       grid=grid,
-                       cfg=cfg)
+@denumpify.register(np.intc)
+@denumpify.register(np.intp)
+@denumpify.register(np.int8)
+@denumpify.register(np.int16)
+@denumpify.register(np.int32)
+@denumpify.register(np.int64)
+@denumpify.register(np.uint8)
+@denumpify.register(np.uint16)
+@denumpify.register(np.uint32)
+@denumpify.register(np.uint64)
+def _(arg):
+    """Converts numpy ints to python ints"""
+    return int(arg)
+
+
+@denumpify.register(np.complex_)
+@denumpify.register(np.complex64)
+@denumpify.register(np.complex128)
+def _(arg):
+    """Converts numpy complex numbers to python complex"""
+    return complex(arg)
+
+
+@denumpify.register(np.ndarray)
+def _(arg):
+    """Converts ndarray to listset to list"""
+    return arg.tolist()
+
+
+@denumpify.register(list)
+def _(arg):
+    """Converts list values to Python types"""
+    return [denumpify(l) for l in arg]
+
+
+@denumpify.register(set)
+def _(arg):
+    """Converts set values to Python types"""
+    return set(denumpify(list(arg)))
+
+
+@denumpify.register(tuple)
+def _(arg):
+    """Converts tuple values to Python types"""
+    return tuple(denumpify(list(arg)))
+
+        
+@denumpify.register(dict)
+def _(arg):
+    """Converts dict values to Python types"""
+    return {k: denumpify(v) for k, v in arg.items()}

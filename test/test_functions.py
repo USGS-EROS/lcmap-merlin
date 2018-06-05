@@ -2,6 +2,7 @@ from cytoolz import first
 from cytoolz import second
 from merlin import cfg
 from merlin import functions as f
+import numpy as np
 import pytest
 import test
 
@@ -26,33 +27,12 @@ def test_intersection():
     assert f.intersection(items) == {3}
 
 
-def test_minbox():
-    one = {'ulx': 0, 'uly': 0, 'lrx': 0, 'lry': 0}
-    assert f.minbox(((0,0),)) == one
-
-    two = {'ulx': 0, 'uly': 10, 'lrx': 10, 'lry': 0}
-    assert f.minbox(((0,0), (10, 10))) == two
-
-    three = {'ulx': -50, 'uly': 3, 'lrx': 10, 'lry': -8}
-    assert f.minbox(((-50,0), (10, 3), (5, -8))) == three
-
-    four = {'ulx': -5, 'uly': 33, 'lrx': 111, 'lry': -66}
-    assert f.minbox(((0, 11), (-5, -5), (3, 33), (111, -66))) == four
-
-    five = {'ulx': -5 , 'uly': 5 , 'lrx': 4 , 'lry': -4 }
-    assert f.minbox(((1, 1), (2, 2), (-3, -3), (4, -4), (-5, 5))) == five
-
-
 def test_sha256():
     assert type(f.sha256('kowalski')) is str
 
 
 def test_md5():
     assert type(f.md5('kowalski')) is str
-
-
-def test_simplify_objects():
-    assert 1 > 0
 
 
 def test_sort():
@@ -156,35 +136,29 @@ def test_insert_into_every():
     #assert all(['newkey' in dod.get(key) for key in dod.keys()])
     assert all([dod.get(key).get('newkey') is 'newval' for key in dod.keys()])
 
+
+def test_denumpify():
+    bools = [np.bool_, np.bool8, bool]
     
-def chip_grid(config):
-    return first(filter(lambda x: x['name'] == 'chip', config.get('grid_fn')()))
+    ints = [np.intc, np.intp, np.int8, np.int16, np.int32, np.int64,
+            np.uint8, np.uint16, np.uint32, np.uint64, int]
 
+    floats = [np.float64, np.float32, np.float16, float]
 
-def tile_grid(config):
-    return first(filter(lambda x: x['name'] == 'tile', config.get('grid_fn')()))
+    complexes = [np.complex_, np.complex64, np.complex128, complex]
 
+    assert all([type(f.denumpify(_b(10))) == bool for _b in bools])
+    assert all([type(f.denumpify(_i(10))) == int for _i in ints])
+    assert all([type(f.denumpify(_f(10))) == float for _f in floats])
+    assert all([type(f.denumpify(_c(10))) == complex for _c in complexes])
+    assert type(f.denumpify(np.ndarray([1, 2, 3])) == list)
 
-@test.vcr.use_cassette(test.cassette)
-def test_coordinates():
-    _cfg     = cfg.get('chipmunk-ard', env=test.env)
-    grid     = chip_grid(_cfg)
-    expected = ((-585.0, 2805.0), (-585.0, -195.0), (2415.0, 2805.0), (2415.0, -195.0))
-    result   = f.coordinates(ulx=0, uly=0, lrx=3000, lry=-3000, grid=grid, cfg=_cfg)
-    assert expected == result
+    assert f.denumpify(None) is None
+    assert type(f.denumpify(set([1, 2, 3]))) == set
+    assert type(f.denumpify([1, 2, 3])) == list
+    assert type(f.denumpify(dict(a=1))) == dict
+    assert type(f.denumpify(tuple([1, 2, 3]))) == tuple
 
-    grid     = tile_grid(_cfg)
-    expected = ((-15585.0, 14805.0),)
-    result = f.coordinates(ulx=0, uly=0, lrx=3000, lry=-3000, grid=grid, cfg=_cfg)
-    assert expected == result
-
-
-@test.vcr.use_cassette(test.cassette)
-def test_bounds_to_coordinates():
-    _cfg     = cfg.get('chipmunk-ard', env=test.env)
-    grid     = chip_grid(_cfg)
-    expected = ((-3585.0, 5805.0), (-3585.0, 2805.0), (-585.0, 5805.0), (-585.0, 2805.0))
-    result   = f.bounds_to_coordinates(bounds=((0, 0), (-590, 0), (0, 2806)),
-                                           grid=grid,
-                                           cfg=_cfg)
-    assert expected == result
+    # make sure it's converting subelement correctly
+    l = f.denumpify([np.int16(1), np.int16(20), np.int16(3)])
+    assert all([type(ll) == int for ll in l])                    
