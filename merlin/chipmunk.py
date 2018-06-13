@@ -11,11 +11,15 @@ To support multiple versions of Chipmunk create new modules that correspond to
 the appropriate version number.
 """
 
+from cytoolz import get
 from cytoolz import reduce
 from functools import partial
 from operator import add
+
+import logging
 import requests
 
+logger = logging.getLogger(__name__)
 
 def chips(x, y, acquired, ubids, url, resource='/chips'):
     """Returns chips from a Chipmunk url given x, y, date range and ubid sequence
@@ -41,12 +45,22 @@ def chips(x, y, acquired, ubids, url, resource='/chips'):
     """
 
     url = '{}{}'.format(url, resource)
+
     params = [{'x': x, 'y': y, 'acquired': acquired, 'ubid': u } for u in ubids]
+    
+    def request(url, params):
+        r = requests.get(url=url, params=params)
+        body = r.json()
 
-    # check to see if there were results.  If yes return .json() else [{}]
-    responses = [requests.get(url=url, params=p).json() for p in params]
-    return tuple(reduce(add, responses))
-
+        if not r.ok:
+            logger.error("{} at {} for {}".format(body, url, params))
+            return None
+        else:
+            return body
+    
+    responses = [request(url=url, params=p) for p in params]
+    return reduce(add, filter(lambda x: type(x) in [list, tuple], responses), [])
+              
 
 def registry(url, resource='/registry'):
     """Retrieve the chip spec registry
