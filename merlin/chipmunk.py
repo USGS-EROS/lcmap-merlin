@@ -59,7 +59,7 @@ def chips(x, y, acquired, ubids, url, resource='/chips'):
             return body
     
     responses = [request(url=url, params=p) for p in params]
-    return reduce(add, filter(lambda x: type(x) in [list, tuple], responses), [])
+    return tuple(reduce(add, filter(lambda x: type(x) in [list, tuple], responses), []))
               
 
 def registry(url, resource='/registry'):
