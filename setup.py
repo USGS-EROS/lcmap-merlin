@@ -8,7 +8,7 @@ def readme():
 
 
 setup(name='lcmap-merlin',
-      version='2.2.0',
+      version='2.2.1',
       description='Python client library for LCMAP rasters',
       long_description=readme(),
       classifiers=[
