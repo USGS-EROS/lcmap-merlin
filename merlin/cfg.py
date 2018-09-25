@@ -17,13 +17,20 @@ ubids = {'chipmunk-ard': {'reds':     ['LC08_SRB4',    'LE07_SRB3',    'LT05_SRB
                           'swir2s':   ['LC08_SRB7',    'LE07_SRB7',    'LT05_SRB7',    'LT04_SRB7'],
                           'thermals': ['LC08_BTB10',   'LE07_BTB6',    'LT05_BTB6',    'LT04_BTB6'],
                           'qas':      ['LC08_PIXELQA', 'LE07_PIXELQA', 'LT05_PIXELQA', 'LT04_PIXELQA']},
-         'chipmunk-aux': {'trends':  ['AUX_TRENDS'],
-                          'posidex': ['AUX_POSIDEX'],
-                          'mpw':     ['AUX_MPW'],
-                          'aspect':  ['AUX_ASPECT'],
-                          'slope':   ['AUX_SLOPE'],
-                          'dem':     ['AUX_DEM']},
-         'chipmunk-trends': {'trends': ['AUX_TRENDS']}}
+
+         'chipmunk-aux': {'nlcd':     ['AUX_NLCD'],
+                          'posidex':  ['AUX_POSIDEX'],
+                          'mpw':      ['AUX_MPW'],
+                          'aspect':   ['AUX_ASPECT'],
+                          'slope':    ['AUX_SLOPE'],
+                          'dem':      ['AUX_DEM']},
+
+         'chipmunk-trn': {'nlcdtrn':  ['AUX_NLCDTRN'],
+                          'posidex':  ['AUX_POSIDEX'],
+                          'mpw':      ['AUX_MPW'],
+                          'aspect':   ['AUX_ASPECT'],
+                          'slope':    ['AUX_SLOPE'],
+                          'dem':      ['AUX_DEM']}}
 
 
 def profiles(env, profile=None):
@@ -77,7 +84,7 @@ def profiles(env, profile=None):
             'near_fn':     partial(chipmunk.near,
                                    url=env.get('CHIPMUNK_URL', None),
                                    resource=env.get('CHIPMUNK_NEAR_RESOURCE', '/grid/near'))},
-        'chipmunk-trends' : {
+        'chipmunk-trn' : {
             'grid_fn':     partial(chipmunk.grid,
                                    url=env.get('CHIPMUNK_URL', None),
                                    resource=env.get('CHIPMUNK_GRID_RESOURCE', '/grid')),
@@ -85,7 +92,7 @@ def profiles(env, profile=None):
             'chips_fn':    partial(chipmunk.chips,
                                    url=env.get('CHIPMUNK_URL', None),
                                    resource=env.get('CHIPMUNK_CHIPS_RESOURCE', '/chips')),
-            'specs_fn':    partial(specs.mapped, ubids=ubids['chipmunk-trends']),
+            'specs_fn':    partial(specs.mapped, ubids=ubids['chipmunk-trn']),
             'format_fn':   formats.pyccd,
             'registry_fn': partial(chipmunk.registry,
                                    url=env.get('CHIPMUNK_URL', None),
