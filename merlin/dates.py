@@ -1,6 +1,7 @@
 from cytoolz import first
 from cytoolz import reduce
 from cytoolz import second
+from cytoolz import thread_first
 from dateutil import parser
 from merlin import chips
 from merlin import functions as f
@@ -86,13 +87,13 @@ def symmetric(datemap):
 
     Example:
 
-        >>> common({"reds":  [ds3, ds1, ds2],
-                    "blues": [ds2, ds3, ds1]})
-        [2, 3, 1]
+        >>> symmetric({"reds":  [ds3, ds1, ds2],
+                       "blues": [ds2, ds3, ds1]})
+        [ds2, ds3, ds1]
         >>>
-        >>> common({"reds":  [ds3, ds1],
-                    "blues": [ds2, ds3, ds1]})
-        Exception: reds:[3, 1] does not match blues:[2, 3, 1]
+        >>> symmetric({"reds":  [ds3, ds1],
+                       "blues": [ds2, ds3, ds1]})
+        Exception: assymetric dates detected - {'reds':[ds3, ds1]} != {'blues':[ds2, ds3, ds1]}
     """
 
     def check(a, b):
@@ -119,6 +120,39 @@ def symmetric(datemap):
     return second(reduce(check, datemap.items()))
 
 
+def symmetric_single(datemap):
+    """Ensures all datemap values are length 1 & returns an iso8601 date range from the 
+       min and max dates in datemap.values()
+
+       Raises exception if values are not length 1.
+
+    Args:
+        datemap: {key: [datestrings,], key2: [datestrings,]}
+
+    Returns:
+        ['min_datestring/max_datestring',] or Exception
+
+    Example:
+
+        >>> symmetric({"nlcd": [ds3,],
+                       "dem":  [ds2,]})
+        [ds2/ds3,]
+        >>>
+        >>> symmetric({"nlcd":  [ds3, ds1],
+                       "dem":   [ds2,]})
+        Exception: assymetric dates detected - {'nlcd':[ds3, ds1], 'dem':[ds2]}
+    """
+    
+    if all(map(lambda a: eq(1, len(a)), datemap.values())):
+        return thread_first(datemap.values(),
+                            f.flatten,
+                            list,
+                            lambda a: '{}/{}'.format(min(a), max(a)),
+                            lambda a: [a,])
+    else:
+        raise Exception('assymetric dates detected - {}'.format(datemap))
+    
+    
 def rsort(dateseq):
     """ Reverse sorts a sequence of dates.
 
