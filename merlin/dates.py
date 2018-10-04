@@ -5,6 +5,7 @@ from cytoolz import thread_first
 from dateutil import parser
 from merlin import chips
 from merlin import functions as f
+from operator import eq
 import re
 
 
@@ -75,6 +76,26 @@ def mapped(chipmap):
     return {k: chips.dates(v) for k, v in chipmap.items()}
 
 
+def minmax(dates):
+    """Returns an iso8601 daterange string that represents the
+       min and max datemap.values().
+
+    Args:
+        datestrings: [d1, d2, d3,]
+
+    Returns:
+        ['min_date/max_date',]
+
+    Example:
+        >>> minmax(['2008-01-01', '2010-01-01', '2009-01-01'])
+        "2008-01-01/2010-01-01"
+    """
+
+    return thread_first(dates,
+                        f.flatten,
+                        list,
+                        lambda a: '{}/{}'.format(min(a), max(a)))
+
 def symmetric(datemap):
     """Returns a sequence of dates that are common to all map values if
     all datemap values are represented, else Exception.
@@ -120,14 +141,13 @@ def symmetric(datemap):
     return second(reduce(check, datemap.items()))
 
 
-def symmetric_single(datemap):
-    """Ensures all datemap values are length 1 & returns an iso8601 date range from the 
-       min and max dates in datemap.values()
-
-       Raises exception if values are not length 1.
+def ranged(datemap):
+    """Returns a sequence of iso8601 daterange strings
+       that represent the min and max datemap.values()
+       if each datemap.values() is length 1, else Exception.
 
     Args:
-        datemap: {key: [datestrings,], key2: [datestrings,]}
+        datemap: {key: [datestring,], key2: [datestring,], ...}
 
     Returns:
         ['min_datestring/max_datestring',] or Exception
@@ -144,15 +164,11 @@ def symmetric_single(datemap):
     """
     
     if all(map(lambda a: eq(1, len(a)), datemap.values())):
-        return thread_first(datemap.values(),
-                            f.flatten,
-                            list,
-                            lambda a: '{}/{}'.format(min(a), max(a)),
-                            lambda a: [a,])
+        return list(f.flatten(datemap.values()))
     else:
         raise Exception('assymetric dates detected - {}'.format(datemap))
     
-    
+
 def rsort(dateseq):
     """ Reverse sorts a sequence of dates.
 

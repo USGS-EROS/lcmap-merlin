@@ -19,19 +19,14 @@ ubids = {'chipmunk-ard': {'reds':     ['LC08_SRB4',    'LE07_SRB3',    'LT05_SRB
                           'qas':      ['LC08_PIXELQA', 'LE07_PIXELQA', 'LT05_PIXELQA', 'LT04_PIXELQA']},
 
          'chipmunk-aux': {'nlcd':     ['AUX_NLCD'],
+                          'nlcdtrn':  ['AUX_NLCDTRN'],
                           'posidex':  ['AUX_POSIDEX'],
                           'mpw':      ['AUX_MPW'],
                           'aspect':   ['AUX_ASPECT'],
                           'slope':    ['AUX_SLOPE'],
-                          'dem':      ['AUX_DEM']},
-
-         'chipmunk-trn': {'nlcdtrn':  ['AUX_NLCDTRN'],
-                          'posidex':  ['AUX_POSIDEX'],
-                          'mpw':      ['AUX_MPW'],
-                          'aspect':   ['AUX_ASPECT'],
-                          'slope':    ['AUX_SLOPE'],
-                          'dem':      ['AUX_DEM']}}
-
+                          'dem':      ['AUX_DEM']}
+}
+         
 
 def profiles(env, profile=None):
     """Retrieve a configuration profile with env applied.
@@ -69,31 +64,12 @@ def profiles(env, profile=None):
             'grid_fn':     partial(chipmunk.grid,
                                    url=env.get('CHIPMUNK_URL', None),
                                    resource=env.get('CHIPMUNK_GRID_RESOURCE', '/grid')),
-            'dates_fn':    dates.symmetric,
+            'dates_fn':    dates.ranged,
             'chips_fn':    partial(chipmunk.chips,
                                    url=env.get('CHIPMUNK_URL', None),
                                    resource=env.get('CHIPMUNK_CHIPS_RESOURCE', '/chips')),
             'specs_fn':    partial(specs.mapped, ubids=ubids['chipmunk-aux']),
-            'format_fn':   formats.pyccd,
-            'registry_fn': partial(chipmunk.registry,
-                                   url=env.get('CHIPMUNK_URL', None),
-                                   resource=env.get('CHIPMUNK_REGISTRY_RESOURCE', '/registry')),
-            'snap_fn':     partial(chipmunk.snap,
-                                   url=env.get('CHIPMUNK_URL', None),
-                                   resource=env.get('CHIPMUNK_SNAP_RESOURCE', '/grid/snap')),
-            'near_fn':     partial(chipmunk.near,
-                                   url=env.get('CHIPMUNK_URL', None),
-                                   resource=env.get('CHIPMUNK_NEAR_RESOURCE', '/grid/near'))},
-        'chipmunk-trn' : {
-            'grid_fn':     partial(chipmunk.grid,
-                                   url=env.get('CHIPMUNK_URL', None),
-                                   resource=env.get('CHIPMUNK_GRID_RESOURCE', '/grid')),
-            'dates_fn':    dates.symmetric,
-            'chips_fn':    partial(chipmunk.chips,
-                                   url=env.get('CHIPMUNK_URL', None),
-                                   resource=env.get('CHIPMUNK_CHIPS_RESOURCE', '/chips')),
-            'specs_fn':    partial(specs.mapped, ubids=ubids['chipmunk-trn']),
-            'format_fn':   formats.pyccd,
+            'format_fn':   formats.aux,
             'registry_fn': partial(chipmunk.registry,
                                    url=env.get('CHIPMUNK_URL', None),
                                    resource=env.get('CHIPMUNK_REGISTRY_RESOURCE', '/registry')),
