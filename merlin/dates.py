@@ -91,10 +91,8 @@ def minmax(dates):
         "2008-01-01/2010-01-01"
     """
 
-    return thread_first(dates,
-                        f.flatten,
-                        list,
-                        lambda a: '{}/{}'.format(min(a), max(a)))
+    return '{}/{}'.format(min(dates), max(dates))
+
 
 def symmetric(datemap):
     """Returns a sequence of dates that are common to all map values if
@@ -141,25 +139,24 @@ def symmetric(datemap):
     return second(reduce(check, datemap.items()))
 
 
-def ranged(datemap):
+def single(datemap):
     """Returns a sequence of iso8601 daterange strings
-       that represent the min and max datemap.values()
        if each datemap.values() is length 1, else Exception.
 
     Args:
         datemap: {key: [datestring,], key2: [datestring,], ...}
 
     Returns:
-        ['min_datestring/max_datestring',] or Exception
+        ['ds2', 'ds3', 'ds1'] or Exception
 
     Example:
 
-        >>> symmetric({"nlcd": [ds3,],
-                       "dem":  [ds2,]})
-        [ds2/ds3,]
+        >>> single({"nlcd": [ds3,],
+                    "dem":  [ds2,]})
+        [ds3, ds2]
         >>>
-        >>> symmetric({"nlcd":  [ds3, ds1],
-                       "dem":   [ds2,]})
+        >>> single({"nlcd":  [ds3, ds1],
+                    "dem":   [ds2,]})
         Exception: assymetric dates detected - {'nlcd':[ds3, ds1], 'dem':[ds2]}
     """
     

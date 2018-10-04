@@ -64,7 +64,7 @@ def profiles(env, profile=None):
             'grid_fn':     partial(chipmunk.grid,
                                    url=env.get('CHIPMUNK_URL', None),
                                    resource=env.get('CHIPMUNK_GRID_RESOURCE', '/grid')),
-            'dates_fn':    dates.ranged,
+            'dates_fn':    dates.single,
             'chips_fn':    partial(chipmunk.chips,
                                    url=env.get('CHIPMUNK_URL', None),
                                    resource=env.get('CHIPMUNK_CHIPS_RESOURCE', '/chips')),

@@ -65,11 +65,11 @@ def aux(x, y, locations, dates_fn, specmap, chipmap):
     Returns:
         A tuple of tuples.
 
-    The pyccd format key is ```(chip_x, chip_y, x, y)``` with a
+    The aux format key is ```(chip_x, chip_y, x, y)``` with a
     dictionary of sorted numpy arrays representing each spectra plus an
     additional sorted dates array.
 
-    >>> pyccd_format(*args)
+    >>> aux(*args)
         (((chip_x, chip_y, x1, y1), {"dates":   [], "nlcd": [],
                                      "nlcdtrn": [], "trends": [],
                                      "mpw":     [], "dem": [],
@@ -84,17 +84,12 @@ def aux(x, y, locations, dates_fn, specmap, chipmap):
     """
     
     _index   = specs.index(list(functions.flatten(specmap.values())))
-    print("INDEX:{}".format(_index))
     _dates   = dates_fn(datemap=dates.mapped(chipmap))
-    print("DATES:{}".format(_dates))
     _creator = partial(rods.create, x=x, y=y, dateseq=_dates, locations=locations, spec_index=_index)
-
     _flipped = partial(functions.flip_keys, {k: _creator(chipseq=v) for k, v in chipmap.items()})
-        
     _rods = functions.insert_into_every(key='dates',
-                                        value=dates.minmax([_dates]),
+                                        value=[dates.minmax(_dates)],
                                         dods=_flipped())
-                                 
     return tuple((k, v) for k, v in _rods.items())
 
 

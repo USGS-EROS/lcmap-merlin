@@ -19,6 +19,12 @@ def test_is_acquired():
     assert dates.is_acquired('1980-01-011982-01-01') is False
 
 
+def test_minmax():
+    datestrs = ['1980', '1979', '1990']
+
+    assert '1979/1990' == dates.minmax(datestrs)
+
+    
 def test_symmetric():
     datemap = {'a': [1, 2, 3],
                'b': [2, 1, 3],
@@ -34,7 +40,31 @@ def test_symmetric():
 
         dates.symmetric(datemap)
 
-        
+
+def test_single():
+    datemap = {'a': [1,],
+               'b': [2,],
+               'c': [3,]}
+
+    assert set([1, 2, 3]) == set(dates.single(datemap))
+
+    with pytest.raises(Exception):
+
+        datemap = {'a': [1, 2, 3],
+                   'b': [2, 1, 3],
+                   'c': [3, 2, 1]}
+
+        dates.single(datemap)
+
+    with pytest.raises(Exception):
+
+        datemap = {'a': [1, 2, 3],
+                   'b': [2, 1, 3],
+                   'c': [3]}
+
+        dates.single(datemap)
+
+    
 def test_rsort():
     assert [3, 2, 1] == dates.rsort([3, 1, 2])
  
