@@ -9,6 +9,6 @@ ard_acquired = '2010/2013'
 aux_acquired = '1999/2002'
 profile = 'chipmunk-ard'
 ard_env = {'CHIPMUNK_URL': 'http://localhost:5656'}
-aux_env = {'CHIPMUNK_URL': 'http://lcmap-test.cr.usgs.gov/aux_cu_v01'}
+aux_env = {'CHIPMUNK_URL': 'http://localhost:5656'}
 cassette = 'test/resources/chipmunk-ard-v1-cassette.yaml'
 vcr = _vcr.VCR(record_mode='new_episodes')
