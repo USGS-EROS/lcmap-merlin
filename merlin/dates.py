@@ -1,9 +1,12 @@
 from cytoolz import first
 from cytoolz import reduce
 from cytoolz import second
+from cytoolz import thread_first
 from dateutil import parser
 from merlin import chips
 from merlin import functions as f
+from operator import eq
+from operator import or_
 import re
 
 
@@ -74,6 +77,24 @@ def mapped(chipmap):
     return {k: chips.dates(v) for k, v in chipmap.items()}
 
 
+def minmax(dates):
+    """Returns an iso8601 daterange string that represents the
+       min and max datemap.values().
+
+    Args:
+        datestrings: [d1, d2, d3,]
+
+    Returns:
+        ['min_date/max_date',]
+
+    Example:
+        >>> minmax(['2008-01-01', '2010-01-01', '2009-01-01'])
+        "2008-01-01/2010-01-01"
+    """
+
+    return '{}/{}'.format(min(dates), max(dates)) if dates else '/'
+
+
 def symmetric(datemap):
     """Returns a sequence of dates that are common to all map values if
     all datemap values are represented, else Exception.
@@ -86,13 +107,13 @@ def symmetric(datemap):
 
     Example:
 
-        >>> common({"reds":  [ds3, ds1, ds2],
-                    "blues": [ds2, ds3, ds1]})
-        [2, 3, 1]
+        >>> symmetric({"reds":  [ds3, ds1, ds2],
+                       "blues": [ds2, ds3, ds1]})
+        [ds2, ds3, ds1]
         >>>
-        >>> common({"reds":  [ds3, ds1],
-                    "blues": [ds2, ds3, ds1]})
-        Exception: reds:[3, 1] does not match blues:[2, 3, 1]
+        >>> symmetric({"reds":  [ds3, ds1],
+                       "blues": [ds2, ds3, ds1]})
+        Exception: assymetric dates detected - {'reds':[ds3, ds1]} != {'blues':[ds2, ds3, ds1]}
     """
 
     def check(a, b):
@@ -118,6 +139,34 @@ def symmetric(datemap):
 
     return second(reduce(check, datemap.items()))
 
+
+def single(datemap):
+    """Returns a sequence of iso8601 daterange strings
+       if each datemap.values() is length <= 1, else Exception.
+
+    Args:
+        datemap: {key: [datestring,], key2: [datestring,], ...}
+
+    Returns:
+        ['ds2', 'ds3', 'ds1'] or Exception
+
+    Example:
+
+        >>> single({"nlcd": [ds3,],
+                    "dem":  [ds2,]})
+        [ds3, ds2]
+        >>>
+        >>> single({"nlcd":  [ds3, ds1],
+                    "dem":   [ds2,]})
+        Exception: assymetric dates detected - {'nlcd':[ds3, ds1], 'dem':[ds2]}
+    """
+    
+    if or_(all(map(lambda a: eq(1, len(a)), datemap.values())),
+           all(map(lambda a: eq(0, len(a)), datemap.values()))):
+        return list(f.flatten(datemap.values()))
+    else:
+        raise Exception('assymetric dates detected - {}'.format(datemap))
+    
 
 def rsort(dateseq):
     """ Reverse sorts a sequence of dates.
