@@ -141,7 +141,7 @@ def symmetric(datemap):
 
 def single(datemap):
     """Returns a sequence of iso8601 daterange strings
-       if each datemap.values() is length 1, else Exception.
+       if each datemap.values() is length <= 1, else Exception.
 
     Args:
         datemap: {key: [datestring,], key2: [datestring,], ...}
@@ -160,7 +160,7 @@ def single(datemap):
         Exception: assymetric dates detected - {'nlcd':[ds3, ds1], 'dem':[ds2]}
     """
     
-    if all(map(lambda a: eq(1, len(a)), datemap.values())):
+    if all(map(lambda a: len(a) in [0, 1], datemap.values())):
         return list(f.flatten(datemap.values()))
     else:
         raise Exception('assymetric dates detected - {}'.format(datemap))
