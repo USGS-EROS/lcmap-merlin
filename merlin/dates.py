@@ -6,6 +6,7 @@ from dateutil import parser
 from merlin import chips
 from merlin import functions as f
 from operator import eq
+from operator import or_
 import re
 
 
@@ -160,7 +161,8 @@ def single(datemap):
         Exception: assymetric dates detected - {'nlcd':[ds3, ds1], 'dem':[ds2]}
     """
     
-    if all(map(lambda a: len(a) in [0, 1], datemap.values())):
+    if or_(all(map(lambda a: eq(1, len(a)), datemap.values())),
+           all(map(lambda a: eq(0, len(a)), datemap.values()))):
         return list(f.flatten(datemap.values()))
     else:
         raise Exception('assymetric dates detected - {}'.format(datemap))
