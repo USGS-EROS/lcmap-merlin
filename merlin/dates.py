@@ -92,7 +92,7 @@ def minmax(dates):
         "2008-01-01/2010-01-01"
     """
 
-    return '{}/{}'.format(min(dates), max(dates))
+    return '{}/{}'.format(min(dates), max(dates)) if dates else '/'
 
 
 def symmetric(datemap):
