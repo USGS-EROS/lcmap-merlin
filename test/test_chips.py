@@ -120,11 +120,11 @@ def test_deduplicate():
 
 @test.vcr.use_cassette(test.cassette)
 def test_mapped():
-    _cfg = cfg.get('chipmunk-ard', env=test.env)
+    _cfg = cfg.get('chipmunk-ard', env=test.ard_env)
     
     chipmap = chips.mapped(x=test.x,
                            y=test.y,
-                           acquired=test.acquired,
+                           acquired=test.ard_acquired,
                            specmap=specs.mapped(ubids=cfg.ubids.get('chipmunk-ard'),
                                                 specs=_cfg.get('registry_fn')()),
                            chips_fn=_cfg.get('chips_fn'))
