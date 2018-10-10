@@ -9,9 +9,9 @@ import test
 def test_chips():
     red_chips = chipmunk.chips(x=test.x,
                                y=test.y,
-                               acquired=test.acquired,
+                               acquired=test.ard_acquired,
                                ubids=cfg.ubids.get('chipmunk-ard').get('reds'),
-                               url=test.env.get('CHIPMUNK_URL'))
+                               url=test.ard_env.get('CHIPMUNK_URL'))
     assert len(red_chips) > 0
     assert type(red_chips) is tuple
     
@@ -19,7 +19,7 @@ def test_chips():
 @test.vcr.use_cassette(test.cassette)
 def test_registry():
 
-    registry = chipmunk.registry(url=test.env.get('CHIPMUNK_URL'))
+    registry = chipmunk.registry(url=test.ard_env.get('CHIPMUNK_URL'))
     assert len(registry) > 0
     assert type(registry) is tuple or list
 
@@ -32,7 +32,7 @@ def test_registry():
 
 @test.vcr.use_cassette(test.cassette)
 def test_grid():
-    grid = chipmunk.grid(url=test.env.get('CHIPMUNK_URL'))
+    grid = chipmunk.grid(url=test.ard_env.get('CHIPMUNK_URL'))
     assert len(grid) == 2
     assert type(grid) is list or tuple
     assert set(['chip', 'tile']) == set([g.get('name') for g in grid])
@@ -45,7 +45,7 @@ def test_grid():
 def test_snap():
     snapped = chipmunk.snap(x=test.x,
                             y=test.y,
-                            url=test.env.get('CHIPMUNK_URL'))
+                            url=test.ard_env.get('CHIPMUNK_URL'))
     
     assert type(snapped) is dict
     assert len(snapped) is 2
@@ -61,7 +61,7 @@ def test_snap():
 def test_near():
     near = chipmunk.near(x=test.x,
                          y=test.y,
-                         url=test.env.get('CHIPMUNK_URL'))
+                         url=test.ard_env.get('CHIPMUNK_URL'))
     
     assert type(near) is dict
 

@@ -32,7 +32,7 @@ def test_minbox():
 
 @test.vcr.use_cassette(test.cassette)
 def test_coordinates():
-    _cfg = cfg.get('chipmunk-ard', env=test.env)
+    _cfg = cfg.get('chipmunk-ard', env=test.ard_env)
     grid = chip_grid(_cfg)
     sfn  = _cfg.get('snap_fn')
     

@@ -13,8 +13,8 @@ import test
 
 @test.vcr.use_cassette(test.cassette)    
 def test_create_nodata():
-    _cfg = cfg.get(profile=test.profile, env=test.env)
-    data = create(x=test.x_nodata, y=test.y_nodata, acquired=test.acquired, cfg=_cfg)
+    _cfg = cfg.get(profile=test.profile, env=test.ard_env)
+    data = create(x=test.x_nodata, y=test.y_nodata, acquired=test.ard_acquired, cfg=_cfg)
     assert len(data) == 0
     assert type(data) is tuple
 
@@ -24,8 +24,8 @@ def test_create():
     # data should be shaped: ( ((chip_x, chip_y, x1, y1),{}),
     #                          ((chip_x, chip_y, x1, y2),{}), )
 
-    _cfg = cfg.get(profile=test.profile, env=test.env)    
-    data = create(x=test.x, y=test.y, acquired=test.acquired, cfg=_cfg)
+    _cfg = cfg.get(profile=test.profile, env=test.ard_env)    
+    data = create(x=test.x, y=test.y, acquired=test.ard_acquired, cfg=_cfg)
 
     # make sure we have 10000 results and the response structure
     assert len(data) == 10000
@@ -51,15 +51,15 @@ def test_compare_timeseries_to_chip():
     # Make sure the timeseries values match the most recent chip for a spectra.
     # This will validate the chip was not transposed during timeseries creation.
     
-    _cfg =   cfg.get(profile=test.profile, env=test.env)
+    _cfg =   cfg.get(profile=test.profile, env=test.ard_env)
     _ubids = cfg.ubids.get(test.profile).get('reds')
-    _chips = _cfg.get('chips_fn')(x=test.x, y=test.y, acquired=test.acquired, ubids=_ubids)
+    _chips = _cfg.get('chips_fn')(x=test.x, y=test.y, acquired=test.ard_acquired, ubids=_ubids)
     _index = specs.index(_cfg.get('registry_fn')())
      
     most_recent_chip = last(sorted(_chips, key=lambda d: d['acquired']))
     most_recent_chip = first(chips.to_numpy(spec_index=_index, chips=[most_recent_chip]))
 
-    time_series = create(x=test.x, y=test.y, acquired=test.acquired, cfg=_cfg)
+    time_series = create(x=test.x, y=test.y, acquired=test.ard_acquired, cfg=_cfg)
                          
     # this is a 2d 100x100 array of values arranged spatially
     chip_data = most_recent_chip['data']

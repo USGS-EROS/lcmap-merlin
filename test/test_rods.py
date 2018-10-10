@@ -73,7 +73,7 @@ def test_locate():
 @test.vcr.use_cassette(test.cassette)
 def test_create():
  
-    c = cfg.get('chipmunk-ard', env=test.env)
+    c = cfg.get('chipmunk-ard', env=test.ard_env)
  
     x, y = c.get('snap_fn')(x=test.x, y=test.y).get('chip').get('proj-pt')
 
@@ -86,7 +86,7 @@ def test_create():
  
     chipseq = c.get('chips_fn')(x=x,
                                 y=y,
-                                acquired=test.acquired,
+                                acquired=test.ard_acquired,
                                 ubids=ubids)
 
     dateseq = dates.mapped(chipmap=dict(reds=chipseq)).get('reds')

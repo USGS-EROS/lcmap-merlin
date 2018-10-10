@@ -51,3 +51,45 @@ def pyccd(x, y, locations, dates_fn, specmap, chipmap):
     return tuple((k, v) for k, v in _rods.items())
 
 
+def aux(x, y, locations, dates_fn, specmap, chipmap):
+    """Builds aux formatted timeseries.
+
+    Args:
+        x: x projection coordinate of chip
+        y: y projection coordinate of chip
+        locations: chip shaped 2d array of projection coordinates
+        dates_fn (fn): returns dates that should be included in time series
+        specmap (dict): mapping of keys to specs
+        chipmap (dict): mapping of keys to chips
+
+    Returns:
+        A tuple of tuples.
+
+    The aux format key is ```(chip_x, chip_y, x, y)``` with a
+    dictionary of sorted numpy arrays representing each spectra plus an
+    additional sorted dates array.
+
+    >>> aux(*args)
+        (((chip_x, chip_y, x1, y1), {"dates":   [], "nlcd": [],
+                                     "nlcdtrn": [], "trends": [],
+                                     "mpw":     [], "dem": [],
+                                     "posidex": [], "aspect": [],
+                                     "slope":   []}),
+         ((chip_x, chip_y, x1, y2), {"dates":   [], "nlcd": [],
+                                     "nlcdtrn": [], "trends": [],
+                                     "mpw":     [], "dem": [],
+                                     "posidex": [], "aspect": [],
+                                     "slope":   []}))
+        ...
+    """
+    
+    _index   = specs.index(list(functions.flatten(specmap.values())))
+    _dates   = dates_fn(datemap=dates.mapped(chipmap))
+    _creator = partial(rods.create, x=x, y=y, dateseq=_dates, locations=locations, spec_index=_index)
+    _flipped = partial(functions.flip_keys, {k: _creator(chipseq=v) for k, v in chipmap.items()})
+    _rods = functions.insert_into_every(key='dates',
+                                        value=[dates.minmax(_dates)],
+                                        dods=_flipped())
+    return tuple((k, v) for k, v in _rods.items())
+
+
