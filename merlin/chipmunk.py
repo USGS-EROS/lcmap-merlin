@@ -50,13 +50,13 @@ def chips(x, y, acquired, ubids, url, resource='/chips'):
     
     def request(url, params):
         r = requests.get(url=url, params=params)
-        body = r.json()
 
         if not r.ok:
-            logger.error("{} at {} for {}".format(body, url, params))
+            logger.error("{} at {} for {}".format(r.reason, url, params))
+            logger.debug(r.text)
             return None
         else:
-            return body
+            return r.json()
     
     responses = [request(url=url, params=p) for p in params]
     return tuple(reduce(add, filter(lambda x: type(x) in [list, tuple], responses), []))
