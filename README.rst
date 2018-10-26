@@ -11,7 +11,7 @@
 
 Merlin
 ======
-A Python3 library for turning LCMAP spatial data into timeseries like magic.
+A Python3 library for turning LCMAP spatial data into timeseries.
 
 Features
 --------
